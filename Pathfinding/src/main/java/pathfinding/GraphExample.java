@@ -7,11 +7,12 @@ import java.util.List;
 public class GraphExample {
 
     public static void main(String[] args) {
-        var graphRandomizer = new GraphRandomizer<>(
-                List.of('A', 'B', 'C', 'D')
-        );
+        var graphRandomizer = GraphRandomizer.<Character>builder()
+                .maxRandomWeight(10)
+                .vertices(List.of('A', 'B', 'C', 'D', 'E'))
+                .build();
 
-        var graph = graphRandomizer.randomizeEdges(false, 0.5);
+        var graph = graphRandomizer.randomizeDirectedEdges();
         System.out.println(graph);
     }
 
