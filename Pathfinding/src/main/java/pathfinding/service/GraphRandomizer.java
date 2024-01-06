@@ -3,7 +3,7 @@ package pathfinding.service;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import pathfinding.domain.Graph;
+import pathfinding.graphs.Graph;
 
 import java.util.List;
 import java.util.Random;

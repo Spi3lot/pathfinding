@@ -1,6 +1,6 @@
 package pathfinding;
 
-import pathfinding.domain.Graph;
+import pathfinding.graphs.Graph;
 import processing.core.PApplet;
 import processing.core.PVector;
 

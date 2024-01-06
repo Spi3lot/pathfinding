@@ -1,4 +1,4 @@
-package pathfinding.domain;
+package pathfinding.graphs;
 
 import lombok.Getter;
 import lombok.ToString;
