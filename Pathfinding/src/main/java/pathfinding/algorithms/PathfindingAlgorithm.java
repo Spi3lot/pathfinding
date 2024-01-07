@@ -3,6 +3,7 @@ package pathfinding.algorithms;
 import pathfinding.graphs.Graph;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Emilio Zottel (5AHIF)
@@ -10,6 +11,6 @@ import java.util.List;
  */
 public interface PathfindingAlgorithm<T> {
 
-    List<T> findShortestPath(T start, T end, Graph<T> graph);
+    Optional<List<T>> findShortestPath(T start, T end, Graph<T> graph);
 
 }

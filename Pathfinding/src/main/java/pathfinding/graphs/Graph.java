@@ -3,9 +3,7 @@ package pathfinding.graphs;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @ToString
 public class Graph<T> {
@@ -36,7 +34,7 @@ public class Graph<T> {
      * Adds a Collection of vertices to the graph
      */
     public void addVertices(Collection<T> vertices) {
-        for (var vertex : vertices) {
+        for (T vertex : vertices) {
             addVertex(vertex);
         }
     }
@@ -138,12 +136,26 @@ public class Graph<T> {
     }
 
     /**
+     * @param path the path to calculate the total weight of
+     * @return the accumulated weight of the path
+     */
+    public double calcAccumulatedPathWeight(List<T> path) {
+        double weight = 0;
+
+        for (int i = 0; i < path.size() - 1; i++) {
+            weight += getEdgeWeight(path.get(i), path.get(i + 1));
+        }
+
+        return weight;
+    }
+
+    /**
      * @param source      the source vertex of the edge
      * @param destination the destination vertex of the edge
      * @return the weight of the edge between the two vertices
      */
     public double getEdgeWeight(T source, T destination) {
-        return vertices.get(source).getOrDefault(destination, 0.0);
+        return vertices.get(source).getOrDefault(destination, Double.POSITIVE_INFINITY);
     }
 
     /**
