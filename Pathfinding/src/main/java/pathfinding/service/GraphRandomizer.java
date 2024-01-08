@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.function.DoubleUnaryOperator;
 
 /**
- * Randomizes edges between vertices of a graph.
+ * Helpful utility class for randomizing edges between vertices of a graph
  *
  * @param <T> the type of the value each vertex holds
  */
@@ -51,7 +51,11 @@ public class GraphRandomizer<T> {
     @Builder.Default
     private List<T> vertices = List.of();
 
-
+    /**
+     * Generates random edges between the vertices of a directed graph
+     *
+     * @return a new directed graph with randomized edges
+     */
     public Graph<T> randomizeDirectedEdges() {
         var graph = createFilledGraph(true);
 
@@ -66,6 +70,11 @@ public class GraphRandomizer<T> {
         return graph;
     }
 
+    /**
+     * Generates random edges between the vertices of an undirected graph
+     *
+     * @return a new undirected graph with randomized edges
+     */
     public Graph<T> randomizeUndirectedEdges() {
         var graph = createFilledGraph(false);
 

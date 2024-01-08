@@ -15,14 +15,14 @@ public class Graph<T> {
     private final Map<T, Map<T, Double>> vertices = new HashMap<>();
 
     /**
-     * Undirected graph constructor
+     * Undirected graph constructor.
      */
     public Graph() {
         this(false);
     }
 
     /**
-     * Graph constructor
+     * Graph constructor.
      *
      * @param directed whether the graph is directed or not
      */
@@ -31,7 +31,7 @@ public class Graph<T> {
     }
 
     /**
-     * Adds a Collection of vertices to the graph
+     * Adds a Collection of vertices to the graph.
      */
     public void addVertices(Collection<T> vertices) {
         for (T vertex : vertices) {
@@ -40,7 +40,7 @@ public class Graph<T> {
     }
 
     /**
-     * Adds a vertex to the graph
+     * Adds a vertex to the graph.
      *
      * @param vertex the value of the vertex to be added
      */
@@ -49,7 +49,7 @@ public class Graph<T> {
     }
 
     /**
-     * Adds an unweighted edge between two vertices
+     * Adds an unweighted edge between two vertices.
      *
      * @param source      the source vertex of the edge
      * @param destination the destination vertex of the edge
@@ -59,7 +59,7 @@ public class Graph<T> {
     }
 
     /**
-     * Adds a weighted edge between two vertices with a weight
+     * Adds a weighted edge between two vertices with a weight.
      *
      * @param source      the source vertex of the edge
      * @param destination the destination vertex of the edge
@@ -76,7 +76,7 @@ public class Graph<T> {
     }
 
     /**
-     * Removes a vertex from the graph
+     * Removes a vertex from the graph.
      *
      * @param vertex the value of the vertex to be removed
      */
@@ -85,7 +85,7 @@ public class Graph<T> {
     }
 
     /**
-     * Removes an edge between two vertices
+     * Removes an edge between two vertices.
      *
      * @param source      the source vertex of the edge to be removed
      * @param destination the destination vertex of the edge to be removed
@@ -139,7 +139,7 @@ public class Graph<T> {
      * @param path the path to calculate the total weight of
      * @return the accumulated weight of the path
      */
-    public double calcAccumulatedPathWeight(List<T> path) {
+    public double calculateAccumulatedPathWeight(List<T> path) {
         double weight = 0;
 
         for (int i = 0; i < path.size() - 1; i++) {
