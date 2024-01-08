@@ -16,7 +16,6 @@ public class DFS<T> implements PathfindingAlgorithm<T> {
         return findAnyPath(start, end, graph, List.of(start));
     }
 
-    // TODO: Make so that it doesn't have to search every path, if it currently does so.
     private Optional<List<T>> findAnyPath(T start,
                                           T end,
                                           Graph<T> graph,

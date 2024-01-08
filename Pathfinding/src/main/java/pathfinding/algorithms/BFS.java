@@ -16,10 +16,8 @@ public class BFS<T> implements PathfindingAlgorithm<T> {
 
         while (!queue.isEmpty()) {
             var current = queue.poll();
-            System.out.println(current);
 
             if (current.equals(end)) {
-                System.out.println(previous);
                 found = true;
                 break;
             }

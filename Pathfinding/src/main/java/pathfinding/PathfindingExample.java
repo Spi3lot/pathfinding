@@ -13,9 +13,9 @@ public class PathfindingExample {
         graph.addEdge('A', 'C', 2);
         graph.addEdge('C', 'D', 2);
         graph.addEdge('D', 'A', 2);
+
         var pathfinder = new Pathfinder<>(graph, new DFS<>());
-        var path = pathfinder.findShortestPath('A', 'D');
-        System.out.println(path);
+        System.out.println(pathfinder.findShortestPath('A', 'D'));
     }
 
 }

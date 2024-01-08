@@ -21,6 +21,10 @@ public class Pathfinder<T> {
     private Graph<T> graph;
     private PathfindingAlgorithm<T> algorithm;
 
+    public Optional<List<T>> findAnyPath(T start, T end) {
+        return algorithm.findAnyPath(start, end, graph);
+    }
+
     public Optional<List<T>> findShortestPath(T start, T end) {
         return algorithm.findShortestPath(start, end, graph);
     }
