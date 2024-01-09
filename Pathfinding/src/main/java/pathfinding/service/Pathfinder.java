@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Utility class so the graph doesn't have to be passed to the algorithm every time.
- * Also, the type T of the algorithm doesn't have to be specified, as it can be inferred from the graph.
+ * Utility class so the graph doesn't have
+ * to be passed to the algorithm every time.
+ * Also, the type T only has to be specified once,
+ * as the objects not specifying it
+ * can infer it from the object that specified it.
  */
 @AllArgsConstructor
 @Getter

@@ -1,69 +1,87 @@
 package pathfinding.algorithms;
 
 import pathfinding.graphs.Graph;
+import pathfinding.service.PathTracer;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+/**
+ * Iterative implementation of the Depth-First Search algorithm.
+ * @param <T> the type of the nodes in the graph to be searched
+ */
 public class DFS<T> implements PathfindingAlgorithm<T> {
 
     @Override
-    public Optional<List<T>> findAnyPath(T start,
-                                         T end,
-                                         Graph<T> graph) {
-        return findAnyPath(start, end, graph, List.of(start));
-    }
+    public Optional<List<T>> findAnyPath(T start, T end, Graph<T> graph) {
+        var stack = new ArrayDeque<T>();
+        var visited = new ArrayList<T>();
+        var predecessors = new HashMap<T, T>();
+        boolean found = false;
+        stack.push(start);
 
-    private Optional<List<T>> findAnyPath(T start,
-                                          T end,
-                                          Graph<T> graph,
-                                          List<T> path) {
-        if (start.equals(end)) {
-            return Optional.of(path);
+        while (!stack.isEmpty()) {
+            var current = stack.pop();
+            visited.add(current);
+
+            if (current.equals(end)) {
+                found = true;
+                break;
+            }
+
+            graph.getNeighbors(current)
+                    .keySet()
+                    .stream()
+                    .filter(neighbor -> !visited.contains(neighbor))
+                    .filter(neighbor -> !stack.contains(neighbor))
+                    .forEach(neighbor -> {
+                        stack.push(neighbor);
+                        predecessors.put(neighbor, current);
+                    });
         }
 
-        return graph.getNeighbors(start)
-                .keySet()
-                .stream()
-                .filter(neighbor -> !path.contains(neighbor))
-                .map(neighbor -> findAnyPath(neighbor, end, graph, append(path, neighbor)))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findAny();
+        if (found) {
+            var pathTracer = new PathTracer<>(predecessors);
+            return Optional.of(pathTracer.trace(start, end));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              T end,
-                                              Graph<T> graph) {
-        return findShortestPath(start, end, graph, List.of(start));
-    }
+    public Optional<List<T>> findShortestPath(T start, T end, Graph<T> graph) {
+        var stack = new ArrayDeque<T>();
+        var visited = new ArrayList<T>();
+        var predecessors = new HashMap<T, T>();
+        var paths = new ArrayList<List<T>>();
+        var pathTracer = new PathTracer<>(predecessors);
+        stack.push(start);
 
-    private Optional<List<T>> findShortestPath(T start,
-                                               T end,
-                                               Graph<T> graph,
-                                               List<T> path) {
-        if (start.equals(end)) {
-            return Optional.of(path);
+        while (!stack.isEmpty()) {
+            var current = stack.pop();
+            visited.add(current);
+            System.out.println(current);
+
+            if (current.equals(end)) {
+                paths.add(pathTracer.trace(start, end));
+            }
+
+            graph.getNeighbors(current)
+                    .keySet()
+                    .stream()
+                    .filter(neighbor -> !visited.contains(neighbor))
+                    .filter(neighbor -> !stack.contains(neighbor))
+                    .forEach(neighbor -> {
+                        stack.push(neighbor);
+                        predecessors.put(neighbor, current);
+                        System.out.println(stack);
+                        System.out.println(predecessors);
+                    });
         }
 
-        return graph
-                .getNeighbors(start)
-                .keySet()
-                .stream()
-                .filter(neighbor -> !path.contains(neighbor))
-                .map(neighbor -> findShortestPath(neighbor, end, graph, append(path, neighbor)))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .min(Comparator.comparingDouble(graph::calculateAccumulatedPathWeight));
-    }
+        System.out.println(paths);
 
-    private List<T> append(List<T> list, T element) {
-        var appended = new ArrayList<>(list);
-        appended.add(element);
-        return appended;
+        return paths.stream()
+                .min(Comparator.comparingDouble(graph::calculateAccumulatedPathWeight));
     }
 
 }
