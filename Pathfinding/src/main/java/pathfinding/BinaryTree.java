@@ -1,7 +1,7 @@
 package pathfinding;
 
-import pathfinding.algorithms.BFS;
-import pathfinding.algorithms.DFS;
+import pathfinding.algorithms.BreadthFirstSearch;
+import pathfinding.algorithms.DepthFirstSearch;
 import pathfinding.graphs.Graph;
 import pathfinding.service.Pathfinder;
 
@@ -9,7 +9,7 @@ import pathfinding.service.Pathfinder;
  * @author : Emilio Zottel (5AHIF)
  * @since : 09.01.2024, Di.
  **/
-public class DFSBFSTest {
+public class BinaryTree {
 
     public static void main(String[] args) {
         var graph = new Graph<Integer>();
@@ -20,8 +20,8 @@ public class DFSBFSTest {
         graph.addEdge(2, 1);
         graph.addEdge(2, 3);
 
-        var pathfinder = new Pathfinder<>(graph, new BFS<>());
-        System.out.println(pathfinder.findAnyPath(4, 7));
+        var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
+        System.out.println(pathfinder.findShortestPath(4, 1));
     }
 
 }

@@ -1,7 +1,6 @@
 package pathfinding;
 
-import pathfinding.algorithms.BFS;
-import pathfinding.algorithms.DFS;
+import pathfinding.algorithms.DepthFirstSearch;
 import pathfinding.graphs.Graph;
 import pathfinding.service.Pathfinder;
 
@@ -19,7 +18,7 @@ public class PathfindingExample {
         graph.addEdge('C', 'D', 2);
         graph.addEdge('D', 'A', 2);
 
-        var pathfinder = new Pathfinder<>(graph, new DFS<>());
+        var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
         System.out.println(pathfinder.findShortestPath('A', 'C'));
     }
 
@@ -27,10 +26,23 @@ public class PathfindingExample {
         var graph = new Graph<Character>();
         graph.addEdge('A', 'B', 1);
         graph.addEdge('B', 'C', 3);
+        graph.addEdge('C', 'A', 1);
         graph.addEdge('C', 'D', 1);
         graph.addEdge('A', 'D', 1000);
 
-        var pathfinder = new Pathfinder<>(graph, new DFS<>());
+        var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
+        System.out.println(pathfinder.findShortestPath('A', 'D'));
+    }
+
+
+    private static void formerIterativeDfsBreaker() {
+        var graph = new Graph<Character>();
+        graph.addEdge('A', 'B', 1);
+        graph.addEdge('B', 'C', 3);
+        graph.addEdge('C', 'D', 1);
+        graph.addEdge('A', 'D', 1000);
+
+        var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
         System.out.println(pathfinder.findShortestPath('A', 'D'));
     }
 
@@ -39,7 +51,7 @@ public class PathfindingExample {
         graph.addEdge('A', 'B', 1);
         graph.addEdge('B', 'C', 10);
 
-        var pathfinder = new Pathfinder<>(graph, new DFS<>());
+        var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
         System.out.println(pathfinder.findAnyPath('A', 'C'));
     }
 

@@ -38,7 +38,9 @@ public class PathTracer<T> {
             current = predecessors.get(current);
 
             if (!path.add(current)) {
-                throw new CycleException("The end node is unreachable because of a cycle.");
+                throw new CycleException(
+                        "The end node is unreachable because of a cycle."
+                );
             }
         }
 

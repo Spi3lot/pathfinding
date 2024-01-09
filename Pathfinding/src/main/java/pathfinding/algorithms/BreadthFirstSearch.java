@@ -5,10 +5,17 @@ import pathfinding.service.PathTracer;
 
 import java.util.*;
 
-public class BFS<T> implements PathfindingAlgorithm<T> {
+/**
+ * Iterative implementation of the Breadth-First Search algorithm.
+ *
+ * @param <T> the type of the nodes in the graph to be searched
+ */
+public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     @Override
-    public Optional<List<T>> findShortestPath(T start, T end, Graph<T> graph) {
+    public Optional<List<T>> findShortestPath(T start,
+                                              T end,
+                                              Graph<T> graph) {
         var queue = new ArrayDeque<T>();
         var visited = new ArrayList<T>();
         var predecessors = new HashMap<T, T>();
@@ -32,7 +39,6 @@ public class BFS<T> implements PathfindingAlgorithm<T> {
                     .forEach(neighbor -> {
                         queue.offer(neighbor);
                         predecessors.put(neighbor, current);
-                        System.out.println(predecessors);
                     });
         }
 

@@ -7,6 +7,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Recursive implementation of the Depth-First Search algorithm.
+ * <p>
+ * For the iterative implementation, see {@link DepthFirstSearch}.
+ * <p>
+ * The interal workings are much simpler to understand in
+ * this implementation, but it is prone to stack overflow errors
+ * for large graphs.
+ *
+ * @param <T> the type of the nodes in the graph to be searched
+ */
 public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
 
 
@@ -21,7 +32,6 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                                           T end,
                                           Graph<T> graph,
                                           List<T> path) {
-        System.out.println(start);
         if (start.equals(end)) {
             return Optional.of(path);
         }
@@ -47,21 +57,20 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                                                T end,
                                                Graph<T> graph,
                                                List<T> path) {
-        System.out.println(start);
-
         if (start.equals(end)) {
             return Optional.of(path);
         }
 
-        return graph
-                .getNeighbors(start)
+        return graph.getNeighbors(start)
                 .keySet()
                 .stream()
                 .filter(neighbor -> !path.contains(neighbor))
                 .map(neighbor -> findShortestPath(neighbor, end, graph, append(path, neighbor)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .min(Comparator.comparingDouble(graph::calculateAccumulatedPathWeight));
+                .min(Comparator.comparingDouble(
+                        graph::calculateAccumulatedPathWeight
+                ));
     }
 
     private List<T> append(List<T> list, T element) {

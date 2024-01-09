@@ -1,6 +1,6 @@
 package pathfinding;
 
-import pathfinding.algorithms.BFS;
+import pathfinding.algorithms.BreadthFirstSearch;
 import pathfinding.graphs.Graph;
 import pathfinding.service.Pathfinder;
 
@@ -13,7 +13,7 @@ public class TypeInference {
         graph.addEdge('C', 'D');
         graph.addEdge('B', 'D');
 
-        var pathfinder = new Pathfinder<>(graph, new BFS<>());
+        var pathfinder = new Pathfinder<>(graph, new BreadthFirstSearch<>());
         System.out.println(pathfinder.findShortestPath('A', 'D'));
     }
 
