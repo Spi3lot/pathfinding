@@ -1,9 +1,9 @@
 package pathfinding.exceptions;
 
 /**
- * @author : Emilio Zottel (5AHIF)
- * @since : 09.01.2024, Di.
- **/
+ * An exception thrown when the program detects that it
+ * got stuck in a cycle during the traversal of a graph.
+ */
 public class CycleException extends RuntimeException {
 
     public CycleException() {
