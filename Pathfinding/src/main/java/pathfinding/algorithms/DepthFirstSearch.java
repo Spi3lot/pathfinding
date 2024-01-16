@@ -51,7 +51,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
         if (found) {
             var pathTracer = new PathTracer<>(predecessors);
-            return Optional.of(pathTracer.trace(start, end));
+            return Optional.of(pathTracer.unsafeTrace(start, end));
         } else {
             return Optional.empty();
         }
@@ -69,7 +69,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
         while (!stack.isEmpty()) {
             var current = stack.pop();
-            var path = pathTracer.trace(start, current);
+            var path = pathTracer.unsafeTrace(start, current);
 
             if (current.equals(end)) {
                 paths.add(path);

@@ -44,7 +44,7 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
         if (found) {
             var pathTracer = new PathTracer<>(predecessors);
-            return Optional.of(pathTracer.trace(start, end));
+            return Optional.of(pathTracer.unsafeTrace(start, end));
         } else {
             return Optional.empty();
         }
