@@ -5,10 +5,10 @@ import pathfinding.graphs.Graph;
 import java.util.List;
 import java.util.Optional;
 
-public interface PathfindingAlgorithm<T> {
+public interface PathfindingAlgorithm<T>{
 
     /**
-     * Finds any path between two given vertices in a graph.
+     * Searches any path between two given vertices in a graph.
      *
      * @param start the vertex the path starts at
      * @param end the vertex the path ends at
@@ -22,7 +22,7 @@ public interface PathfindingAlgorithm<T> {
     }
 
     /**
-     * Finds the shortest path between two given vertices in a graph.
+     * Searches the shortest path between two given vertices in a graph.
      *
      * @param start the vertex the path starts at
      * @param end   the vertex the path ends at

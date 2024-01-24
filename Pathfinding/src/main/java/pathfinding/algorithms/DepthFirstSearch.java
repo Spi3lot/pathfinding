@@ -19,6 +19,7 @@ import java.util.*;
  */
 public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
+    // TODO: check if this is actually faster than findShortestPath
     @Override
     public Optional<List<T>> findAnyPath(T start,
                                          T end,

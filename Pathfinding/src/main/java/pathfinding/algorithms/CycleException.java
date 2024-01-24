@@ -1,4 +1,4 @@
-package pathfinding.exceptions;
+package pathfinding.algorithms;
 
 /**
  * An exception thrown when the program detects that it

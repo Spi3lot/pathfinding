@@ -3,7 +3,7 @@ package pathfinding.service;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import pathfinding.exceptions.CycleException;
+import pathfinding.algorithms.CycleException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
