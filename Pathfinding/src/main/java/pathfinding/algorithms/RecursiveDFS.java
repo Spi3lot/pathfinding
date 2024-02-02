@@ -69,7 +69,7 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .min(Comparator.comparingDouble(
-                        graph::calculateAccumulatedPathWeight
+                        graph::sumEdgeWeights
                 ));
     }
 

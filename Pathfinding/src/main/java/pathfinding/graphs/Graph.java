@@ -12,7 +12,7 @@ public class Graph<T> {
     private final boolean directed;
 
     @Getter
-    private final Map<T, Map<T, Double>> vertices = new HashMap<>();
+    private final Map<T, Map<T, Double>> adjacencies = new HashMap<>();
 
     /**
      * Undirected graph constructor.
@@ -28,24 +28,6 @@ public class Graph<T> {
      */
     public Graph(boolean directed) {
         this.directed = directed;
-    }
-
-    /**
-     * Adds a Collection of vertices to the graph.
-     */
-    public void addVertices(Collection<T> vertices) {
-        for (T vertex : vertices) {
-            addVertex(vertex);
-        }
-    }
-
-    /**
-     * Adds a vertex to the graph.
-     *
-     * @param vertex the value of the vertex to be added
-     */
-    public void addVertex(T vertex) {
-        vertices.computeIfAbsent(vertex, key -> new HashMap<>());
     }
 
     /**
@@ -68,20 +50,29 @@ public class Graph<T> {
     public void addEdge(T source, T destination, double weight) {
         addVertex(source);
         addVertex(destination);
-        vertices.get(source).put(destination, weight);
+        adjacencies.get(source).put(destination, weight);
 
         if (!directed) {
-            vertices.get(destination).put(source, weight);
+            adjacencies.get(destination).put(source, weight);
         }
     }
 
     /**
-     * Removes a vertex from the graph.
-     *
-     * @param vertex the value of the vertex to be removed
+     * Adds a Collection of vertices to the graph.
      */
-    public void removeVertex(T vertex) {
-        vertices.remove(vertex);
+    public void addVertices(Collection<T> vertices) {
+        for (T vertex : vertices) {
+            addVertex(vertex);
+        }
+    }
+
+    /**
+     * Adds a vertex to the graph.
+     *
+     * @param vertex the value of the vertex to be added
+     */
+    public void addVertex(T vertex) {
+        adjacencies.computeIfAbsent(vertex, key -> new HashMap<>());
     }
 
     /**
@@ -91,25 +82,27 @@ public class Graph<T> {
      * @param destination the destination vertex of the edge to be removed
      */
     public void removeEdge(T source, T destination) {
-        vertices.get(source).remove(destination);
+        adjacencies.get(source).remove(destination);
 
         if (!directed) {
-            vertices.get(destination).remove(source);
+            adjacencies.get(destination).remove(source);
         }
     }
 
     /**
-     * @return the number of vertices in the graph
+     * Removes a vertex from the graph.
+     *
+     * @param vertex the value of the vertex to be removed
      */
-    public int getVertexCount() {
-        return vertices.size();
+    public void removeVertex(T vertex) {
+        adjacencies.remove(vertex);
     }
 
     /**
      * @return the number of edges in the graph
      */
     public int getEdgeCount() {
-        int count = vertices
+        int count = adjacencies
                 .values()
                 .stream()
                 .mapToInt(Map::size)
@@ -119,11 +112,10 @@ public class Graph<T> {
     }
 
     /**
-     * @param vertex the vertex to be checked for
-     * @return the weight of the edge between the two vertices
+     * @return the number of vertices in the graph
      */
-    public boolean hasVertex(T vertex) {
-        return vertices.containsKey(vertex);
+    public int getVertexCount() {
+        return adjacencies.size();
     }
 
     /**
@@ -132,14 +124,22 @@ public class Graph<T> {
      * @return the weight of the edge between the two vertices
      */
     public boolean hasEdge(T source, T destination) {
-        return vertices.get(source).containsKey(destination);
+        return adjacencies.get(source).containsKey(destination);
+    }
+
+    /**
+     * @param vertex the vertex to be checked for
+     * @return the weight of the edge between the two vertices
+     */
+    public boolean hasVertex(T vertex) {
+        return adjacencies.containsKey(vertex);
     }
 
     /**
      * @param path the path to calculate the total weight of
      * @return the accumulated weight of the path
      */
-    public double calculateAccumulatedPathWeight(List<T> path) {
+    public double sumEdgeWeights(List<T> path) {
         double weight = 0;
 
         for (int i = 0; i < path.size() - 1; i++) {
@@ -155,7 +155,14 @@ public class Graph<T> {
      * @return the weight of the edge between the two vertices
      */
     public double getEdgeWeight(T source, T destination) {
-        return vertices.get(source).getOrDefault(destination, Double.POSITIVE_INFINITY);
+        return adjacencies.get(source).getOrDefault(destination, Double.POSITIVE_INFINITY);
+    }
+
+    /**
+     * @return a Set of all the vertices in the graph
+     */
+    public Set<T> getVertices() {
+        return adjacencies.keySet();
     }
 
     /**
@@ -163,7 +170,7 @@ public class Graph<T> {
      * @return a Map of the neighbors of the vertex and the weights of the edges between them
      */
     public Map<T, Double> getNeighbors(T vertex) {
-        return vertices.get(vertex);
+        return adjacencies.get(vertex);
     }
 
 }

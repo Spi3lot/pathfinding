@@ -90,7 +90,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
         return paths.stream()
                 .min(Comparator.comparingDouble(
-                        graph::calculateAccumulatedPathWeight
+                        graph::sumEdgeWeights
                 ));
     }
 

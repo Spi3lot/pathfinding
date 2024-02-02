@@ -30,8 +30,8 @@ public class Pathfinding extends PApplet {
             graph.addVertex(new PVector(random(width), random(height)));
         }
 
-        for (var vertex : graph.getVertices().keySet()) {
-            for (var neighbor : graph.getVertices().keySet()) {
+        for (var vertex : graph.getVertices()) {
+            for (var neighbor : graph.getVertices()) {
                 if (vertex != neighbor && random(1) < 0.1) {
                     graph.addEdge(vertex, neighbor);
                 }
@@ -46,7 +46,7 @@ public class Pathfinding extends PApplet {
     public void draw() {
         background(0);
 
-        for (var entry : graph.getVertices().entrySet()) {
+        for (var entry : graph.getAdjacencies().entrySet()) {
             var vertex = entry.getKey();
             var edges = entry.getValue();
 
