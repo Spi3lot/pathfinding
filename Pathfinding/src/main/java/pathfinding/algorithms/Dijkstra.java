@@ -8,7 +8,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
- * @param <T>
+ * @param <T> the type of the vertices in the graph
  */
 public class Dijkstra<T> implements PathfindingAlgorithm<T> {
 
@@ -16,10 +16,11 @@ public class Dijkstra<T> implements PathfindingAlgorithm<T> {
     public Optional<List<T>> findShortestPath(T start,
                                               T end,
                                               Graph<T> graph) {
+        var distances = new HashMap<T, Double>();
 
-        var distances = graph.getVertices()
-                .stream()
-                .collect(Collectors.toMap(vertex -> vertex, vertex -> Double.POSITIVE_INFINITY));
+        for (var vertex : graph.getVertices()) {
+            distances.put(vertex, Double.POSITIVE_INFINITY);
+        }
 
         distances.put(start, 0.0);
         var predecessors = new HashMap<T, T>();
