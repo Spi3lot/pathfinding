@@ -2,6 +2,7 @@ package pathfinding.algorithms;
 
 import pathfinding.graphs.Graph;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +16,8 @@ public class AStar<T> implements PathfindingAlgorithm<T> {
     public Optional<List<T>> findShortestPath(T start,
                                               T end,
                                               Graph<T> graph) {
-        return Optional.empty();
+        var distances = new HashMap<T, Double>();
+
     }
 
 }

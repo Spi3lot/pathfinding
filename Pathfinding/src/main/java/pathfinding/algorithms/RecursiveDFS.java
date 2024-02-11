@@ -40,7 +40,12 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                 .keySet()
                 .stream()
                 .filter(neighbor -> !path.contains(neighbor))
-                .map(neighbor -> findAnyPath(neighbor, end, graph, append(path, neighbor)))
+                .map(neighbor -> findAnyPath(
+                        neighbor,
+                        end,
+                        graph,
+                        append(path, neighbor)
+                ))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findAny();
@@ -65,12 +70,14 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                 .keySet()
                 .stream()
                 .filter(neighbor -> !path.contains(neighbor))
-                .map(neighbor -> findShortestPath(neighbor, end, graph, append(path, neighbor)))
+                .map(neighbor -> findShortestPath(
+                        neighbor,
+                        end, graph,
+                        append(path, neighbor)
+                ))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .min(Comparator.comparingDouble(
-                        graph::sumEdgeWeights
-                ));
+                .min(Comparator.comparingDouble(graph::sumEdgeWeights));
     }
 
     private List<T> append(List<T> list, T element) {

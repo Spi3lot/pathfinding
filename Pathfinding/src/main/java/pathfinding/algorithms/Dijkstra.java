@@ -8,6 +8,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
+ * Implementation of the Dijkstra algorithm for finding the shortest path.
  * @param <T> the type of the vertices in the graph
  */
 public class Dijkstra<T> implements PathfindingAlgorithm<T> {
@@ -32,7 +33,7 @@ public class Dijkstra<T> implements PathfindingAlgorithm<T> {
 
             graph.getNeighbors(current)
                     .forEach((neighbor, weight) -> {
-                        var newDistance = weight + distances.get(current);
+                        double newDistance = weight + distances.get(current);
 
                         if (newDistance < distances.get(neighbor)) {
                             distances.put(neighbor, newDistance);
