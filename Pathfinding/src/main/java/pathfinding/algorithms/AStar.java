@@ -16,8 +16,7 @@ public class AStar<T> implements PathfindingAlgorithm<T> {
     public Optional<List<T>> findShortestPath(T start,
                                               T end,
                                               Graph<T> graph) {
-        var distances = new HashMap<T, Double>();
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
