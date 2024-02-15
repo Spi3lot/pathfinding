@@ -34,7 +34,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
             var current = stack.pop();
             visited.add(current);
 
-            if (current.equals(end)) {
+            if (current == end) {
                 found = true;
                 break;
             }
@@ -53,9 +53,9 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
         if (found) {
             var pathTracer = new PathTracer<>(predecessors);
             return Optional.of(pathTracer.unsafeTrace(start, end));
-        } else {
-            return Optional.empty();
         }
+
+        return Optional.empty();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
             var current = stack.pop();
             var path = pathTracer.unsafeTrace(start, current);
 
-            if (current.equals(end)) {
+            if (current == end) {
                 paths.add(path);
                 continue;
             }
@@ -89,9 +89,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
         }
 
         return paths.stream()
-                .min(Comparator.comparingDouble(
-                        graph::sumEdgeWeights
-                ));
+                .min(Comparator.comparingDouble(graph::sumEdgeWeights));
     }
 
 }

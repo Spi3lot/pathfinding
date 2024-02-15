@@ -26,7 +26,7 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
             var current = queue.poll();
             visited.add(current);
 
-            if (current.equals(end)) {
+            if (current == end) {
                 found = true;
                 break;
             }
@@ -45,9 +45,9 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
         if (found) {
             var pathTracer = new PathTracer<>(predecessors);
             return Optional.of(pathTracer.unsafeTrace(start, end));
-        } else {
-            return Optional.empty();
         }
+
+        return Optional.empty();
     }
 
 }

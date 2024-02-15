@@ -4,11 +4,10 @@ import pathfinding.graphs.Graph;
 import pathfinding.service.PathTracer;
 
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of the Dijkstra algorithm for finding the shortest path.
+ *
  * @param <T> the type of the vertices in the graph
  */
 public class Dijkstra<T> implements PathfindingAlgorithm<T> {
@@ -17,19 +16,23 @@ public class Dijkstra<T> implements PathfindingAlgorithm<T> {
     public Optional<List<T>> findShortestPath(T start,
                                               T end,
                                               Graph<T> graph) {
+        var predecessors = new HashMap<T, T>();
         var distances = new HashMap<T, Double>();
+        var queue = new PriorityQueue<T>(Comparator.comparingDouble(distances::get));
 
         for (var vertex : graph.getVertices()) {
             distances.put(vertex, Double.POSITIVE_INFINITY);
         }
 
         distances.put(start, 0.0);
-        var predecessors = new HashMap<T, T>();
-        var queue = new PriorityQueue<T>(Comparator.comparingDouble(distances::get));
         queue.add(start);
 
         while (!queue.isEmpty()) {
             var current = queue.poll();
+
+            if (current == end) {
+                break;
+            }
 
             graph.getNeighbors(current)
                     .forEach((neighbor, weight) -> {
@@ -38,13 +41,18 @@ public class Dijkstra<T> implements PathfindingAlgorithm<T> {
                         if (newDistance < distances.get(neighbor)) {
                             distances.put(neighbor, newDistance);
                             predecessors.put(neighbor, current);
+                            queue.remove(neighbor);
                             queue.offer(neighbor);
                         }
                     });
         }
 
-        var pathTracer = new PathTracer<>(predecessors);
-        return Optional.of(pathTracer.unsafeTrace(start, end));
+        if (Double.isFinite(distances.get(end))) {
+            var pathTracer = new PathTracer<>(predecessors);
+            return Optional.of(pathTracer.unsafeTrace(start, end));
+        }
+
+        return Optional.empty();
     }
 
 }
