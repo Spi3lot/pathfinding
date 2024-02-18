@@ -59,8 +59,8 @@ public class GraphRandomizer<T> {
     public Graph<T> randomizeDirectedEdges() {
         var graph = createFilledGraph(true);
 
-        for (var source : vertices) {
-            for (var destination : vertices) {
+        for (T source : vertices) {
+            for (T destination : vertices) {
                 if (source != destination && random() < edgeProbability) {
                     graph.addEdge(source, destination, randomWeight());
                 }

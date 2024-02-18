@@ -1,22 +1,20 @@
 package pathfinding.algorithms;
 
-import pathfinding.graphs.Graph;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
 /**
+ * Implementation of the A* algorithm for finding the shortest path.
  *
- * @param <T>
+ * @param <T> the type of the vertices in the graph
  */
-public class AStar<T> implements PathfindingAlgorithm<T> {
+public class AStar<T> extends BestFirstSearch<T> {
 
     @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              T end,
-                                              Graph<T> graph) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    protected double g(T vertex) {
+        return distances.get(vertex);
+    }
+
+    @Override
+    protected double h(T vertex) {
+        return 0;  // TODO: Implement heuristic
     }
 
 }

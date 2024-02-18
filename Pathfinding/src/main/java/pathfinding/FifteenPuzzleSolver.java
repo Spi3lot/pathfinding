@@ -88,8 +88,9 @@ public class FifteenPuzzleSolver extends PApplet {
     private void handleMouse() {
         int i = (int) (mouseX / tileSize);
         int j = (int) (mouseY / tileSize);
+        var position = new Position(i, j);
 
-        if (!puzzle.board().isSolved() && puzzle.board().move(puzzle.board().get(j, i))) {
+        if (position.isOnBoard(BOARD_SIZE) && !puzzle.board().isSolved() && puzzle.board().move(puzzle.board().get(position))) {
             increaseMoveCount();
             redraw();
         }
