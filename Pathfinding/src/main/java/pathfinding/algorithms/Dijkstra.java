@@ -5,15 +5,10 @@ package pathfinding.algorithms;
  *
  * @param <T> the type of the vertices in the graph
  */
-public class Dijkstra<T> extends BestFirstSearch<T> {
+public class Dijkstra<T> extends AStar<T> {
 
     @Override
-    protected double g(T vertex) {
-        return distances.get(vertex);
-    }
-
-    @Override
-    protected double h(T vertex) {
+    protected double h(T n) {
         return 0;
     }
 

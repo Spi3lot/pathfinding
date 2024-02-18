@@ -6,8 +6,9 @@ import pathfinding.service.PathTracer;
 import java.util.*;
 
 /**
- * @author Emilio Zottel (5AHIF)
- * @since 18.02.2024, So.
+ * Abstract class to make the implementation of best-first search algorithms easier.
+ *
+ * @param <T> the type of the vertices in the graph
  */
 public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
 
@@ -17,8 +18,9 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
     public Optional<List<T>> findShortestPath(T start,
                                               T end,
                                               Graph<T> graph) {
+        var comparator = Comparator.comparingDouble(this::f);
+        var queue = new PriorityQueue<>(comparator);
         var predecessors = new HashMap<T, T>();
-        var queue = new PriorityQueue<>(Comparator.comparingDouble(this::f));
         distances.clear();
 
         for (T vertex : graph.getVertices()) {
