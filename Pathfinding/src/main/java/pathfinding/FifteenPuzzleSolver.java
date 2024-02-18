@@ -5,6 +5,7 @@ import pathfinding.games.FifteenPuzzle;
 import pathfinding.games.Position;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
+import processing.event.MouseEvent;
 
 import java.util.Locale;
 
@@ -14,7 +15,7 @@ import java.util.Locale;
  */
 public class FifteenPuzzleSolver extends PApplet {
 
-    private static final int BOARD_SIZE = 7;
+    private static final int BOARD_SIZE = 4;
     private final FifteenPuzzle puzzle = new FifteenPuzzle(BOARD_SIZE, 0);
     private float tileSize;
     private float numberTextSize;
@@ -39,6 +40,7 @@ public class FifteenPuzzleSolver extends PApplet {
         numberTextSize = tileSize * 2 / (highestDigitCount + 1);
         solvedTextSize = width / 10f;
         textAlign(CENTER, CENTER);
+        textFont(createFont("Comic Sans MS", 32));
         noLoop();
         resetBoard();
     }
@@ -74,7 +76,16 @@ public class FifteenPuzzleSolver extends PApplet {
     }
 
     @Override
-    public void mousePressed() {
+    public void mousePressed(MouseEvent event) {
+        handleMouse();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent event) {
+        handleMouse();
+    }
+
+    private void handleMouse() {
         int i = (int) (mouseX / tileSize);
         int j = (int) (mouseY / tileSize);
 
