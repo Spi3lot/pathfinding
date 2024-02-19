@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 @ToString
-public class SimpleGraph<T> implements Graph<T> {
+public class FlexibleGraph<T> implements Graph<T> {
 
     @Getter
     private final boolean directed;
@@ -20,7 +20,7 @@ public class SimpleGraph<T> implements Graph<T> {
     /**
      * Undirected graph constructor.
      */
-    public SimpleGraph() {
+    public FlexibleGraph() {
         this(false);
     }
 
@@ -29,7 +29,7 @@ public class SimpleGraph<T> implements Graph<T> {
      *
      * @param directed whether the graph is directed or not
      */
-    public SimpleGraph(boolean directed) {
+    public FlexibleGraph(boolean directed) {
         this.directed = directed;
     }
 
@@ -75,7 +75,7 @@ public class SimpleGraph<T> implements Graph<T> {
      * @param vertex the value of the vertex to be added
      */
     public void addVertex(T vertex) {
-        adjacencies.computeIfAbsent(vertex, key -> new HashMap<>());
+        adjacencies.computeIfAbsent(vertex, _ -> new HashMap<>());
     }
 
     /**
@@ -145,10 +145,6 @@ public class SimpleGraph<T> implements Graph<T> {
         return adjacencies.keySet();
     }
 
-    /**
-     * @param vertex the vertex to get the neighbors of
-     * @return a Map of the neighbors of the vertex and the weights of the edges between them
-     */
     @Override
     public Map<T, Double> getNeighbors(T vertex) {
         return adjacencies.get(vertex);

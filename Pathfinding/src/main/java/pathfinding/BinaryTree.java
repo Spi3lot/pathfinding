@@ -1,7 +1,7 @@
 package pathfinding;
 
 import pathfinding.algorithms.DepthFirstSearch;
-import pathfinding.graphs.SimpleGraph;
+import pathfinding.graphs.FlexibleGraph;
 import pathfinding.service.Pathfinder;
 
 /**
@@ -11,7 +11,7 @@ import pathfinding.service.Pathfinder;
 public class BinaryTree {
 
     public static void main(String[] args) {
-        var graph = new SimpleGraph<Integer>();
+        var graph = new FlexibleGraph<Integer>();
         graph.addEdge(4, 2);
         graph.addEdge(4, 6);
         graph.addEdge(6, 5);

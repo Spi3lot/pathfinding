@@ -5,6 +5,7 @@ import pathfinding.games.FifteenPuzzle;
 import pathfinding.games.FifteenPuzzleBoard;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,11 +23,21 @@ public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
 
             if (moved) {
                 var puzzleCopy = new FifteenPuzzle(boardCopy);
-                map.put(puzzleCopy, 1.0);
+                map.put(puzzleCopy, getEdgeWeight(puzzle, puzzleCopy));
             }
         }
 
         return map;
+    }
+
+    @Override
+    public double getEdgeWeight(FifteenPuzzle source, FifteenPuzzle destination) {
+        return 1;
+    }
+
+    @Override
+    public double sumEdgeWeights(List<FifteenPuzzle> path) {
+        return path.size() - 1;
     }
 
 }

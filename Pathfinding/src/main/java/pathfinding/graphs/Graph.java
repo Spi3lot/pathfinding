@@ -4,24 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Emilio Zottel (5AHIF)
- * @since 19.02.2024, Mo.
- **/
+ * An interface that helps to define the behavior of a graph.
+ *
+ * @param <T> the type of the vertices in the graph
+ */
 public interface Graph<T> {
 
     /**
-     * @param path the path to calculate the total weight of
-     * @return the accumulated weight of the path
+     * @param vertex the vertex to get the neighbors of
+     * @return a Map of the neighbors of the vertex and the weights of the edges between them
      */
-    default double sumEdgeWeights(List<T> path) {
-        double weight = 0;
-
-        for (int i = 0; i < path.size() - 1; i++) {
-            weight += getEdgeWeight(path.get(i), path.get(i + 1));
-        }
-
-        return weight;
-    }
+    Map<T, Double> getNeighbors(T vertex);
 
     /**
      * @param source      the source vertex of the edge
@@ -29,9 +22,22 @@ public interface Graph<T> {
      * @return the weight of the edge between the two vertices
      */
     default double getEdgeWeight(T source, T destination) {
-        return getNeighbors(source).getOrDefault(destination, Double.POSITIVE_INFINITY);
+        return getNeighbors(source)
+                .getOrDefault(destination, Double.POSITIVE_INFINITY);
     }
 
-    Map<T, Double> getNeighbors(T vertex);
+    /**
+     * @param path the path to calculate the total weight of
+     * @return the accumulated weight of the path
+     */
+    default double sumEdgeWeights(List<T> path) {
+        double sum = 0;
+
+        for (int i = 0; i < path.size() - 1; i++) {
+            sum += getEdgeWeight(path.get(i), path.get(i + 1));
+        }
+
+        return sum;
+    }
 
 }

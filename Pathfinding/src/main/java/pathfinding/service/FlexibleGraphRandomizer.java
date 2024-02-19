@@ -3,7 +3,7 @@ package pathfinding.service;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import pathfinding.graphs.SimpleGraph;
+import pathfinding.graphs.FlexibleGraph;
 
 import java.util.List;
 import java.util.Random;
@@ -17,7 +17,7 @@ import java.util.function.DoubleUnaryOperator;
 @Builder
 @Getter
 @Setter
-public class SimpleGraphRandomizer<T> {
+public class FlexibleGraphRandomizer<T> {
 
     private static final Random RANDOM = new Random();
 
@@ -56,7 +56,7 @@ public class SimpleGraphRandomizer<T> {
      *
      * @return a new directed graph with randomized edges
      */
-    public SimpleGraph<T> randomizeDirectedEdges() {
+    public FlexibleGraph<T> randomizeDirectedEdges() {
         var graph = createFilledGraph(true);
 
         for (T source : vertices) {
@@ -75,7 +75,7 @@ public class SimpleGraphRandomizer<T> {
      *
      * @return a new undirected graph with randomized edges
      */
-    public SimpleGraph<T> randomizeUndirectedEdges() {
+    public FlexibleGraph<T> randomizeUndirectedEdges() {
         var graph = createFilledGraph(false);
 
         for (int i = 0; i < vertices.size(); i++) {
@@ -91,8 +91,8 @@ public class SimpleGraphRandomizer<T> {
         return graph;
     }
 
-    private SimpleGraph<T> createFilledGraph(boolean directed) {
-        var graph = new SimpleGraph<T>(directed);
+    private FlexibleGraph<T> createFilledGraph(boolean directed) {
+        var graph = new FlexibleGraph<T>(directed);
         graph.addVertices(vertices);
         return graph;
     }

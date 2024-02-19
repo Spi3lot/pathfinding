@@ -1,13 +1,13 @@
 package pathfinding;
 
 import pathfinding.algorithms.BreadthFirstSearch;
-import pathfinding.graphs.SimpleGraph;
+import pathfinding.graphs.FlexibleGraph;
 import pathfinding.service.Pathfinder;
 
 public class TypeInference {
 
     public static void main(String[] args) {
-        var graph = new SimpleGraph<Character>();
+        var graph = new FlexibleGraph<Character>();
         graph.addEdge('A', 'B');
         graph.addEdge('B', 'C');
         graph.addEdge('C', 'D');

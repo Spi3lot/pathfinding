@@ -2,6 +2,7 @@ package pathfinding.games;
 
 import lombok.EqualsAndHashCode;
 
+import java.util.Arrays;
 import java.util.StringJoiner;
 
 /**
@@ -24,12 +25,11 @@ public class FifteenPuzzleBoard {
     }
 
     private FifteenPuzzleBoard(int[][] board) {
-        this.board = new int[board.length][board.length];
-        this.emptyValue = calcArea();
+        this.board = Arrays.stream(board)
+                .map(int[]::clone)
+                .toArray(int[][]::new);
 
-        for (int j = 0; j < board.length; j++) {
-            System.arraycopy(board[j], 0, this.board[j], 0, board.length);
-        }
+        this.emptyValue = calcArea();
     }
 
     private void fillBoard(int size) {
