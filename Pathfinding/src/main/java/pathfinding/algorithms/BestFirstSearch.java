@@ -34,7 +34,7 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
             if (current == end) {
                 break;
             }
-
+            System.out.println(graph.getNeighbors(current));
             graph.getNeighbors(current)
                     .forEach((neighbor, weight) -> {
                         double newDistance = weight + f(current);

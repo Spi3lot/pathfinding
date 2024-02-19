@@ -2,6 +2,7 @@ package pathfinding.graphs;
 
 import pathfinding.games.Direction;
 import pathfinding.games.FifteenPuzzle;
+import pathfinding.games.FifteenPuzzleBoard;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,10 +18,11 @@ public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
         var map = new HashMap<FifteenPuzzle, Double>();
 
         for (var direction : Direction.values()) {
-            boolean moved = puzzle.board().move(direction);
+            var boardCopy = new FifteenPuzzleBoard(puzzle.board());
+            boolean moved = boardCopy.move(direction);
 
             if (moved) {
-                var puzzleCopy = new FifteenPuzzle(puzzle.board());
+                var puzzleCopy = new FifteenPuzzle(boardCopy);
                 map.put(puzzleCopy, 1.0);
             }
         }

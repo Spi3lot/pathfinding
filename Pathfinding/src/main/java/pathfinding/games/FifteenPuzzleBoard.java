@@ -14,26 +14,26 @@ public class FifteenPuzzleBoard {
     private final int[][] board;
     private final int emptyValue;
 
-    public FifteenPuzzleBoard(int size) {
-        this.board = new int[size][size];
-        this.emptyValue = calcArea();
+    public FifteenPuzzleBoard(FifteenPuzzleBoard board) {
+        this(board.board.clone());
+    }
 
+    public FifteenPuzzleBoard(int size) {
+        this(new int[size][size]);
+        randomizeBoard(size);
+    }
+    private FifteenPuzzleBoard(int[][] board) {
+        this.board = board;
+        this.emptyValue = calcArea();
+    }
+
+    private void randomizeBoard(int size) {
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
                 var position = new Position(i, j);
                 set(position, position.calcExpectedValue(size));
             }
         }
-    }
-
-    private static String joinColumns(int[] row) {
-        var joiner = new StringJoiner("\t");
-
-        for (int value : row) {
-            joiner.add(STR."\{value}");
-        }
-
-        return joiner.toString();
     }
 
     public boolean isSolved() {
@@ -139,13 +139,19 @@ public class FifteenPuzzleBoard {
 
     @Override
     public String toString() {
-        var joiner = new StringJoiner("\n");
+        var outerJoiner = new StringJoiner("\n");
 
         for (int[] row : board) {
-            joiner.add(joinColumns(row));
+            var innerJoiner = new StringJoiner("\t");
+
+            for (int value : row) {
+                innerJoiner.add(STR."\{value}");
+            }
+
+            outerJoiner.merge(innerJoiner);
         }
 
-        return joiner.toString();
+        return outerJoiner.toString();
     }
 
 }
