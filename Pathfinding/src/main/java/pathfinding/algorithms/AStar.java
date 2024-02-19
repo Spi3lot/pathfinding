@@ -9,7 +9,7 @@ public abstract class AStar<T> extends BestFirstSearch<T> {
 
     @Override
     protected double g(T vertex) {
-        return distances.get(vertex);
+        return distances.getOrDefault(vertex, Double.POSITIVE_INFINITY);
     }
 
 }

@@ -2,7 +2,7 @@ package pathfinding;
 
 import pathfinding.algorithms.DepthFirstSearch;
 import pathfinding.algorithms.Dijkstra;
-import pathfinding.graphs.Graph;
+import pathfinding.graphs.SimpleGraph;
 import pathfinding.service.Pathfinder;
 
 public class PathfindingExample {
@@ -15,7 +15,7 @@ public class PathfindingExample {
      * This method demonstrates how the Dijkstra algorithm can break if a vertex is not reinserted into the queue.
      */
     private static void dijkstraBreakerNoReinsert() {
-        var graph = new Graph<Character>();
+        var graph = new SimpleGraph<Character>();
         graph.addEdge('A', 'B', 1);
         graph.addEdge('B', 'C', 2);
         graph.addEdge('A', 'C', 5);
@@ -26,7 +26,7 @@ public class PathfindingExample {
     }
 
     private static void dijkstraBreakerNegative() {
-        var graph = new Graph<Character>();
+        var graph = new SimpleGraph<Character>();
         graph.addEdge('A', 'B', 5);
         graph.addEdge('A', 'C', 2);
         graph.addEdge('B', 'C', -10);
@@ -36,7 +36,7 @@ public class PathfindingExample {
     }
 
     private static void dijkstra() {
-        var graph = new Graph<Character>();
+        var graph = new SimpleGraph<Character>();
         graph.addEdge('A', 'B', 2);
         graph.addEdge('A', 'C', 1);
         graph.addEdge('B', 'C', 3);
@@ -49,7 +49,7 @@ public class PathfindingExample {
     }
 
     private static void pathfinding() {
-        var graph = new Graph<Character>();
+        var graph = new SimpleGraph<Character>();
         graph.addEdge('A', 'B', 1);
         graph.addEdge('B', 'D', 10);
         graph.addEdge('A', 'C', 2);
@@ -61,7 +61,7 @@ public class PathfindingExample {
     }
 
     private static void iterativeDfsBreaker() {
-        var graph = new Graph<Character>();
+        var graph = new SimpleGraph<Character>();
         graph.addEdge('A', 'B', 1);
         graph.addEdge('B', 'C', 3);
         graph.addEdge('C', 'A', 1);
@@ -74,7 +74,7 @@ public class PathfindingExample {
 
 
     private static void formerIterativeDfsBreaker() {
-        var graph = new Graph<Character>();
+        var graph = new SimpleGraph<Character>();
         graph.addEdge('A', 'B', 1);
         graph.addEdge('B', 'C', 3);
         graph.addEdge('C', 'D', 1);
@@ -85,7 +85,7 @@ public class PathfindingExample {
     }
 
     private static void any() {
-        var graph = new Graph<Character>();
+        var graph = new SimpleGraph<Character>();
         graph.addEdge('A', 'B', 1);
         graph.addEdge('B', 'C', 10);
 

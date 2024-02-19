@@ -1,6 +1,6 @@
 package pathfinding;
 
-import pathfinding.graphs.Graph;
+import pathfinding.graphs.SimpleGraph;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -11,7 +11,7 @@ import processing.core.PVector;
 public class Pathfinding extends PApplet {
 
     private static final int VERTEX_COUNT = 10;
-    private Graph<PVector> graph;
+    private SimpleGraph<PVector> graph;
 
     public static void main(String[] args) {
         PApplet.main(Pathfinding.class);
@@ -24,7 +24,7 @@ public class Pathfinding extends PApplet {
 
     @Override
     public void setup() {
-        graph = new Graph<>();
+        graph = new SimpleGraph<>();
 
         for (int i = 0; i < VERTEX_COUNT; i++) {
             graph.addVertex(new PVector(random(width), random(height)));

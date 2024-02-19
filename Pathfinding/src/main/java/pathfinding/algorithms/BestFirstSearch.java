@@ -18,17 +18,15 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
     public Optional<List<T>> findShortestPath(T start,
                                               T end,
                                               Graph<T> graph) {
-        var comparator = Comparator.comparingDouble(this::f);
-        var queue = new PriorityQueue<>(comparator);
-        var predecessors = new HashMap<T, T>();
+        var queue = new PriorityQueue<>(
+                Comparator.comparingDouble(this::f)
+                        .thenComparingDouble(this::h)
+        );
+
         distances.clear();
-
-        for (T vertex : graph.getVertices()) {
-            distances.put(vertex, Double.POSITIVE_INFINITY);
-        }
-
         distances.put(start, 0.0);
         queue.add(start);
+        var predecessors = new HashMap<T, T>();
 
         while (!queue.isEmpty()) {
             var current = queue.poll();
@@ -50,7 +48,7 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
                     });
         }
 
-        if (Double.isFinite(distances.get(end))) {
+        if (Double.isFinite(g(end))) {
             var pathTracer = new PathTracer<>(predecessors);
             return Optional.of(pathTracer.unsafeTrace(start, end));
         }

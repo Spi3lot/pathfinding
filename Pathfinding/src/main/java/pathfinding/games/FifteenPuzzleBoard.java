@@ -104,7 +104,7 @@ public class FifteenPuzzleBoard {
     private int findValueIndex(int value) {
         for (int j = 0; j < board.length; j++) {
             for (int i = 0; i < board.length; i++) {
-                if (board[j][i] == value) {
+                if (get(j, i) == value) {
                     return new Position(i, j).calcFlatIndex(board.length);
                 }
             }

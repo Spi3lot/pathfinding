@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import pathfinding.algorithms.PathfindingAlgorithm;
-import pathfinding.graphs.Graph;
+import pathfinding.graphs.SimpleGraph;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Setter
 public class Pathfinder<T> {
 
-    private Graph<T> graph;
+    private SimpleGraph<T> graph;
     private PathfindingAlgorithm<T> algorithm;
 
     public Optional<List<T>> findAnyPath(T start, T end) {
