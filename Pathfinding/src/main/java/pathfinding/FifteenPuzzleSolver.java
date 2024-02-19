@@ -16,7 +16,7 @@ public class FifteenPuzzleSolver {
     public static void main(String[] args) {
         var graph = new FifteenPuzzleGraph();
         var puzzle = new FifteenPuzzle(BOARD_SIZE);
-        var solvedPuzzle = new FifteenPuzzle(BOARD_SIZE, 0);
+        var solvedPuzzle = FifteenPuzzle.solved(4);
 
         var pathfinder = new Pathfinder<>(graph, new AStar<>() {
             @Override

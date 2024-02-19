@@ -1,5 +1,7 @@
 package pathfinding.algorithms;
 
+import pathfinding.FifteenPuzzleGui;
+import pathfinding.games.FifteenPuzzle;
 import pathfinding.graphs.Graph;
 import pathfinding.service.PathTracer;
 

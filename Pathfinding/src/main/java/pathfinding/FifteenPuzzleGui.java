@@ -125,7 +125,7 @@ public class FifteenPuzzleGui extends PApplet {
 
     private void resetBoard() {
         puzzle.board().shuffle();
-        minMoveCount = puzzle.getLeastMoveCountTo(FifteenPuzzle.solved(4));
+        minMoveCount = puzzle.getLeastMoveCountTo(FifteenPuzzle.solved(BOARD_SIZE));
         moveCount = 0;
     }
 
