@@ -1,13 +1,14 @@
 package pathfinding.games;
 
-import java.util.Arrays;
+import lombok.EqualsAndHashCode;
+
 import java.util.StringJoiner;
 
 /**
  * @author Emilio Zottel (5AHIF)
  * @since 17.02.2024, Sa.
  */
-//@EqualsAndHashCode
+@EqualsAndHashCode
 public class FifteenPuzzleBoard {
 
     private final int[][] board;
@@ -139,19 +140,6 @@ public class FifteenPuzzleBoard {
 
     private void set(Position position, int value) {
         board[position.y()][position.x()] = value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FifteenPuzzleBoard that = (FifteenPuzzleBoard) o;
-        return Arrays.deepEquals(board, that.board);
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.deepHashCode(board);
     }
 
     @Override
