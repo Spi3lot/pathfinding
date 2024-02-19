@@ -20,8 +20,8 @@ public class FifteenPuzzleSolver {
 
         var pathfinder = new Pathfinder<>(graph, new AStar<>() {
             @Override
-            protected double h(FifteenPuzzle vertex) {
-                return vertex.getLeastPossibleMoveCount();
+            protected double h(FifteenPuzzle current, FifteenPuzzle end) {
+                return current.getLeastMoveCountTo(end);
             }
         });
 

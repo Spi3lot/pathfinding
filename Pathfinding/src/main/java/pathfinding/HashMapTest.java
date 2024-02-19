@@ -38,6 +38,13 @@ public class HashMapTest {
             }
         }
 
+        for (var a : map.keySet()) {
+            for (var b : map.keySet()) {
+                System.out.println(a.equals(b));
+                System.out.println(a.hashCode() - b.hashCode());
+            }
+        }
+
         System.out.println(map);
     }
 

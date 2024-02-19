@@ -24,7 +24,7 @@ public class PathfindingExample {
 
         var pathfinder = new Pathfinder<>(graph, new AStar<>() {
             @Override
-            protected double h(PVector current) {
+            protected double h(PVector current, PVector end) {
                 return current.dist(end);
             }
         });

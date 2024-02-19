@@ -21,31 +21,46 @@ public record FifteenPuzzle(FifteenPuzzleBoard board) {
         board.shuffle(shuffleCount);
     }
 
-    public int getLeastPossibleMoveCount() {
-        return getLeastPossibleMoveCounts()
+    public static FifteenPuzzle solved(int size) {
+        var board = new FifteenPuzzleBoard(size);
+        return new FifteenPuzzle(board);
+    }
+
+    public int getLeastMoveCountTo(FifteenPuzzle desired) {
+        return getLeastMoveCounts(desired)
                 .values()
                 .stream()
                 .mapToInt(Integer::intValue)
                 .sum();
     }
 
-    public Map<Integer, Integer> getLeastPossibleMoveCounts() {
-        var moves = HashMap.<Integer, Integer>newHashMap(board.calcArea() - 1);
+    public Map<Integer, Integer> getLeastMoveCounts(FifteenPuzzle desired) {
+        var moveCounts = HashMap.<Integer, Integer>newHashMap(board.calcArea() - 1);
+        var positions = getPositions();
+        var desiredPositions = desired.getPositions();
+
+        for (int i = 1; i < board.calcArea(); i++) {
+            var position = positions.get(i);
+            var desiredPosition = desiredPositions.get(i);
+            int moveCount = position.manhattanDistance(desiredPosition);
+            moveCounts.put(i, moveCount);
+        }
+
+        return moveCounts;
+    }
+
+    public Map<Integer, Position> getPositions() {
+        var positions = HashMap.<Integer, Position>newHashMap(board.calcArea());
 
         for (int j = 0; j < board.getLength(); j++) {
             for (int i = 0; i < board.getLength(); i++) {
                 var position = new Position(i, j);
                 int value = board.get(position);
-
-                if (value != board.getEmptyValue()) {
-                    var expectedPosition = Position.fromValue(value, board.getLength());
-                    int distance = position.manhattanDistance(expectedPosition);
-                    moves.put(value, distance);
-                }
+                positions.put(value, position);
             }
         }
 
-        return moves;
+        return positions;
     }
 
     @Override

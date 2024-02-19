@@ -13,22 +13,20 @@ import java.util.*;
 public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     protected final Map<T, Double> distances = new HashMap<>();
-    protected T end;
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
                                               T end,
                                               Graph<T> graph) {
         var queue = new PriorityQueue<>(
-                Comparator.comparingDouble(this::f)
-                        .thenComparingDouble(this::h)
+                Comparator.<T>comparingDouble(current -> f(current, end))
+                        .thenComparingDouble(current -> h(current, end))
         );
 
-        this.end = end;
+        var predecessors = new HashMap<T, T>();
         distances.clear();
         distances.put(start, 0.0);
         queue.add(start);
-        var predecessors = new HashMap<T, T>();
 
         while (!queue.isEmpty()) {
             var current = queue.poll();
@@ -39,9 +37,9 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
 
             graph.getNeighbors(current)
                     .forEach((neighbor, weight) -> {
-                        double newDistance = weight + f(current);
+                        double newDistance = weight + f(current, end);
 
-                        if (newDistance < f(neighbor)) {
+                        if (newDistance < f(neighbor, end)) {
                             distances.put(neighbor, newDistance);
                             predecessors.put(neighbor, current);
                             queue.remove(neighbor);
@@ -58,12 +56,12 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
         return Optional.empty();
     }
 
-    protected double f(T current) {
-        return g(current) + h(current);
+    protected double f(T current, T end) {
+        return g(current) + h(current, end);
     }
 
     protected abstract double g(T current);
 
-    protected abstract double h(T current);
+    protected abstract double h(T current, T end);
 
 }
