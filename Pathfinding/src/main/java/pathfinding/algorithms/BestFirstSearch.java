@@ -13,6 +13,7 @@ import java.util.*;
 public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     protected final Map<T, Double> distances = new HashMap<>();
+    protected T end;
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
@@ -23,6 +24,7 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
                         .thenComparingDouble(this::h)
         );
 
+        this.end = end;
         distances.clear();
         distances.put(start, 0.0);
         queue.add(start);
@@ -34,7 +36,7 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
             if (current == end) {
                 break;
             }
-            System.out.println(graph.getNeighbors(current));
+
             graph.getNeighbors(current)
                     .forEach((neighbor, weight) -> {
                         double newDistance = weight + f(current);
@@ -56,12 +58,12 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
         return Optional.empty();
     }
 
-    protected double f(T vertex) {
-        return g(vertex) + h(vertex);
+    protected double f(T current) {
+        return g(current) + h(current);
     }
 
-    protected abstract double g(T vertex);
+    protected abstract double g(T current);
 
-    protected abstract double h(T vertex);
+    protected abstract double h(T current);
 
 }

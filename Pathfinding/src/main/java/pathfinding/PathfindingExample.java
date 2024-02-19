@@ -1,14 +1,35 @@
 package pathfinding;
 
+import pathfinding.algorithms.AStar;
 import pathfinding.algorithms.DepthFirstSearch;
 import pathfinding.algorithms.Dijkstra;
 import pathfinding.graphs.SimpleGraph;
 import pathfinding.service.Pathfinder;
+import processing.core.PVector;
 
 public class PathfindingExample {
 
     public static void main(String[] args) {
-        dijkstraBreakerNoReinsert();
+        aStar();
+    }
+
+    private static void aStar() {
+        var graph = new SimpleGraph<PVector>();
+        var a = new PVector(0, 0);
+        var b = new PVector(1, 0);
+        var c = new PVector(2, 0);
+        graph.addEdge(a, b, 5);
+        graph.addEdge(a, c, 2);
+        graph.addEdge(c, b, 2);
+
+        var pathfinder = new Pathfinder<>(graph, new AStar<>() {
+            @Override
+            protected double h(PVector current) {
+                return current.dist(end);
+            }
+        });
+
+        System.out.println(pathfinder.findShortestPath(a, b));
     }
 
     /**

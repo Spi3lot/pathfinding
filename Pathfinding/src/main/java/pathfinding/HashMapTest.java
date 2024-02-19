@@ -1,19 +1,31 @@
-package pathfinding.graphs;
+package pathfinding;
 
 import pathfinding.games.Direction;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.games.FifteenPuzzleBoard;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
- * A graph that helps with solving the fifteen puzzle in the shortest amount of moves.
+ * @author Emilio Zottel (5AHIF)
+ * @since 19.02.2024, Mo.
  **/
-public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
+public class HashMapTest {
 
-    @Override
-    public Map<FifteenPuzzle, Double> getNeighbors(FifteenPuzzle puzzle) {
+    public static void main(String[] args) {
+        test2(new FifteenPuzzle(4, 0));
+    }
+
+    private static void test1() {
+        var map = new HashMap<FifteenPuzzle, Double>();
+        var puzzle = new FifteenPuzzle(4);
+        var puzzleCopy = new FifteenPuzzle(new FifteenPuzzleBoard(puzzle.board()));
+        map.put(puzzle, 1.0);
+        map.put(puzzleCopy, 2.0);
+        System.out.println(map);
+    }
+
+    private static void test2(FifteenPuzzle puzzle) {
         var map = new HashMap<FifteenPuzzle, Double>();
 
         for (var direction : Direction.values()) {
@@ -27,7 +39,6 @@ public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
         }
 
         System.out.println(map);
-        return map;
     }
 
 }

@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Emilio Zottel (5AHIF)
- * @since 17.02.2024, Sa.
+ * A wrapper class for the fifteen puzzle board to make
+ * it easier to use and extend its functionality.
+ *
+ * @param board the board of the puzzle
  */
 public record FifteenPuzzle(FifteenPuzzleBoard board) {
 
