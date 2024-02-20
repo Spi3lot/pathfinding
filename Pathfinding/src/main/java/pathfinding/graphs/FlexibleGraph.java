@@ -122,15 +122,6 @@ public class FlexibleGraph<T> implements Graph<T> {
     }
 
     /**
-     * @param source      the source vertex of the edge to be checked for
-     * @param destination the destination vertex of the edge to be checked for
-     * @return the weight of the edge between the two vertices
-     */
-    public boolean hasEdge(T source, T destination) {
-        return adjacencies.get(source).containsKey(destination);
-    }
-
-    /**
      * @param vertex the vertex to be checked for
      * @return the weight of the edge between the two vertices
      */
