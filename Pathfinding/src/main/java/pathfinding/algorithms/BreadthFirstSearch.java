@@ -19,7 +19,6 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
         var queue = new ArrayDeque<T>();
         var visited = new ArrayList<T>();
         var predecessors = new HashMap<T, T>();
-        boolean found = false;
         queue.add(start);
 
         while (!queue.isEmpty()) {
@@ -27,8 +26,8 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
             visited.add(current);
 
             if (current == end) {
-                found = true;
-                break;
+                var pathTracer = new PathTracer<>(predecessors);
+                return Optional.of(pathTracer.unsafeTrace(start, end));
             }
 
             graph.getNeighbors(current)
@@ -40,11 +39,6 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
                         queue.offer(neighbor);
                         predecessors.put(neighbor, current);
                     });
-        }
-
-        if (found) {
-            var pathTracer = new PathTracer<>(predecessors);
-            return Optional.of(pathTracer.unsafeTrace(start, end));
         }
 
         return Optional.empty();

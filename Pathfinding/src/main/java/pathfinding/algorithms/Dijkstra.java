@@ -7,9 +7,11 @@ package pathfinding.algorithms;
  */
 public class Dijkstra<T> extends AStar<T> {
 
-    @Override
-    protected double h(T current, T end) {
-        return 0;
+    /**
+     * Creates a new instance of the Dijkstra algorithm.
+     */
+    public Dijkstra() {
+        super((_, _) -> 0.0);
     }
 
 }

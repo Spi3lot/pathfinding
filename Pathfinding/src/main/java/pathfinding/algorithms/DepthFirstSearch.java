@@ -27,7 +27,6 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
         var predecessors = new HashMap<T, T>();
         var stack = new ArrayDeque<T>();
         var visited = new ArrayList<T>();
-        boolean found = false;
         stack.push(start);
 
         while (!stack.isEmpty()) {
@@ -35,8 +34,8 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
             visited.add(current);
 
             if (current == end) {
-                found = true;
-                break;
+                var pathTracer = new PathTracer<>(predecessors);
+                return Optional.of(pathTracer.unsafeTrace(start, end));
             }
 
             graph.getNeighbors(current)
@@ -48,11 +47,6 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
                         stack.push(neighbor);
                         predecessors.put(neighbor, current);
                     });
-        }
-
-        if (found) {
-            var pathTracer = new PathTracer<>(predecessors);
-            return Optional.of(pathTracer.unsafeTrace(start, end));
         }
 
         return Optional.empty();

@@ -34,7 +34,8 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
             var current = queue.poll();
 
             if (current == end) {
-                break;
+                var pathTracer = new PathTracer<>(predecessors);
+                return Optional.of(pathTracer.unsafeTrace(start, end));
             }
 
             graph.getNeighbors(current)
@@ -48,11 +49,6 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
                             queue.offer(neighbor);
                         }
                     });
-        }
-
-        if (Double.isFinite(g(end))) {
-            var pathTracer = new PathTracer<>(predecessors);
-            return Optional.of(pathTracer.unsafeTrace(start, end));
         }
 
         return Optional.empty();

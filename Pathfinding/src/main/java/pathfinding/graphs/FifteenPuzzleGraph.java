@@ -37,7 +37,7 @@ public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
 
     @Override
     public double sumEdgeWeights(List<FifteenPuzzle> path) {
-        return path.size() - 1;
+        return path.size() - 1.0;
     }
 
 }

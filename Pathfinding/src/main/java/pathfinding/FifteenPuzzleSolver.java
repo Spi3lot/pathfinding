@@ -11,22 +11,21 @@ import pathfinding.service.Pathfinder;
  **/
 public class FifteenPuzzleSolver {
 
-    private static final int BOARD_SIZE = 4;
+    private static final int BOARD_SIZE = 3;
 
     public static void main(String[] args) {
         var graph = new FifteenPuzzleGraph();
         var puzzle = new FifteenPuzzle(BOARD_SIZE);
-        var solvedPuzzle = FifteenPuzzle.solved(4);
+        var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
-        var pathfinder = new Pathfinder<>(graph, new AStar<>() {
-            @Override
-            protected double h(FifteenPuzzle current, FifteenPuzzle end) {
-                return current.getLeastMoveCountTo(end);
-            }
-        });
+        var pathfinder = new Pathfinder<>(
+                graph,
+                new AStar<>((current, end) -> (double) current.countOutOfPlaceTiles(end))
+        );
 
         var path = pathfinder.findShortestPath(puzzle, solvedPuzzle);
         System.out.println(path);
+        System.out.println(graph.sumEdgeWeights(path.orElseThrow()));
     }
 
 }

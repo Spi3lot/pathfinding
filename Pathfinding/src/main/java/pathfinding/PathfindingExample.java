@@ -10,7 +10,18 @@ import processing.core.PVector;
 public class PathfindingExample {
 
     public static void main(String[] args) {
-        aStar();
+        aStarBreaker();
+    }
+
+    private static void aStarBreaker() {
+        var graph = new FlexibleGraph<Character>();
+        graph.addEdge('A', 'B', 1);
+        graph.addEdge('A', 'C', 2);
+        graph.addEdge('B', 'D', 3);
+        graph.addEdge('C', 'D', 1);
+
+        var pathfinder = new Pathfinder<>(graph, new AStar<>((_, _) -> -1.0));
+        System.out.println(pathfinder.findShortestPath('A', 'D'));
     }
 
     private static void aStar() {
@@ -22,12 +33,10 @@ public class PathfindingExample {
         graph.addEdge(a, c, 2);
         graph.addEdge(c, b, 2);
 
-        var pathfinder = new Pathfinder<>(graph, new AStar<>() {
-            @Override
-            protected double h(PVector current, PVector end) {
-                return current.dist(end);
-            }
-        });
+        var pathfinder = new Pathfinder<>(
+                graph,
+                new AStar<>((current, end) -> (double) current.dist(end))
+        );
 
         System.out.println(pathfinder.findShortestPath(a, b));
     }

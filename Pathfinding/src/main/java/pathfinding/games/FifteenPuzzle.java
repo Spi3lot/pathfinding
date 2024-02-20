@@ -26,15 +26,32 @@ public record FifteenPuzzle(FifteenPuzzleBoard board) {
         return new FifteenPuzzle(board);
     }
 
+    public int countOutOfPlaceTiles(FifteenPuzzle desired) {
+        int count = 0;
+
+        for (int j = 0; j < board.getLength(); j++) {
+            for (int i = 0; i < board.getLength(); i++) {
+                var position = new Position(i, j);
+                int value = board.get(position);
+
+                if (value != board.getEmptyValue() && value != desired.board().get(position)) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
     public int getLeastMoveCountTo(FifteenPuzzle desired) {
-        return getLeastMoveCounts(desired)
+        return getLeastMoveCountsTo(desired)
                 .values()
                 .stream()
                 .mapToInt(Integer::intValue)
                 .sum();
     }
 
-    public Map<Integer, Integer> getLeastMoveCounts(FifteenPuzzle desired) {
+    public Map<Integer, Integer> getLeastMoveCountsTo(FifteenPuzzle desired) {
         var moveCounts = HashMap.<Integer, Integer>newHashMap(board.calcArea() - 1);
         var positions = getPositions();
         var desiredPositions = desired.getPositions();
