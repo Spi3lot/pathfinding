@@ -26,6 +26,7 @@ public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
             }
         }
 
+        System.out.println(map);
         return map;
     }
 

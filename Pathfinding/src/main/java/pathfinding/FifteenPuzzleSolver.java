@@ -26,7 +26,6 @@ public class FifteenPuzzleSolver {
         });
 
         var path = pathfinder.findShortestPath(puzzle, solvedPuzzle);
-        System.out.println(path);
     }
 
 }
