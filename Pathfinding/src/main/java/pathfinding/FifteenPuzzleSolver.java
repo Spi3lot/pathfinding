@@ -20,7 +20,7 @@ public class FifteenPuzzleSolver {
 
         var pathfinder = new Pathfinder<>(
                 graph,
-                new AStar<>((current, end) -> (double) current.countOutOfPlaceTiles(end))
+                new AStar<>((current, end) -> (double) current.getLeastMoveCountTo(end))
         );
 
         var path = pathfinder.findShortestPath(puzzle, solvedPuzzle);
