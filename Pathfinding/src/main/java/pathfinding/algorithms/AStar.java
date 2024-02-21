@@ -1,5 +1,7 @@
 package pathfinding.algorithms;
 
+import pathfinding.service.EndCondition;
+
 import java.util.function.BiFunction;
 
 /**
@@ -9,14 +11,14 @@ import java.util.function.BiFunction;
  */
 public class AStar<T> extends BestFirstSearch<T> {
 
-    private final BiFunction<T, T, Double> heuristic;
+    private final BiFunction<T, EndCondition<T>, Double> heuristic;
 
     /**
      * Creates a new instance of the A* algorithm.
      *
      * @param heuristic the heuristic function to use
      */
-    public AStar(BiFunction<T, T, Double> heuristic) {
+    public AStar(BiFunction<T, EndCondition<T>, Double> heuristic) {
         this.heuristic = heuristic;
     }
 
@@ -26,8 +28,8 @@ public class AStar<T> extends BestFirstSearch<T> {
     }
 
     @Override
-    protected double h(T vertex, T end) {
-        return heuristic.apply(vertex, end);
+    protected double h(T vertex, EndCondition<T> endCondition) {
+        return heuristic.apply(vertex, endCondition);
     }
 
 }

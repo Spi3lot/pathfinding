@@ -1,12 +1,12 @@
 package pathfinding.algorithms;
 
 import pathfinding.graphs.Graph;
+import pathfinding.service.EndCondition;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * Recursive implementation of the Depth-First Search algorithm.
@@ -24,16 +24,16 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
 
     @Override
     public Optional<List<T>> findAnyPath(T start,
-                                         Predicate<T> endCondition,
+                                         EndCondition<T> endCondition,
                                          Graph<T> graph) {
         return findAnyPath(start, endCondition, graph, List.of(start));
     }
 
     private Optional<List<T>> findAnyPath(T start,
-                                          Predicate<T> endCondition,
+                                          EndCondition<T> endCondition,
                                           Graph<T> graph,
                                           List<T> path) {
-        if (endCondition.test(start)) {
+        if (endCondition.condition().test(start)) {
             return Optional.of(path);
         }
 
@@ -54,16 +54,16 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
-                                              Predicate<T> endCondition,
+                                              EndCondition<T> endCondition,
                                               Graph<T> graph) {
         return findShortestPath(start, endCondition, graph, List.of(start));
     }
 
     private Optional<List<T>> findShortestPath(T start,
-                                               Predicate<T> endCondition,
+                                               EndCondition<T> endCondition,
                                                Graph<T> graph,
                                                List<T> path) {
-        if (endCondition.test(start)) {
+        if (endCondition.condition().test(start)) {
             return Optional.of(path);
         }
 

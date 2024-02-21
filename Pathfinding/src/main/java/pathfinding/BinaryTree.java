@@ -2,6 +2,7 @@ package pathfinding;
 
 import pathfinding.algorithms.DepthFirstSearch;
 import pathfinding.graphs.FlexibleGraph;
+import pathfinding.service.EndCondition;
 import pathfinding.service.Pathfinder;
 
 /**
@@ -20,7 +21,7 @@ public class BinaryTree {
         graph.addEdge(2, 3);
 
         var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
-        System.out.println(pathfinder.findShortestPath(4, 1));
+        System.out.println(pathfinder.findShortestPath(4, EndCondition.endAt(1)));
     }
 
 }

@@ -2,6 +2,7 @@ package pathfinding;
 
 import pathfinding.algorithms.BreadthFirstSearch;
 import pathfinding.graphs.FlexibleGraph;
+import pathfinding.service.EndCondition;
 import pathfinding.service.Pathfinder;
 
 public class TypeInference {
@@ -14,7 +15,7 @@ public class TypeInference {
         graph.addEdge('B', 'D');
 
         var pathfinder = new Pathfinder<>(graph, new BreadthFirstSearch<>());
-        System.out.println(pathfinder.findShortestPath('A', 'D'));
+        System.out.println(pathfinder.findShortestPath('A', EndCondition.endAt('D')));
     }
 
 }

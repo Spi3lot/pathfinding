@@ -1,10 +1,10 @@
 package pathfinding.algorithms;
 
 import pathfinding.graphs.Graph;
+import pathfinding.service.EndCondition;
 import pathfinding.service.PathTracer;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Iterative implementation of the Depth-First Search algorithm.
@@ -23,7 +23,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
     // TODO: check if this is actually faster than findShortestPath
     @Override
     public Optional<List<T>> findAnyPath(T start,
-                                         Predicate<T> endCondition,
+                                         EndCondition<T> endCondition,
                                          Graph<T> graph) {
         var predecessors = new HashMap<T, T>();
         var stack = new ArrayDeque<T>();
@@ -34,7 +34,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
             var current = stack.pop();
             visited.add(current);
 
-            if (endCondition.test(current)) {
+            if (endCondition.condition().test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
                 return Optional.of(pathTracer.unsafeTrace(start, current));
             }
@@ -55,7 +55,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
-                                              Predicate<T> endCondition,
+                                              EndCondition<T> endCondition,
                                               Graph<T> graph) {
         var predecessors = new HashMap<T, T>();
         var stack = new ArrayDeque<T>();
@@ -67,7 +67,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
             var current = stack.pop();
             var path = pathTracer.unsafeTrace(start, current);
 
-            if (endCondition.test(current)) {
+            if (endCondition.condition().test(current)) {
                 paths.add(path);
                 continue;
             }

@@ -4,6 +4,7 @@ import pathfinding.algorithms.AStar;
 import pathfinding.algorithms.DepthFirstSearch;
 import pathfinding.algorithms.Dijkstra;
 import pathfinding.graphs.FlexibleGraph;
+import pathfinding.service.EndCondition;
 import pathfinding.service.Pathfinder;
 import processing.core.PVector;
 
@@ -21,7 +22,7 @@ public class PathfindingExample {
         graph.addEdge('C', 'D', 1);
 
         var pathfinder = new Pathfinder<>(graph, new AStar<>((_, _) -> -1.0));
-        System.out.println(pathfinder.findShortestPath('A', 'D'));
+        System.out.println(pathfinder.findShortestPath('A', EndCondition.endAt('D')));
     }
 
     private static void aStar() {
@@ -35,10 +36,10 @@ public class PathfindingExample {
 
         var pathfinder = new Pathfinder<>(
                 graph,
-                new AStar<>((current, end) -> (double) current.dist(end))
+                new AStar<>((current, endCondition) -> (double) current.dist(endCondition.endVertex().orElseThrow()))
         );
 
-        System.out.println(pathfinder.findShortestPath(a, b));
+        System.out.println(pathfinder.findShortestPath(a, EndCondition.endAt(b)));
     }
 
     /**
@@ -52,7 +53,7 @@ public class PathfindingExample {
         graph.addEdge('A', 'D', 4);
 
         var pathfinder = new Pathfinder<>(graph, new Dijkstra<>());
-        System.out.println(pathfinder.findShortestPath('A', 'C'));
+        System.out.println(pathfinder.findShortestPath('A', EndCondition.endAt('C')));
     }
 
     private static void dijkstraBreakerNegative() {
@@ -62,7 +63,7 @@ public class PathfindingExample {
         graph.addEdge('B', 'C', -10);
 
         var pathfinder = new Pathfinder<>(graph, new Dijkstra<>());
-        System.out.println(pathfinder.findShortestPath('A', 'C'));
+        System.out.println(pathfinder.findShortestPath('A', EndCondition.endAt('C')));
     }
 
     private static void dijkstra() {
@@ -75,7 +76,7 @@ public class PathfindingExample {
         graph.addEdge('D', 'E', 5);
 
         var pathfinder = new Pathfinder<>(graph, new Dijkstra<>());
-        System.out.println(pathfinder.findShortestPath('A', 'E'));
+        System.out.println(pathfinder.findShortestPath('A', EndCondition.endAt('E')));
     }
 
     private static void pathfinding() {
@@ -87,7 +88,7 @@ public class PathfindingExample {
         graph.addEdge('D', 'A', 2);
 
         var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
-        System.out.println(pathfinder.findShortestPath('A', 'C'));
+        System.out.println(pathfinder.findShortestPath('A', EndCondition.endAt('C')));
     }
 
     private static void iterativeDfsBreaker() {
@@ -99,7 +100,7 @@ public class PathfindingExample {
         graph.addEdge('A', 'D', 1000);
 
         var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
-        System.out.println(pathfinder.findShortestPath('A', 'D'));
+        System.out.println(pathfinder.findShortestPath('A', EndCondition.endAt('D')));
     }
 
 
@@ -111,7 +112,7 @@ public class PathfindingExample {
         graph.addEdge('A', 'D', 1000);
 
         var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
-        System.out.println(pathfinder.findShortestPath('A', 'D'));
+        System.out.println(pathfinder.findShortestPath('A', EndCondition.endAt('D')));
     }
 
     private static void any() {
@@ -120,7 +121,7 @@ public class PathfindingExample {
         graph.addEdge('B', 'C', 10);
 
         var pathfinder = new Pathfinder<>(graph, new DepthFirstSearch<>());
-        System.out.println(pathfinder.findAnyPath('A', 'C'));
+        System.out.println(pathfinder.findAnyPath('A', EndCondition.endAt('C')));
     }
 
 }

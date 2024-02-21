@@ -4,6 +4,7 @@ import pathfinding.algorithms.AStar;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.graphs.FifteenPuzzleGraph;
 import pathfinding.service.Benchmark;
+import pathfinding.service.EndCondition;
 import pathfinding.service.Pathfinder;
 
 /**
@@ -21,11 +22,15 @@ public class FifteenPuzzleSolver {
 
         var pathfinder = new Pathfinder<>(
                 graph,
-                new AStar<>((current, end) -> (double) current.getLeastMoveCountTo(end))
+                new AStar<>(
+                        (current, endCondition) -> (double) current.getLeastMoveCountTo(
+                                endCondition.endVertex().orElseThrow()
+                        )
+                )
         );
 
         var benchmark = new Benchmark();
-        var path = pathfinder.findShortestPath(puzzle, solvedPuzzle);
+        var path = pathfinder.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
         System.out.println(benchmark);
         System.out.println(path);
         System.out.println(graph.sumEdgeWeights(path.orElseThrow()));
