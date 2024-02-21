@@ -22,8 +22,12 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
                                               EndCondition<T> endCondition,
                                               Graph<T> graph) {
         var queue = new PriorityQueue<>(
-                Comparator.<T>comparingDouble(vertex -> f(vertex, endCondition))
-                        .thenComparingDouble(vertex -> h(vertex, endCondition))
+                Comparator.<T>comparingDouble(
+                                vertex -> f(vertex, endCondition)
+                        )
+                        .thenComparingDouble(
+                                vertex -> h(vertex, endCondition)
+                        )
         );
 
         predecessors.clear();
