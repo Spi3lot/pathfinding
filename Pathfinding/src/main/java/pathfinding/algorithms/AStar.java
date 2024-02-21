@@ -21,13 +21,13 @@ public class AStar<T> extends BestFirstSearch<T> {
     }
 
     @Override
-    protected double g(T current) {
-        return distances.getOrDefault(current, Double.POSITIVE_INFINITY);
+    protected double g(T vertex) {
+        return distances.getOrDefault(vertex, Double.POSITIVE_INFINITY);
     }
 
     @Override
-    protected double h(T current, T end) {
-        return heuristic.apply(current, end);
+    protected double h(T vertex, T end) {
+        return heuristic.apply(vertex, end);
     }
 
 }

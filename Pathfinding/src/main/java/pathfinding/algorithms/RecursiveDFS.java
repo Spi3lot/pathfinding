@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Recursive implementation of the Depth-First Search algorithm.
@@ -23,16 +24,16 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
 
     @Override
     public Optional<List<T>> findAnyPath(T start,
-                                         T end,
+                                         Predicate<T> endCondition,
                                          Graph<T> graph) {
-        return findAnyPath(start, end, graph, List.of(start));
+        return findAnyPath(start, endCondition, graph, List.of(start));
     }
 
     private Optional<List<T>> findAnyPath(T start,
-                                          T end,
+                                          Predicate<T> endCondition,
                                           Graph<T> graph,
                                           List<T> path) {
-        if (start.equals(end)) {
+        if (endCondition.test(start)) {
             return Optional.of(path);
         }
 
@@ -42,7 +43,7 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                 .filter(neighbor -> !path.contains(neighbor))
                 .map(neighbor -> findAnyPath(
                         neighbor,
-                        end,
+                        endCondition,
                         graph,
                         append(path, neighbor)
                 ))
@@ -53,16 +54,16 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
-                                              T end,
+                                              Predicate<T> endCondition,
                                               Graph<T> graph) {
-        return findShortestPath(start, end, graph, List.of(start));
+        return findShortestPath(start, endCondition, graph, List.of(start));
     }
 
     private Optional<List<T>> findShortestPath(T start,
-                                               T end,
+                                               Predicate<T> endCondition,
                                                Graph<T> graph,
                                                List<T> path) {
-        if (start.equals(end)) {
+        if (endCondition.test(start)) {
             return Optional.of(path);
         }
 
@@ -72,7 +73,8 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                 .filter(neighbor -> !path.contains(neighbor))
                 .map(neighbor -> findShortestPath(
                         neighbor,
-                        end, graph,
+                        endCondition,
+                        graph,
                         append(path, neighbor)
                 ))
                 .filter(Optional::isPresent)

@@ -4,6 +4,7 @@ import pathfinding.graphs.Graph;
 import pathfinding.service.PathTracer;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Iterative implementation of the Breadth-First Search algorithm.
@@ -14,7 +15,7 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
-                                              T end,
+                                              Predicate<T> endCondition,
                                               Graph<T> graph) {
         var queue = new ArrayDeque<T>();
         var visited = new ArrayList<T>();
@@ -25,9 +26,9 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
             var current = queue.poll();
             visited.add(current);
 
-            if (current == end) {
+            if (endCondition.test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
-                return Optional.of(pathTracer.unsafeTrace(start, end));
+                return Optional.of(pathTracer.unsafeTrace(start, current));
             }
 
             graph.getNeighbors(current)

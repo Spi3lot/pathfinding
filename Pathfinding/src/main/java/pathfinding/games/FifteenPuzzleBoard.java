@@ -13,6 +13,8 @@ import java.util.StringJoiner;
 public class FifteenPuzzleBoard {
 
     private final int[][] board;
+
+    @EqualsAndHashCode.Exclude
     private final int emptyValue;
 
     public FifteenPuzzleBoard(FifteenPuzzleBoard board) {
