@@ -2,6 +2,7 @@ package pathfinding.algorithms;
 
 import pathfinding.service.EndCondition;
 
+import java.util.Map;
 import java.util.function.BiFunction;
 
 /**
@@ -23,12 +24,12 @@ public class AStar<T> extends BestFirstSearch<T> {
     }
 
     @Override
-    protected double g(T vertex) {
+    protected final double g(T vertex, Map<T, Double> distances) {
         return distances.getOrDefault(vertex, Double.POSITIVE_INFINITY);
     }
 
     @Override
-    protected double h(T vertex, EndCondition<T> endCondition) {
+    protected final double h(T vertex, EndCondition<T> endCondition) {
         return heuristic.apply(vertex, endCondition);
     }
 
