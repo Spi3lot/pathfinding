@@ -22,23 +22,15 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
     public Optional<List<T>> findShortestPath(T start,
                                               EndCondition<T> endCondition,
                                               Graph<T> graph) {
-        var open = new PriorityQueue<>(
-                Comparator.<T>comparingDouble(
-                                vertex -> f(vertex, endCondition)
-                        )
-                        .thenComparingDouble(
-                                vertex -> h(vertex, endCondition)
-                        )
-        );
-
+        var open = new FibonacciHeap<T>();
         var closed = new HashSet<T>();
         predecessors.clear();
         distances.clear();
         distances.put(start, 0.0);
-        open.offer(start);
+        open.enqueue(start, 0);
 
         while (!open.isEmpty()) {
-            T current = open.poll();
+            T current = open.dequeueMin().getValue();
             closed.add(current);
 
             if (endCondition.condition().test(current)) {
@@ -61,16 +53,12 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
                         if (newDistance < oldDistance) {
                             distances.put(neighbor, newStartDistance);
                             predecessors.put(neighbor, current);
-                            open.offer(neighbor);
+                            open.enqueue(neighbor, newDistance);
                         }
                     });
         }
 
         return Optional.empty();
-    }
-
-    protected double f(T vertex, EndCondition<T> endCondition) {
-        return g(vertex) + h(vertex, endCondition);
     }
 
     protected abstract double g(T vertex);
