@@ -23,7 +23,7 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
         queue.add(start);
 
         while (!queue.isEmpty()) {
-            var current = queue.poll();
+            T current = queue.poll();
             visited.add(current);
 
             if (endCondition.condition().test(current)) {

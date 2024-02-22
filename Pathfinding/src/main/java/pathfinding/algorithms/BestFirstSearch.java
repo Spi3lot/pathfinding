@@ -1,5 +1,6 @@
 package pathfinding.algorithms;
 
+import pathfinding.datastructures.FibonacciHeap;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 import pathfinding.service.PathTracer;
@@ -21,7 +22,7 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
     public Optional<List<T>> findShortestPath(T start,
                                               EndCondition<T> endCondition,
                                               Graph<T> graph) {
-        var queue = new PriorityQueue<>(
+        var open = new PriorityQueue<>(
                 Comparator.<T>comparingDouble(
                                 vertex -> f(vertex, endCondition)
                         )
@@ -30,28 +31,37 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
                         )
         );
 
+        var closed = new HashSet<T>();
         predecessors.clear();
         distances.clear();
         distances.put(start, 0.0);
-        queue.add(start);
+        open.offer(start);
 
-        while (!queue.isEmpty()) {
-            var current = queue.poll();
+        while (!open.isEmpty()) {
+            T current = open.poll();
+            closed.add(current);
 
             if (endCondition.condition().test(current)) {
                 return Optional.of(pathTracer.unsafeTrace(start, current));
             }
 
             graph.getNeighbors(current)
-                    .forEach((neighbor, weight) -> {
-                        double newDistance = f(current, endCondition) + weight;
-                        double distance = f(neighbor, endCondition);
+                    .entrySet()
+                    .stream()
+                    .filter(neighbor -> !closed.contains(neighbor.getKey()))
+                    .forEach(entry -> {
+                        T neighbor = entry.getKey();
+                        double weight = entry.getValue();
+                        double oldStartDistance = g(neighbor);
+                        double newStartDistance = g(current) + weight;
+                        double heuristic = h(neighbor, endCondition);
+                        double oldDistance = oldStartDistance + heuristic;
+                        double newDistance = newStartDistance + heuristic;
 
-                        if (newDistance < distance) {
-                            distances.put(neighbor, newDistance);
+                        if (newDistance < oldDistance) {
+                            distances.put(neighbor, newStartDistance);
                             predecessors.put(neighbor, current);
-                            queue.remove(neighbor);
-                            queue.offer(neighbor);
+                            open.offer(neighbor);
                         }
                     });
         }
