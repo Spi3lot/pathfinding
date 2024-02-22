@@ -2,21 +2,21 @@ package pathfinding.algorithms;
 
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
-import pathfinding.service.PathTracer;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.PriorityQueue;
+import java.util.function.BiFunction;
 
 /**
- * Abstract class to make the implementation of best-first search algorithms easier.
+ * Implementation of the A* algorithm for finding the shortest path.
  *
  * @param <T> the type of the vertices in the graph
  */
-public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
+public class AStar2<T> extends BestFirstSearch<T> {
 
-    protected final Map<T, Double> distances = new HashMap<>();
-    protected final Map<T, Double> heuristicValues = new HashMap<>();
-    protected final Map<T, T> predecessors = new HashMap<>();
-    protected final PathTracer<T> pathTracer = new PathTracer<>(predecessors);
+    private final BiFunction<T, EndCondition<T>, Double> heuristic;
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
@@ -45,17 +45,19 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
 
             graph.getNeighbors(current)
                     .forEach((neighbor, weight) -> {
+                        if (!distances.containsKey(neighbor)) {
                             double g = g(current);
-                            double h = h(current, endCondition);
+                            double h = heuristicValues.computeIfAbsent(neighbor, v -> h(current, endCondition));
                             double f = g + h + weight;
                             double distance = f(neighbor, endCondition);
 
                             if (f < distance) {
-                                distances.put(neighbor, g);
+                                distances.put(neighbor, g + weight);
                                 predecessors.put(neighbor, current);
-                                //queue.remove(neighbor);
+                                queue.remove(neighbor);
                                 queue.offer(neighbor);
                             }
+                        }
 
                     });
         }
@@ -63,12 +65,23 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
         return Optional.empty();
     }
 
-    protected double f(T vertex, EndCondition<T> endCondition) {
-        return g(vertex) + h(vertex, endCondition);
+    /**
+     * Creates a new instance of the A* algorithm.
+     *
+     * @param heuristic the heuristic function to use
+     */
+    public AStar2(BiFunction<T, EndCondition<T>, Double> heuristic) {
+        this.heuristic = heuristic;
     }
 
-    protected abstract double g(T vertex);
+    @Override
+    protected double g(T vertex) {
+        return distances.getOrDefault(vertex, Double.POSITIVE_INFINITY);
+    }
 
-    protected abstract double h(T vertex, EndCondition<T> endCondition);
+    @Override
+    protected double h(T vertex, EndCondition<T> endCondition) {
+        return heuristic.apply(vertex, endCondition);
+    }
 
 }

@@ -11,10 +11,10 @@ import java.util.Map;
 /**
  * A graph that helps with solving the fifteen puzzle in the shortest amount of moves.
  **/
-public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
+public class FifteenPuzzleGraph extends CachedGraph<FifteenPuzzle> {
 
     @Override
-    public Map<FifteenPuzzle, Double> getNeighbors(FifteenPuzzle puzzle) {
+    public Map<FifteenPuzzle, Double> calculateNeighbors(FifteenPuzzle puzzle) {
         var map = new HashMap<FifteenPuzzle, Double>();
 
         for (var direction : Direction.values()) {

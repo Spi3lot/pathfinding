@@ -1,8 +1,11 @@
 package pathfinding;
 
+import pathfinding.algorithms.AStar;
 import pathfinding.games.Direction;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.games.Position;
+import pathfinding.graphs.FifteenPuzzleGraph;
+import pathfinding.service.EndCondition;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -43,6 +46,8 @@ public class FifteenPuzzleGui extends PApplet {
         textFont(createFont("Comic Sans MS", 32));
         noLoop();
         resetBoard();
+
+
     }
 
     @Override
@@ -127,6 +132,11 @@ public class FifteenPuzzleGui extends PApplet {
         puzzle.board().shuffle();
         minMoveCount = puzzle.getLeastMoveCountTo(FifteenPuzzle.solved(BOARD_SIZE));
         moveCount = 0;
+        var astar = new AStar<FifteenPuzzle>((current, endCondition) -> (double) current.getLeastMoveCountTo(endCondition.endVertex().orElseThrow()));
+        var graph = new FifteenPuzzleGraph();
+        var path = astar.findShortestPath(puzzle, EndCondition.endAt(FifteenPuzzle.solved(BOARD_SIZE)), graph);
+        System.out.println(path);
+        System.out.println(graph.sumEdgeWeights(path.orElseThrow()));
     }
 
     private void increaseMoveCount() {
