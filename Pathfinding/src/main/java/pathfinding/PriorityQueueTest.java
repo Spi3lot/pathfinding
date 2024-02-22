@@ -1,5 +1,7 @@
 package pathfinding;
 
+import pathfinding.datastructures.FibonacciHeap;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +14,7 @@ import java.util.PriorityQueue;
 public class PriorityQueueTest {
 
     public static void main(String[] args) {
-        test1();
+        test3();
     }
 
     /**
@@ -58,6 +60,14 @@ public class PriorityQueueTest {
         while (!queue.isEmpty()) {
             System.out.println(queue.poll());
         }
+    }
+
+    private static void test3() {
+        var heap = new FibonacciHeap<Integer>();
+        heap.enqueue(1, 2);
+        heap.enqueue(2, 3);
+        heap.enqueue(2, 1);
+        System.out.println(heap.dequeueMin().getValue());
     }
 
 }

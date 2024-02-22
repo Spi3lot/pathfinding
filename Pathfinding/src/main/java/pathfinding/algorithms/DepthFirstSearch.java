@@ -31,7 +31,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
         stack.push(start);
 
         while (!stack.isEmpty()) {
-            var current = stack.pop();
+            T current = stack.pop();
             visited.add(current);
 
             if (endCondition.condition().test(current)) {
@@ -64,7 +64,7 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
         stack.push(start);
 
         while (!stack.isEmpty()) {
-            var current = stack.pop();
+            T current = stack.pop();
             var path = pathTracer.unsafeTrace(start, current);
 
             if (endCondition.condition().test(current)) {

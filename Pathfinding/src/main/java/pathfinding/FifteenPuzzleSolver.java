@@ -1,7 +1,6 @@
 package pathfinding;
 
 import pathfinding.algorithms.AStar;
-import pathfinding.algorithms.AStar2;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.graphs.FifteenPuzzleGraph;
 import pathfinding.service.Benchmark;
@@ -22,33 +21,17 @@ public class FifteenPuzzleSolver {
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
         var pathfinder = new Pathfinder<>(graph, new AStar<>(
-                        (current, endCondition) -> (double) current.getLeastMoveCountTo(
+                        (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
                                 endCondition.endVertex().orElseThrow()
-                        )));
-
-        var pathfinder2 = new Pathfinder<>(graph, new AStar2<>(
-                        (current, endCondition) -> (double) current.getLeastMoveCountTo(
-                                endCondition.endVertex().orElseThrow()
-                        )));
+                        )
+        ));
 
         var benchmark = new Benchmark();
         var path = pathfinder.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
-        System.out.println(benchmark);
+        long millis = benchmark.elapsedMillis();
+        System.out.println(path);
         System.out.println(graph.sumEdgeWeights(path.orElseThrow()));
-        benchmark.resetTimer();
-        var path2 = pathfinder2.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
-        System.out.println(benchmark);
-        System.out.println(graph.sumEdgeWeights(path2.orElseThrow()));
-
-
-//        for (int i = 0; i < 1; i++) {
-//            benchmark.resetTimer();
-//            var path = pathfinder.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
-//            System.out.println(benchmark);
-//            //System.out.println(graph.sumEdgeWeights(path.orElseThrow()));
-//            //System.out.println(path.orElseThrow());
-//        }
-
+        System.out.println(STR."\{millis} ms");
     }
 
 }

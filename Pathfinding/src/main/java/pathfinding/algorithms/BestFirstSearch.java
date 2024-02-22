@@ -1,5 +1,6 @@
 package pathfinding.algorithms;
 
+import pathfinding.datastructures.FibonacciHeap;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 import pathfinding.service.PathTracer;
@@ -14,57 +15,50 @@ import java.util.*;
 public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     protected final Map<T, Double> distances = new HashMap<>();
-    protected final Map<T, Double> heuristicValues = new HashMap<>();
-    protected final Map<T, T> predecessors = new HashMap<>();
-    protected final PathTracer<T> pathTracer = new PathTracer<>(predecessors);
+    private final Map<T, T> predecessors = new HashMap<>();
+    private final PathTracer<T> pathTracer = new PathTracer<>(predecessors);
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
                                               EndCondition<T> endCondition,
                                               Graph<T> graph) {
-        var queue = new PriorityQueue<>(
-                Comparator.<T>comparingDouble(
-                                vertex -> f(vertex, endCondition)
-                        )
-                        .thenComparingDouble(
-                                vertex -> h(vertex, endCondition)
-                        )
-        );
-
+        var open = new FibonacciHeap<T>();
+        var closed = new HashSet<T>();
         predecessors.clear();
         distances.clear();
         distances.put(start, 0.0);
-        queue.add(start);
+        open.enqueue(start, 0);
 
-        while (!queue.isEmpty()) {
-            var current = queue.poll();
+        while (!open.isEmpty()) {
+            T current = open.dequeueMin().getValue();
+            closed.add(current);
 
             if (endCondition.condition().test(current)) {
                 return Optional.of(pathTracer.unsafeTrace(start, current));
             }
 
             graph.getNeighbors(current)
-                    .forEach((neighbor, weight) -> {
-                            double g = g(current);
-                            double h = h(current, endCondition);
-                            double f = g + h + weight;
-                            double distance = f(neighbor, endCondition);
+                    .entrySet()
+                    .stream()
+                    .filter(neighbor -> !closed.contains(neighbor.getKey()))
+                    .forEach(entry -> {
+                        T neighbor = entry.getKey();
+                        double weight = entry.getValue();
+                        double oldStartDistance = g(neighbor);
+                        double newStartDistance = g(current) + weight;
+                        double heuristic = h(neighbor, endCondition);
+                        double oldDistance = oldStartDistance + heuristic;
+                        double newDistance = newStartDistance + heuristic;
 
-                            if (f < distance) {
-                                distances.put(neighbor, g);
-                                predecessors.put(neighbor, current);
-                                //queue.remove(neighbor);
-                                queue.offer(neighbor);
-                            }
-
+                        if (newDistance < oldDistance) {
+                            distances.put(neighbor, newStartDistance);
+                            predecessors.put(neighbor, current);
+                            open.enqueue(neighbor, newDistance);
+                        }
                     });
         }
 
         return Optional.empty();
-    }
-
-    protected double f(T vertex, EndCondition<T> endCondition) {
-        return g(vertex) + h(vertex, endCondition);
     }
 
     protected abstract double g(T vertex);
