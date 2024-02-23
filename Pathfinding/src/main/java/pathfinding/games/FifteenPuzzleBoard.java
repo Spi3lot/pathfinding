@@ -6,8 +6,7 @@ import java.util.Arrays;
 import java.util.StringJoiner;
 
 /**
- * @author Emilio Zottel (5AHIF)
- * @since 17.02.2024, Sa.
+ * Represents a board of a 15-puzzle game.
  */
 @EqualsAndHashCode
 public class FifteenPuzzleBoard {
@@ -146,7 +145,7 @@ public class FifteenPuzzleBoard {
 
     @Override
     public String toString() {
-        var outerJoiner = new StringJoiner("\n", "\n", "");
+        var outerJoiner = new StringJoiner("\n");
 
         for (int[] row : board) {
             var innerJoiner = new StringJoiner("\t");

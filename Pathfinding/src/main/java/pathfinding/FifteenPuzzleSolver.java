@@ -3,7 +3,6 @@ package pathfinding;
 import pathfinding.algorithms.AStarMeetInTheMiddle;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.graphs.FifteenPuzzleGraph;
-import pathfinding.service.Benchmark;
 import pathfinding.service.EndCondition;
 import pathfinding.service.Pathfinder;
 
@@ -26,12 +25,9 @@ public class FifteenPuzzleSolver {
                         )
         ));
 
-        var benchmark = new Benchmark();
         var path = pathfinder.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
-        long millis = benchmark.elapsedMillis();
         System.out.println(path);
         System.out.println(graph.sumEdgeWeights(path.orElseThrow()));
-        System.out.println(STR."\{millis} ms");
     }
 
 }
