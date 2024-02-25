@@ -39,6 +39,7 @@ public class FifteenPuzzleGui extends PApplet {
         tileSize = (float) width / BOARD_SIZE;
         numberTextSize = tileSize * 2 / (highestDigitCount + 1);
         solvedTextSize = width / 10f;
+        windowTitle("15 Puzzle");
         textAlign(CENTER, CENTER);
         textFont(createFont("Comic Sans MS", 32));
         noLoop();

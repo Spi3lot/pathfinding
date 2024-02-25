@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Emilio Zottel (5AHIF)
- * @since 20.02.2024, Di.
+ * An abstract class that helps with caching the neighbors of a vertex in a graph.
+ * The neighbors will only be calculated when they are requested for the first time.
+ *
+ * @param <T> the type of the vertices in the graph
  */
 public abstract class CachedGraph<T> implements Graph<T> {
 

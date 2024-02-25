@@ -1,7 +1,6 @@
 package pathfinding;
 
-import pathfinding.algorithms.AStar;
-import pathfinding.algorithms.AStarMeetInTheMiddle;
+import pathfinding.algorithms.BidiBestFirstSearch;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.graphs.FifteenPuzzleGraph;
 import pathfinding.service.Benchmark;
@@ -20,18 +19,18 @@ public class FifteenPuzzleBenchmark {
         var graph = new FifteenPuzzleGraph();
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
-        var pathfinder = new Pathfinder<>(graph, new AStarMeetInTheMiddle<>(
+        var pathfinder = new Pathfinder<>(graph, BidiBestFirstSearch.usingAStar(
                 (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
                         endCondition.endVertex().orElseThrow()
                 )
         ));
 
-        var benchmark = new Benchmark(() -> pathfinder.findShortestPath(
+        var benchmark = new Benchmark(() -> /*System.out.println(*/pathfinder.findShortestPath(
                 new FifteenPuzzle(BOARD_SIZE),
                 EndCondition.endAt(solvedPuzzle)
-        ));
+        /*)*/));
 
-        long totalDuration = benchmark.times(5);
+        long totalDuration = benchmark.times(3);
         System.out.println(STR."Total duration: \{totalDuration}ms");
         System.out.println(benchmark);
     }

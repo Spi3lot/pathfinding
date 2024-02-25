@@ -6,9 +6,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * @author Emilio Zottel (5AHIF)
- * @since 21.02.2024, Mi.
- **/
+ * Utility class to specify the end condition of a search algorithm.
+ * It can be either a specific vertex or a condition that the vertex must satisfy.
+ *
+ * @param <T> the type of the vertices in the graph
+ */
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class EndCondition<T> {
 

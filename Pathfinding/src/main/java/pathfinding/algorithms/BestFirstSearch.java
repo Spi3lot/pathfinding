@@ -1,5 +1,6 @@
 package pathfinding.algorithms;
 
+import lombok.Getter;
 import pathfinding.datastructures.FibonacciHeap;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
@@ -12,71 +13,80 @@ import java.util.*;
  *
  * @param <T> the type of the vertices in the graph
  */
+@Getter
 public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
+
+    protected final Map<T, Double> distances = new HashMap<>();
+    private final Map<T, T> predecessors = new HashMap<>();
+    private final Set<T> closed = new HashSet<>();
+    private final Map<T, FibonacciHeap.Entry<T>> entries = new HashMap<>();
+    private FibonacciHeap<T> open;
+    private T current;
 
     @Override
     public Optional<List<T>> findShortestPath(T start,
                                               EndCondition<T> endCondition,
                                               Graph<T> graph) {
-        var open = new FibonacciHeap<T>();
-        var closed = new HashSet<T>();
-        var distances = new HashMap<T, Double>();
-        var predecessors = new HashMap<T, T>();
-        distances.put(start, 0.0);
-        open.enqueue(start, 0);
+        initializeDataStructures(start);
 
         while (!open.isEmpty()) {
-            T current = open.dequeueMin().getValue();
-            closed.add(current);
+            updateCurrent();
+
+            if (closed.contains(current)) {
+                System.out.println("Closed contains current");
+            }
 
             if (endCondition.condition().test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
                 return Optional.of(pathTracer.unsafeTrace(start, current));
             }
 
-            expandNode(
-                    current,
-                    endCondition,
-                    graph,
-                    open,
-                    closed,
-                    distances,
-                    predecessors
-            );
+            closeCurrent();
+            expand(endCondition, graph);
         }
 
         return Optional.empty();
     }
 
-    protected void expandNode(T current,
-                            EndCondition<T> endCondition,
-                            Graph<T> graph,
-                            FibonacciHeap<T> open,
-                            Set<T> closed,
-                            Map<T, Double> distances,
-                            Map<T, T> predecessors) {
+    protected void updateCurrent() {
+        current = open.dequeueMin().getValue();
+    }
+
+    protected void closeCurrent() {
+        closed.add(current);
+    }
+
+    protected void initializeDataStructures(T start) {
+        predecessors.clear();
+        distances.clear();
+        distances.put(start, 0.0);
+        closed.clear();
+        entries.clear();
+        open = new FibonacciHeap<>();
+        open.enqueue(start, 0.0);
+    }
+
+    protected void expand(EndCondition<T> endCondition,
+                          Graph<T> graph) {
         graph.getNeighbors(current)
                 .entrySet()
                 .stream()
-                .filter(neighbor -> !closed.contains(neighbor.getKey()))
+                .filter(entry -> !closed.contains(entry.getKey()))
                 .forEach(entry -> {
                     T neighbor = entry.getKey();
                     double weight = entry.getValue();
-                    double oldG = g(neighbor, distances);
-                    double newG = g(current, distances) + weight;
-                    double heuristic = h(neighbor, endCondition);
-                    double oldF = oldG + heuristic;
-                    double newF = newG + heuristic;
+                    double oldG = g(neighbor);
+                    double newG = g(current) + weight;
 
-                    if (newF < oldF) {
+                    if (newG < oldG) {
                         distances.put(neighbor, newG);
                         predecessors.put(neighbor, current);
-                        open.enqueue(neighbor, newF);
+                        open.enqueue(neighbor, newG + h(neighbor, endCondition));
                     }
                 });
     }
 
-    protected abstract double g(T vertex, Map<T, Double> distances);
+    protected abstract double g(T vertex);
 
     protected abstract double h(T vertex, EndCondition<T> endCondition);
 

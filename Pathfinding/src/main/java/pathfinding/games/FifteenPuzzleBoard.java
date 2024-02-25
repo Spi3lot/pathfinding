@@ -145,7 +145,7 @@ public class FifteenPuzzleBoard {
 
     @Override
     public String toString() {
-        var outerJoiner = new StringJoiner("\n");
+        var outerJoiner = new StringJoiner("\n", "\n", "");
 
         for (int[] row : board) {
             var innerJoiner = new StringJoiner("\t");

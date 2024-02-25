@@ -1,30 +1,30 @@
 package pathfinding.algorithms;
 
+import lombok.Getter;
+import pathfinding.functions.Heuristic;
 import pathfinding.service.EndCondition;
-
-import java.util.Map;
-import java.util.function.BiFunction;
 
 /**
  * Implementation of the A* algorithm for finding the shortest path.
  *
  * @param <T> the type of the vertices in the graph
  */
+@Getter
 public class AStar<T> extends BestFirstSearch<T> {
 
-    private final BiFunction<T, EndCondition<T>, Double> heuristic;
+    private final Heuristic<T> heuristic;
 
     /**
      * Creates a new instance of the A* algorithm.
      *
      * @param heuristic the heuristic function to use
      */
-    public AStar(BiFunction<T, EndCondition<T>, Double> heuristic) {
+    public AStar(Heuristic<T> heuristic) {
         this.heuristic = heuristic;
     }
 
     @Override
-    protected final double g(T vertex, Map<T, Double> distances) {
+    protected final double g(T vertex) {
         return distances.getOrDefault(vertex, Double.POSITIVE_INFINITY);
     }
 

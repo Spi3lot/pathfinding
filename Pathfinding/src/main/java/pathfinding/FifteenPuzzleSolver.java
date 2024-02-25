@@ -1,6 +1,6 @@
 package pathfinding;
 
-import pathfinding.algorithms.AStarMeetInTheMiddle;
+import pathfinding.algorithms.BidiBestFirstSearch;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.graphs.FifteenPuzzleGraph;
 import pathfinding.service.EndCondition;
@@ -19,7 +19,7 @@ public class FifteenPuzzleSolver {
         var puzzle = new FifteenPuzzle(BOARD_SIZE);
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
-        var pathfinder = new Pathfinder<>(graph, new AStarMeetInTheMiddle<>(
+        var pathfinder = new Pathfinder<>(graph, BidiBestFirstSearch.usingAStar(
                         (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
                                 endCondition.endVertex().orElseThrow()
                         )

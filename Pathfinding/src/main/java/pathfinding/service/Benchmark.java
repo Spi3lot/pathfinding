@@ -5,15 +5,18 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.FormatProcessor.FMT;
+
 /**
- * @author Emilio Zottel (5AHIF)
- * @since 20.02.2024, Di.
+ * Utility class to measure the duration of a given task.
+ * It can also calculate the mean and standard deviation of the durations.
+ * The task is given as a {@link Runnable}.
  */
 @RequiredArgsConstructor
 public class Benchmark {
 
     private final List<Long> durations = new ArrayList<>();
-    private final Runnable runnable;
+    private final Runnable task;
     private long lastResetMillis;
 
     public long times(int times) {
@@ -21,7 +24,7 @@ public class Benchmark {
 
         for (int i = 0; i < times; i++) {
             resetTimer();
-            runnable.run();
+            task.run();
             long elapsedMillis = elapsedMillis();
             totalDuration += elapsedMillis;
             durations.add(elapsedMillis);
@@ -41,12 +44,12 @@ public class Benchmark {
     public double standardDeviationMillis() {
         double mean = meanMillis();
 
-        double sum = durations.stream()
-                .mapToDouble(d -> d - mean)
-                .map(d -> d * d)
+        double squaredErrorSum = durations.stream()
+                .mapToDouble(duration -> duration - mean)
+                .map(error -> error * error)
                 .sum();
 
-        double variance = sum / durations.size();
+        double variance = squaredErrorSum / durations.size();
         return Math.sqrt(variance);
     }
 
@@ -59,7 +62,7 @@ public class Benchmark {
 
     @Override
     public String toString() {
-        return STR."μ=\{meanMillis()} ms, σ=\{standardDeviationMillis()} ms";
+        return FMT."μ=%.3f\{meanMillis()} ms, σ=%.3f\{standardDeviationMillis()} ms";
     }
 
 }
