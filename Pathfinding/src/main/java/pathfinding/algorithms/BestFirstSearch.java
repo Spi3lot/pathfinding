@@ -19,7 +19,6 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
     protected final Map<T, Double> distances = new HashMap<>();
     private final Map<T, T> predecessors = new HashMap<>();
     private final Set<T> closed = new HashSet<>();
-    private final Map<T, FibonacciHeap.Entry<T>> entries = new HashMap<>();
     private FibonacciHeap<T> open;
     private T current;
 
@@ -33,7 +32,7 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
             updateCurrent();
 
             if (closed.contains(current)) {
-                System.out.println("Closed contains current");
+                continue;
             }
 
             if (endCondition.condition().test(current)) {
@@ -61,7 +60,6 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
         distances.clear();
         distances.put(start, 0.0);
         closed.clear();
-        entries.clear();
         open = new FibonacciHeap<>();
         open.enqueue(start, 0.0);
     }
