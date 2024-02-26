@@ -14,9 +14,9 @@ import java.util.*;
 public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              EndCondition<T> endCondition,
-                                              Graph<T> graph) {
+    public List<T> findShortestPath(T start,
+                                    EndCondition<T> endCondition,
+                                    Graph<T> graph) {
         var queue = new ArrayDeque<T>();
         var visited = new ArrayList<T>();
         var predecessors = new HashMap<T, T>();
@@ -28,7 +28,7 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
             if (endCondition.condition().test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
-                return Optional.of(pathTracer.unsafeTrace(start, current));
+                return pathTracer.unsafeTrace(start, current);
             }
 
             graph.getNeighbors(current)
@@ -42,7 +42,7 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
                     });
         }
 
-        return Optional.empty();
+        return Collections.emptyList();
     }
 
 }

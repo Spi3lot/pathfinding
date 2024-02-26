@@ -24,11 +24,11 @@ public class Pathfinder<T> {
     private Graph<T> graph;
     private PathfindingAlgorithm<T> algorithm;
 
-    public Optional<List<T>> findAnyPath(T start, EndCondition<T> endCondition) {
+    public List<T> findAnyPath(T start, EndCondition<T> endCondition) {
         return algorithm.findAnyPath(start, endCondition, graph);
     }
 
-    public Optional<List<T>> findShortestPath(T start, EndCondition<T> endCondition) {
+    public List<T> findShortestPath(T start, EndCondition<T> endCondition) {
         return algorithm.findShortestPath(start, endCondition, graph);
     }
 

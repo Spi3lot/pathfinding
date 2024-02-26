@@ -1,13 +1,22 @@
 package pathfinding;
 
+import pathfinding.algorithms.BidiBestFirstSearch;
+import pathfinding.functions.FifteenPuzzleHeuristic;
 import pathfinding.games.Direction;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.games.Position;
+import pathfinding.graphs.FifteenPuzzleGraph;
+import pathfinding.service.EndCondition;
+import pathfinding.service.Pathfinder;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * @author Emilio Zottel (5AHIF)
@@ -16,11 +25,14 @@ import java.util.Locale;
 public class FifteenPuzzleGui extends PApplet {
 
     private static final int BOARD_SIZE = 4;
+    private static final BidiBestFirstSearch<FifteenPuzzle> SEARCH = BidiBestFirstSearch.usingAStar(new FifteenPuzzleHeuristic());
+    private static final Pathfinder<FifteenPuzzle> FINDER = new Pathfinder<>(new FifteenPuzzleGraph(), SEARCH);
     private final FifteenPuzzle puzzle = new FifteenPuzzle(BOARD_SIZE, 0);
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private Future<Integer> minMoveCountFuture;
     private float tileSize;
     private float numberTextSize;
     private float solvedTextSize;
-    private int minMoveCount;  // TODO: Calculate this value by using the A* algorithm
     private int moveCount;
     private long startNanos;
 
@@ -126,8 +138,12 @@ public class FifteenPuzzleGui extends PApplet {
 
     private void resetBoard() {
         puzzle.board().shuffle();
-        minMoveCount = puzzle.getLeastMoveCountTo(FifteenPuzzle.solved(BOARD_SIZE));
         moveCount = 0;
+
+        minMoveCountFuture = executor.submit(() -> {
+            var path = FINDER.findShortestPath(puzzle, EndCondition.endAt(FifteenPuzzle.solved(BOARD_SIZE)));
+            return (int) FINDER.getGraph().sumEdgeWeights(path);
+        });
     }
 
     private void increaseMoveCount() {
@@ -139,10 +155,19 @@ public class FifteenPuzzleGui extends PApplet {
     }
 
     private String formatSolveText() {
+        int minMoveCount = getMinMoveCount();
         double seconds = (System.nanoTime() - startNanos) / 1e9;
         double moveRatio = (double) moveCount / minMoveCount;
-        double relativePercent = 100.0 * (moveRatio - 1);
+        double relativePercent = 100 * (moveRatio - 1);
         return String.format(Locale.US, "SOLVED%n%.2f seconds%n%d/%d moves%n(+%.2f%%)", seconds, moveCount, minMoveCount, relativePercent);
+    }
+
+    private int getMinMoveCount() {
+        try {
+            return minMoveCountFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private int countDigits(int number) {

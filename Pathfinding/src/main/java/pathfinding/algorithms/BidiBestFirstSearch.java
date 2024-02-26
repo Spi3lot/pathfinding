@@ -5,6 +5,7 @@ import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 import pathfinding.service.PathTracer;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,39 +44,39 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
     }
 
     @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              EndCondition<T> endCondition,
-                                              Graph<T> graph) {
-        var backwardEndCondition = EndCondition.endAt(start);
+    public List<T> findShortestPath(T start,
+                                    EndCondition<T> endCondition,
+                                    Graph<T> graph) {
         T end = endCondition.endVertex().orElseThrow();
+        var backwardEndCondition = EndCondition.endAt(start);
         forwardSearch.initializeDataStructures(start);
         backwardSearch.initializeDataStructures(end);
 
-        while (!forwardSearch.getOpen().isEmpty() && !backwardSearch.getOpen().isEmpty()) {
+        while (forwardSearch.hasOpen() && backwardSearch.hasOpen()) {
             forwardSearch.updateCurrent();
             backwardSearch.updateCurrent();
 
-            if (forwardSearch.getClosed().contains(forwardSearch.getCurrent())
-                    || backwardSearch.getClosed().contains(backwardSearch.getCurrent())) {
+            if (forwardSearch.hasVisited(forwardSearch.getCurrent()) ||
+                    backwardSearch.hasVisited(backwardSearch.getCurrent())) {
                 continue;
             }
 
             forwardSearch.closeCurrent();
             backwardSearch.closeCurrent();
 
-            if (backwardSearch.getClosed().contains(forwardSearch.getCurrent())) {
-                return Optional.of(mergePaths(start, forwardSearch.getCurrent(), end));
+            if (backwardSearch.hasVisited(forwardSearch.getCurrent())) {
+                return mergePaths(start, forwardSearch.getCurrent(), end);
             }
 
-            if (forwardSearch.getClosed().contains(backwardSearch.getCurrent())) {
-                return Optional.of(mergePaths(start, backwardSearch.getCurrent(), end));
+            if (forwardSearch.hasVisited(backwardSearch.getCurrent())) {
+                return mergePaths(start, backwardSearch.getCurrent(), end);
             }
 
             forwardSearch.expand(endCondition, graph);
             backwardSearch.expand(backwardEndCondition, graph);
         }
 
-        return Optional.empty();
+        return Collections.emptyList();
     }
 
     private List<T> mergePaths(T start,

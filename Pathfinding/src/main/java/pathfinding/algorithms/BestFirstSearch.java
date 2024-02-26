@@ -9,7 +9,8 @@ import pathfinding.service.PathTracer;
 import java.util.*;
 
 /**
- * Abstract class to make the implementation of best-first search algorithms easier.
+ * Abstract class to make the implementation
+ * of best-first search algorithms easier.
  *
  * @param <T> the type of the vertices in the graph
  */
@@ -23,28 +24,28 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
     private T current;
 
     @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              EndCondition<T> endCondition,
-                                              Graph<T> graph) {
+    public List<T> findShortestPath(T start,
+                                    EndCondition<T> endCondition,
+                                    Graph<T> graph) {
         initializeDataStructures(start);
 
-        while (!open.isEmpty()) {
+        while (hasOpen()) {
             updateCurrent();
 
-            if (closed.contains(current)) {
+            if (hasVisited(current)) {
                 continue;
             }
 
             if (endCondition.condition().test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
-                return Optional.of(pathTracer.unsafeTrace(start, current));
+                return pathTracer.unsafeTrace(start, current);
             }
 
             closeCurrent();
             expand(endCondition, graph);
         }
 
-        return Optional.empty();
+        return Collections.emptyList();
     }
 
     protected void updateCurrent() {
@@ -53,6 +54,14 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     protected void closeCurrent() {
         closed.add(current);
+    }
+
+    protected boolean hasVisited(T vertex) {
+        return closed.contains(vertex);
+    }
+
+    protected boolean hasOpen() {
+        return !open.isEmpty();
     }
 
     protected void initializeDataStructures(T start) {
@@ -69,17 +78,18 @@ public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
         graph.getNeighbors(current)
                 .entrySet()
                 .stream()
-                .filter(entry -> !closed.contains(entry.getKey()))
+                .filter(entry -> !hasVisited(entry.getKey()))
                 .forEach(entry -> {
                     T neighbor = entry.getKey();
                     double weight = entry.getValue();
-                    double oldG = g(neighbor);
-                    double newG = g(current) + weight;
+                    double g = g(neighbor);
+                    double tentativeG = g(current) + weight;
 
-                    if (newG < oldG) {
-                        distances.put(neighbor, newG);
+                    if (tentativeG < g) {
+                        distances.put(neighbor, tentativeG);
                         predecessors.put(neighbor, current);
-                        open.enqueue(neighbor, newG + h(neighbor, endCondition));
+                        double heuristic = h(neighbor, endCondition);
+                        open.enqueue(neighbor, tentativeG + heuristic);
                     }
                 });
     }

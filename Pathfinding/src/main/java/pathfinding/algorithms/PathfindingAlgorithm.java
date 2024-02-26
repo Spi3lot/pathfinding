@@ -16,9 +16,9 @@ public interface PathfindingAlgorithm<T> {
      * @param graph        the graph in which a path is to be found
      * @return Any path between the two vertices, or {@link Optional#empty()} if no path exists.
      */
-    default Optional<List<T>> findAnyPath(T start,
-                                          EndCondition<T> endCondition,
-                                          Graph<T> graph) {
+    default List<T> findAnyPath(T start,
+                                EndCondition<T> endCondition,
+                                Graph<T> graph) {
         return findShortestPath(start, endCondition, graph);
     }
 
@@ -29,9 +29,9 @@ public interface PathfindingAlgorithm<T> {
      * @param endCondition the condition that has to be met for the path to end
      * @return The shortest path between the two vertices, or {@link Optional#empty()} if no path exists.
      */
-    Optional<List<T>> findShortestPath(T start,
-                                       EndCondition<T> endCondition,
-                                       Graph<T> graph);
+    List<T> findShortestPath(T start,
+                             EndCondition<T> endCondition,
+                             Graph<T> graph);
 
 
 }

@@ -27,7 +27,7 @@ public class FifteenPuzzleSolver {
 
         var path = pathfinder.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
         System.out.println(path);
-        System.out.println(graph.sumEdgeWeights(path.orElseThrow()));
+        System.out.println(graph.sumEdgeWeights(path));
     }
 
 }
