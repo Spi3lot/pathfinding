@@ -11,8 +11,6 @@ import java.util.Map;
  */
 public record FifteenPuzzle(FifteenPuzzleBoard board) {
 
-    public static final FifteenPuzzle SOLVED_4 = solved(4);
-
     public FifteenPuzzle(int size) {
         this(new FifteenPuzzleBoard(size));
         board.shuffle();

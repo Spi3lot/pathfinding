@@ -12,11 +12,12 @@ import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import static java.util.FormatProcessor.FMT;
 
 /**
  * @author Emilio Zottel (5AHIF)
@@ -159,13 +160,16 @@ public class FifteenPuzzleGui extends PApplet {
         double seconds = (System.nanoTime() - startNanos) / 1e9;
         double moveRatio = (double) moveCount / minMoveCount;
         double relativePercent = 100 * (moveRatio - 1);
-        return String.format(Locale.US, "SOLVED%n%.2f seconds%n%d/%d moves%n(+%.2f%%)", seconds, moveCount, minMoveCount, relativePercent);
+        return FMT."SOLVED%n%.2f\{seconds} seconds%n%d\{moveCount}/%d\{minMoveCount} moves%n(+%.2f\{relativePercent}%%)";
     }
 
     private int getMinMoveCount() {
         try {
             return minMoveCountFuture.get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
     }

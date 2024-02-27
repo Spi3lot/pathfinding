@@ -18,7 +18,7 @@ public class EndCondition<T> {
     private final Predicate<T> condition;
 
     public static <T> EndCondition<T> endAt(T endVertex) {
-        return new EndCondition<>(endVertex, vertex -> vertex.equals(endVertex));
+        return new EndCondition<>(endVertex, endVertex::equals);
     }
 
     public static <T> EndCondition<T> endIf(Predicate<T> condition) {

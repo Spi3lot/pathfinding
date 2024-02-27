@@ -30,7 +30,7 @@ public class AStar<T> extends BestFirstSearch<T> {
 
     @Override
     protected final double h(T vertex, EndCondition<T> endCondition) {
-        return heuristic.apply(vertex, endCondition);
+        return heuristic.applyAsDouble(vertex, endCondition);
     }
 
 }

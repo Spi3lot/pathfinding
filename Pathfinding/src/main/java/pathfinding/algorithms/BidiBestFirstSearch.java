@@ -8,7 +8,6 @@ import pathfinding.service.PathTracer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Implementation of the bidirectional best-first search algorithm.

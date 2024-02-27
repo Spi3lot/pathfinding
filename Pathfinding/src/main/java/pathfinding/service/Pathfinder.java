@@ -7,7 +7,6 @@ import pathfinding.algorithms.PathfindingAlgorithm;
 import pathfinding.graphs.Graph;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Utility class so the graph doesn't have
