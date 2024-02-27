@@ -1,8 +1,5 @@
 package pathfinding.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import pathfinding.algorithms.CycleException;
 
 import java.util.ArrayList;
@@ -15,12 +12,7 @@ import java.util.Map;
  *
  * @param <T> the type of the nodes in the map
  */
-@AllArgsConstructor
-@Getter
-@Setter
-public class PathTracer<T> {
-
-    private Map<T, T> predecessors;
+public record PathTracer<T>(Map<T, T> predecessors) {
 
     /**
      * Traces the path from start to end in a given map of predecessors.

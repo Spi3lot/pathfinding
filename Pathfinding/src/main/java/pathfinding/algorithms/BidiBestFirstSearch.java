@@ -44,10 +44,10 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     @Override
     public List<T> findShortestPath(T start,
-                                    EndCondition<T> endCondition,
+                                    EndCondition<T> forwardEndCondition,
                                     Graph<T> graph) {
-        T end = endCondition.endVertex().orElseThrow();
         var backwardEndCondition = EndCondition.endAt(start);
+        T end = forwardEndCondition.endVertex().orElseThrow();
         forwardSearch.initializeDataStructures(start);
         backwardSearch.initializeDataStructures(end);
 
@@ -55,8 +55,7 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
             forwardSearch.updateCurrent();
             backwardSearch.updateCurrent();
 
-            if (forwardSearch.hasVisited(forwardSearch.getCurrent()) ||
-                    backwardSearch.hasVisited(backwardSearch.getCurrent())) {
+            if (doSearchesCollide()) {
                 continue;
             }
 
@@ -71,21 +70,26 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
                 return mergePaths(start, backwardSearch.getCurrent(), end);
             }
 
-            forwardSearch.expand(endCondition, graph);
+            forwardSearch.expand(forwardEndCondition, graph);
             backwardSearch.expand(backwardEndCondition, graph);
         }
 
         return Collections.emptyList();
     }
 
+    private boolean doSearchesCollide() {
+        return forwardSearch.hasVisited(forwardSearch.getCurrent())
+                || backwardSearch.hasVisited(backwardSearch.getCurrent());
+    }
+
     private List<T> mergePaths(T start,
                                T contained,
                                T end) {
-        var pathTracer = new PathTracer<>(forwardSearch.getPredecessors());
-        var startToContained = pathTracer.unsafeTrace(start, contained);
+        var forwardTracer = new PathTracer<>(forwardSearch.getPredecessors());
+        var startToContained = forwardTracer.unsafeTrace(start, contained);
 
-        pathTracer.setPredecessors(backwardSearch.getPredecessors());
-        var endToContained = pathTracer.unsafeTrace(end, contained);
+        var backwardTracer = new PathTracer<>(backwardSearch.getPredecessors());
+        var endToContained = backwardTracer.unsafeTrace(end, contained);
         return mergePaths(startToContained, endToContained);
     }
 

@@ -141,6 +141,10 @@ public class FifteenPuzzleGui extends PApplet {
         puzzle.board().shuffle();
         moveCount = 0;
 
+        if (minMoveCountFuture != null) {
+            minMoveCountFuture.cancel(true);
+        }
+
         minMoveCountFuture = executor.submit(() -> {
             var path = FINDER.findShortestPath(puzzle, EndCondition.endAt(FifteenPuzzle.solved(BOARD_SIZE)));
             return (int) FINDER.getGraph().sumEdgeWeights(path);

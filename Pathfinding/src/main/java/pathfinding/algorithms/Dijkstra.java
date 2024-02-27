@@ -12,20 +12,20 @@ import java.util.List;
  */
 public class Dijkstra<T> implements PathfindingAlgorithm<T> {
 
-    private final AStar<T> aStar = new AStar<>((_, _) -> 0.0);
+    private final PathfindingAlgorithm<T> algorithm = new AStar<>((_, _) -> 0.0);
 
     @Override
     public List<T> findAnyPath(T start,
                                EndCondition<T> endCondition,
                                Graph<T> graph) {
-        return aStar.findAnyPath(start, endCondition, graph);
+        return algorithm.findAnyPath(start, endCondition, graph);
     }
 
     @Override
     public List<T> findShortestPath(T start,
                                     EndCondition<T> endCondition,
                                     Graph<T> graph) {
-        return aStar.findShortestPath(start, endCondition, graph);
+        return algorithm.findShortestPath(start, endCondition, graph);
     }
 
 }
