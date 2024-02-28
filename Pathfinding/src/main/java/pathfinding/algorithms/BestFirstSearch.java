@@ -20,11 +20,11 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
 
     void closeCurrent();
 
-    void initializeDataStructures(T start);
+    boolean hasVisited(T vertex);
 
     boolean hasOpen();
 
-    boolean hasVisited(T vertex);
+    void initializeDataStructures(T start);
 
     void expand(EndCondition<T> endCondition, Graph<T> graph);
 

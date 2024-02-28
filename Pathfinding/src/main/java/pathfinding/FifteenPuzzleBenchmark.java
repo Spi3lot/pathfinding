@@ -19,7 +19,7 @@ public class FifteenPuzzleBenchmark {
         var graph = new FifteenPuzzleGraph();
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
-        var pathfinder = new Pathfinder<>(graph, BidiBestFirstSearch.usingAStar(
+        var pathfinder = new Pathfinder<>(graph, BidiBestFirstSearch.aStar(
                 (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
                         endCondition.endVertex().orElseThrow()
                 )

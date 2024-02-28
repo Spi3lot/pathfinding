@@ -25,7 +25,7 @@ public class FlexibleGraphBenchmark {
                 .build();
 
         var search = new AStar<PVector>(
-                (vertex, endCondition) -> (double) vertex.dist(endCondition.endVertex().orElseThrow())
+                (vertex, endCondition) -> vertex.dist(endCondition.endVertex().orElseThrow())
         );
 
         var benchmark = new Benchmark(() -> search.findShortestPath(

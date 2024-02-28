@@ -15,7 +15,10 @@ public abstract class CachedGraph<T> implements Graph<T> {
 
     @Override
     public Map<T, Double> getNeighbors(T vertex) {
-        return adjacencyCache.computeIfAbsent(vertex, this::calculateNeighbors);
+        return adjacencyCache.computeIfAbsent(
+                vertex,
+                this::calculateNeighbors
+        );
     }
 
     abstract Map<T, Double> calculateNeighbors(T vertex);

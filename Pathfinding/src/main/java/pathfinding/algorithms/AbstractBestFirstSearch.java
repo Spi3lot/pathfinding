@@ -82,10 +82,10 @@ public abstract class AbstractBestFirstSearch<T> implements BestFirstSearch<T> {
         graph.getNeighbors(current)
                 .entrySet()
                 .stream()
-                .filter(neighborEntry -> !hasVisited(neighborEntry.getKey()))
-                .forEach(neighborEntry -> {
-                    T neighbor = neighborEntry.getKey();
-                    double weight = neighborEntry.getValue();
+                .filter(entry -> !hasVisited(entry.getKey()))
+                .forEach(entry -> {
+                    T neighbor = entry.getKey();
+                    double weight = entry.getValue();
                     double g = g(neighbor, distances);
                     double tentativeG = g(current, distances) + weight;
 
