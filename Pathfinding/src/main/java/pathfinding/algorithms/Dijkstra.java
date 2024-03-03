@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Dijkstra<T> implements PathfindingAlgorithm<T> {
 
-    private final PathfindingAlgorithm<T> algorithm = new AStar<>((_, _) -> 0.0);
+    private final PathfindingAlgorithm<T> algorithm = new AStar<>((_, _) -> 0);
 
     @Override
     public List<T> findAnyPath(T start,

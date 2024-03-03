@@ -35,7 +35,7 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
         this.backwardSearch = Objects.requireNonNull(backwardSearch);
     }
 
-    public static <T> BidiBestFirstSearch<T> usingAStar(Heuristic<T> heuristic) {
+    public static <T> BidiBestFirstSearch<T> aStar(Heuristic<T> heuristic) {
         return new BidiBestFirstSearch<>(
                 new AStar<>(heuristic),
                 new AStar<>(heuristic)

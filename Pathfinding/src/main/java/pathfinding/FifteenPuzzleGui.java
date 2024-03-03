@@ -4,6 +4,7 @@ import pathfinding.algorithms.BidiBestFirstSearch;
 import pathfinding.functions.FifteenPuzzleHeuristic;
 import pathfinding.games.Direction;
 import pathfinding.games.FifteenPuzzle;
+import pathfinding.games.FifteenPuzzleBoard;
 import pathfinding.games.Position;
 import pathfinding.graphs.FifteenPuzzleGraph;
 import pathfinding.service.EndCondition;
@@ -26,7 +27,7 @@ import static java.util.FormatProcessor.FMT;
 public class FifteenPuzzleGui extends PApplet {
 
     private static final int BOARD_SIZE = 4;
-    private static final BidiBestFirstSearch<FifteenPuzzle> SEARCH = BidiBestFirstSearch.usingAStar(new FifteenPuzzleHeuristic());
+    private static final BidiBestFirstSearch<FifteenPuzzle> SEARCH = BidiBestFirstSearch.aStar(new FifteenPuzzleHeuristic());
     private static final Pathfinder<FifteenPuzzle> FINDER = new Pathfinder<>(new FifteenPuzzleGraph(), SEARCH);
     private final FifteenPuzzle puzzle = new FifteenPuzzle(BOARD_SIZE, 0);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -146,7 +147,8 @@ public class FifteenPuzzleGui extends PApplet {
         }
 
         minMoveCountFuture = executor.submit(() -> {
-            var path = FINDER.findShortestPath(puzzle, EndCondition.endAt(FifteenPuzzle.solved(BOARD_SIZE)));
+            var start = new FifteenPuzzle(new FifteenPuzzleBoard(puzzle.board()));
+            var path = FINDER.findShortestPath(start, EndCondition.endAt(FifteenPuzzle.solved(BOARD_SIZE)));
             return (int) FINDER.getGraph().sumEdgeWeights(path);
         });
     }

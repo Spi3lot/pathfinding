@@ -8,8 +8,8 @@ public class FlexibleGraphExample {
 
     public static void main(String[] args) {
         var graphRandomizer = FlexibleGraphRandomizer.<Character>builder()
-                .maxRandomWeight(10)
                 .vertices(List.of('A', 'B', 'C', 'D', 'E'))
+                .weightFunction((source, destination) -> (double) Math.abs(source - destination))
                 .build();
 
         var graph = graphRandomizer.randomizeDirectedEdges();

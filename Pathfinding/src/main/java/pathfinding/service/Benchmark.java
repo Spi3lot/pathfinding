@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
 
 import static java.util.FormatProcessor.FMT;
 
@@ -16,7 +18,7 @@ import static java.util.FormatProcessor.FMT;
 public class Benchmark {
 
     private final List<Long> durations = new ArrayList<>();
-    private final Runnable task;
+    private final IntConsumer task;
     private long lastResetMillis;
 
     public long times(int times) {
@@ -24,7 +26,7 @@ public class Benchmark {
 
         for (int i = 0; i < times; i++) {
             resetTimer();
-            task.run();
+            task.accept(i);
             long elapsedMillis = elapsedMillis();
             totalDuration += elapsedMillis;
             durations.add(elapsedMillis);
