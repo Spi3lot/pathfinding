@@ -27,7 +27,7 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
         if (forwardSearch == backwardSearch) {
             throw new IllegalArgumentException(
                     "The forward and backward searches " +
-                            "must be different instances."
+                            "must not be the same instance."
             );
         }
 
@@ -55,7 +55,7 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
             forwardSearch.updateCurrent();
             backwardSearch.updateCurrent();
 
-            if (doSearchesCollide()) {
+            if (doSearchesIntersect()) {
                 continue;
             }
 
@@ -77,7 +77,7 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
         return Collections.emptyList();
     }
 
-    private boolean doSearchesCollide() {
+    private boolean doSearchesIntersect() {
         return forwardSearch.hasVisited(forwardSearch.getCurrent())
                 || backwardSearch.hasVisited(backwardSearch.getCurrent());
     }

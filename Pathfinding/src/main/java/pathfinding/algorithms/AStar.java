@@ -23,7 +23,7 @@ public class AStar<T> extends AbstractBestFirstSearch<T> {
     }
 
     @Override
-    public double h(T vertex, EndCondition<T> endCondition) {
+    public final double h(T vertex, EndCondition<T> endCondition) {
         return heuristic.applyAsDouble(vertex, endCondition);
     }
 

@@ -1,5 +1,6 @@
 package pathfinding.algorithms;
 
+import pathfinding.functions.Heuristic;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 
@@ -12,7 +13,8 @@ import java.util.List;
  */
 public class Dijkstra<T> implements PathfindingAlgorithm<T> {
 
-    private final PathfindingAlgorithm<T> algorithm = new AStar<>((_, _) -> 0);
+    private final Heuristic<T> zero = (_, _) -> 0;
+    private final PathfindingAlgorithm<T> algorithm = new AStar<>(zero);
 
     @Override
     public List<T> findAnyPath(T start,
