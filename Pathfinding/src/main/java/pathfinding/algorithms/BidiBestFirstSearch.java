@@ -35,10 +35,10 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
         this.backwardSearch = Objects.requireNonNull(backwardSearch);
     }
 
-    public static <T> BidiBestFirstSearch<T> aStar(Heuristic<T> heuristic) {
+    public static <T> BidiBestFirstSearch<T> usingAStar(Heuristic<T> h) {
         return new BidiBestFirstSearch<>(
-                new AStar<>(heuristic),
-                new AStar<>(heuristic)
+                new AStar<>(h),
+                new AStar<>(h)
         );
     }
 
@@ -46,8 +46,12 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
     public List<T> findShortestPath(T start,
                                     EndCondition<T> forwardEndCondition,
                                     Graph<T> graph) {
+        T end = forwardEndCondition.vertex()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "The end condition must specify a vertex."
+                ));
+
         var backwardEndCondition = EndCondition.endAt(start);
-        T end = forwardEndCondition.endVertex().orElseThrow();
         forwardSearch.initializeDataStructures(start);
         backwardSearch.initializeDataStructures(end);
 

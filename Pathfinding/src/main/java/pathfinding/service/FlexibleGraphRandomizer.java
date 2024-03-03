@@ -40,7 +40,6 @@ public class FlexibleGraphRandomizer<T> {
     @Builder.Default
     private ToDoubleBiFunction<T, T> weightFunction = (_, _) -> 1;
 
-
     /**
      * Generates random edges between the vertices of a directed graph
      *

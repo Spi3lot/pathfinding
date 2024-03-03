@@ -19,9 +19,9 @@ public class FifteenPuzzleSolver {
         var puzzle = new FifteenPuzzle(BOARD_SIZE);
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
-        var pathfinder = new Pathfinder<>(graph, BidiBestFirstSearch.aStar(
+        var pathfinder = new Pathfinder<>(graph, BidiBestFirstSearch.usingAStar(
                         (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
-                                endCondition.endVertex().orElseThrow()
+                                endCondition.vertex().orElseThrow()
                         )
         ));
 

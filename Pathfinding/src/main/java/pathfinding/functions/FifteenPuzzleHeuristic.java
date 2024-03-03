@@ -11,7 +11,7 @@ public class FifteenPuzzleHeuristic implements Heuristic<FifteenPuzzle> {
 
     @Override
     public double applyAsDouble(FifteenPuzzle puzzle, EndCondition<FifteenPuzzle> endCondition) {
-        return puzzle.getLeastMoveCountTo(endCondition.endVertex().orElseThrow());
+        return puzzle.getLeastMoveCountTo(endCondition.vertex().orElseThrow());
     }
 
 }

@@ -36,7 +36,7 @@ public class PathfindingExample {
 
         var pathfinder = new Pathfinder<>(
                 graph,
-                new AStar<>((current, endCondition) -> (double) current.dist(endCondition.endVertex().orElseThrow()))
+                new AStar<>((current, endCondition) -> current.dist(endCondition.vertex().orElseThrow()))
         );
 
         System.out.println(pathfinder.findShortestPath(a, EndCondition.endAt(b)));

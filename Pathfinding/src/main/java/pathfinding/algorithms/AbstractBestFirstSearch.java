@@ -9,12 +9,13 @@ import pathfinding.service.PathTracer;
 import java.util.*;
 
 /**
- * Implementation of the A* algorithm for finding the shortest path.
+ * Abstract class for best-first search algorithms.
  *
  * @param <T> the type of the vertices in the graph
  */
 @Getter
-public abstract class AbstractBestFirstSearch<T> implements BestFirstSearch<T> {
+public abstract class AbstractBestFirstSearch<T>
+        implements BestFirstSearch<T> {
 
     private final Map<T, Double> distances = new HashMap<>();
     private final Map<T, T> predecessors = new HashMap<>();

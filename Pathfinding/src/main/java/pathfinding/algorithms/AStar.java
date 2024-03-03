@@ -7,7 +7,7 @@ import pathfinding.service.EndCondition;
 import java.util.Map;
 
 /**
- * Abstract class for best-first search algorithms.
+ * Implementation of the A* algorithm for finding the shortest path.
  *
  * @param <T> the type of the vertices in the graph
 
