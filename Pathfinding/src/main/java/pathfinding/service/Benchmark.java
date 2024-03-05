@@ -17,7 +17,7 @@ public class Benchmark<T> {
 
     private final List<Long> durations = new ArrayList<>();
 
-    private long lastResetMillis;
+    private long lastResetNanos;
 
     private IntFunction<T> task;
 
@@ -25,26 +25,26 @@ public class Benchmark<T> {
     private ObjLongConsumer<T> postProcessor = (_, _) -> {};
 
     public long times(int times) {
-        long totalDuration = 0;
+        long totalNanos = 0;
 
         for (int i = 0; i < times; i++) {
             resetTimer();
             T result = task.apply(i);
-            long elapsedMillis = elapsedMillis();
-            totalDuration += elapsedMillis;
-            durations.add(elapsedMillis);
-            postProcessor.accept(result, elapsedMillis);
+            long nanos = elapsedNanos();
+            totalNanos += nanos;
+            durations.add(nanos);
+            postProcessor.accept(result, nanos);
         }
 
-        return totalDuration;
+        return totalNanos;
     }
 
     private void resetTimer() {
-        lastResetMillis = System.currentTimeMillis();
+        lastResetNanos = System.nanoTime();
     }
 
-    private long elapsedMillis() {
-        return System.currentTimeMillis() - lastResetMillis;
+    private long elapsedNanos() {
+        return System.nanoTime() - lastResetNanos;
     }
 
     public NormalDistribution calculateDistribution() {

@@ -1,15 +1,15 @@
 package pathfinding;
 
+import com.opencsv.CSVWriter;
 import pathfinding.algorithms.*;
 import pathfinding.functions.Heuristic;
 import pathfinding.service.Benchmark;
 import pathfinding.service.EndCondition;
 import pathfinding.service.FlexibleGraphRandomizer;
-import pathfinding.service.NormalDistribution;
 import processing.core.PVector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -19,21 +19,30 @@ import java.util.stream.IntStream;
  */
 public class FlexibleGraphBenchmark {
 
-    private static final int VERTEX_COUNT = 250;
-    private static final int GRAPH_COUNT = 250;
+    private static final int GRAPH_COUNT = 1000;
+    private static final int VERTEX_COUNT_PER_GRAPH = 1000;
+    private static final int AVERAGE_EDGE_COUNT_PER_GRAPH = 100;
+    private static final double EDGE_PROBABILITY = AVERAGE_EDGE_COUNT_PER_GRAPH * 2.0 / (VERTEX_COUNT_PER_GRAPH * (VERTEX_COUNT_PER_GRAPH - 1));
     private static final Heuristic<PVector> HEURISTIC = (vertex, endCondition) -> vertex.dist(endCondition.vertex().orElseThrow());
-    private static final String UNIT = "ms";
+    private static final String UNIT = "ns";
 
-    public static void main(String[] args) {
-        var vertices = IntStream.range(0, VERTEX_COUNT)
+    public static void main(String[] args) throws IOException {
+        System.out.println("Generating random vertices...");
+
+        var vertices = IntStream.range(0, VERTEX_COUNT_PER_GRAPH)
                 .mapToObj(_ -> PVector.random2D())
                 .toList();
+
+        var start = vertices.getFirst();
+        var endCondition = EndCondition.endAt(vertices.getLast());
 
         var randomizer = FlexibleGraphRandomizer.<PVector>builder()
                 .vertices(vertices)
                 .weightFunction((source, destination) -> source.dist(destination))
-                .edgeProbability(0.1)
+                .edgeProbability(EDGE_PROBABILITY)
                 .build();
+
+        System.out.println("Generating random graphs...");
 
         var graphs = IntStream.range(0, GRAPH_COUNT)
                 .mapToObj(_ -> randomizer.randomizeUndirectedEdges())
@@ -43,30 +52,34 @@ public class FlexibleGraphBenchmark {
                 BidiBestFirstSearch.usingAStar(HEURISTIC),
                 new AStar<>(HEURISTIC),
                 new Dijkstra<>(),
-                new RecursiveDFS<>(),
-                new DepthFirstSearch<>(),
+//                new RecursiveDFS<>(),
+//                new DepthFirstSearch<>(),
                 new BreadthFirstSearch<>()
         );
 
-        searches.forEach(search -> {
-                    var durations = new HashMap<Integer, List<Long>>();
+        var csvWriter = new CSVWriter(new FileWriter("benchmark.csv"));
+        csvWriter.writeNext(new String[]{"Algorithm", "Path Length", UNIT});
+        System.out.println(STR."Running benchmarks with an edge probability of \{EDGE_PROBABILITY}...");
 
-                    var benchmark = Benchmark.<List<PVector>>builder()
-                            .task((iteration) -> search.findAnyPath(
-                                    vertices.getFirst(),
-                                    EndCondition.endAt(vertices.getLast()),
-                                    graphs.get(iteration)
-                            ))
-                            .postProcessor((path, millis) -> durations.computeIfAbsent(path.size(), _ -> new ArrayList<>()).add(millis))
-                            .build();
+        for (var search : searches) {
+            var benchmark = Benchmark.<List<PVector>>builder()
+                    .task((iteration) -> search.findAnyPath(
+                            start,
+                            endCondition,
+                            graphs.get(iteration))
+                    )
+                    .postProcessor((path, nanos) -> csvWriter.writeNext(new String[]{
+                            search.getClass().getSimpleName(),
+                            STR."\{path.size()}",
+                            STR."\{nanos}",
+                    }))
+                    .build();
 
-                    benchmark.times(GRAPH_COUNT);
-                    System.out.println(search.getClass().getSimpleName());
-                    System.out.println(benchmark);
-                    durations.forEach((length, values) -> System.out.println(STR."\{length}: \{NormalDistribution.of(values).toString(UNIT)}"));
-                    System.out.println();
-                }
-        );
+            long nanos = benchmark.times(GRAPH_COUNT);
+            System.out.println(STR."\{nanos / 1e6} ms for \{search.getClass().getSimpleName()}");
+        }
+
+        csvWriter.close();
     }
 
 }
