@@ -1,4 +1,5 @@
 target/
+benchmark.csv
 
 ### IntelliJ IDEA ###
 .idea/
