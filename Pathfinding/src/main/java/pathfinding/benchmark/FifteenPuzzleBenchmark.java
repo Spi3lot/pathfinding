@@ -1,4 +1,4 @@
-package pathfinding;
+package pathfinding.benchmark;
 
 import pathfinding.algorithms.BidiBestFirstSearch;
 import pathfinding.games.FifteenPuzzle;

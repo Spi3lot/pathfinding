@@ -10,10 +10,14 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Implementation of the bidirectional best-first search algorithm.
- * It uses two instances of any best-first search algorithm to search from both ends.
+ * Implementation of bidirectional best-first search.
+ * It uses two instances of any best-first search
+ * algorithms to search from both ends.
  * The two algorithms can even be different.
- * The algorithm stops when the two searches <b>meet in the middle</b>.
+ * The search stops when the two searches <b>meet in the middle</b>.
+ * <p>
+ * <i>Bidi</i> stands for bidirectional and is
+ * abbreviated to avoid line breaks in the code.
  *
  * @param <T> the type of the vertices in the graph
  */
@@ -35,6 +39,15 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
         this.backwardSearch = Objects.requireNonNull(backwardSearch);
     }
 
+    /**
+     * Named constructor to create a bidirectional best-first search
+     * using A* as the search algorithm for both directions.
+     *
+     * @param h   the heuristic function to use.
+     *            The name is abbreviated to avoid line breaks in the code.
+     * @param <T> the type of the vertices in the graph
+     * @return a new instance of BidiBestFirstSearch
+     */
     public static <T> BidiBestFirstSearch<T> usingAStar(Heuristic<T> h) {
         return new BidiBestFirstSearch<>(
                 new AStar<>(h),
@@ -86,21 +99,42 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
                 || backwardSearch.hasVisited(backwardSearch.getCurrent());
     }
 
+    /**
+     * Merges the vertices from the start to the common vertex
+     * and from the end to the common vertex into a single path.
+     * The common vertex is included only once in the result.
+     *
+     * @param start  the start vertex
+     * @param common the common vertex
+     * @param end    the end vertex
+     * @return the merged path
+     */
     private List<T> mergePaths(T start,
-                               T contained,
+                               T common,
                                T end) {
-        var forwardTracer = new PathTracer<>(forwardSearch.getPredecessors());
-        var startToContained = forwardTracer.unsafeTrace(start, contained);
+        var forwardPredecessors = forwardSearch.getPredecessors();
+        var forwardTracer = new PathTracer<>(forwardPredecessors);
+        var startToCommon = forwardTracer.unsafeTrace(start, common);
 
-        var backwardTracer = new PathTracer<>(backwardSearch.getPredecessors());
-        var endToContained = backwardTracer.unsafeTrace(end, contained);
-        return mergePaths(startToContained, endToContained);
+        var backwardPredecessors = backwardSearch.getPredecessors();
+        var backwardTracer = new PathTracer<>(backwardPredecessors);
+        var endToCommon = backwardTracer.unsafeTrace(end, common);
+        return mergePaths(startToCommon, endToCommon);
     }
 
-    private List<T> mergePaths(List<T> startToContained, List<T> endToContained) {
-        var containedToEnd = endToContained.reversed();
-        startToContained.addAll(containedToEnd.subList(1, containedToEnd.size()));
-        return startToContained;
+    /**
+     * Merges the 2 paths by reversing the 2nd one and
+     * removing the common vertex from any of the 2
+     * (in this case, from the 2nd path) and concatenating them
+     *
+     * @param startToCommon the path from the start to the common vertex
+     * @param endToCommon   the path from the end to the common vertex
+     * @return the merged path
+     */
+    private List<T> mergePaths(List<T> startToCommon, List<T> endToCommon) {
+        var commonToEnd = endToCommon.reversed();
+        startToCommon.addAll(commonToEnd.subList(1, commonToEnd.size()));
+        return startToCommon;
     }
 
 }

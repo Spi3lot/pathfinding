@@ -49,7 +49,7 @@ public class FifteenPuzzleGui extends PApplet {
 
     @Override
     public void setup() {
-        int highestDigitCount = countDigits(puzzle.board().calcArea() - 1);
+        int highestDigitCount = countDigits(puzzle.board().calculateArea() - 1);
         tileSize = (float) width / BOARD_SIZE;
         numberTextSize = tileSize * 2 / (highestDigitCount + 1);
         solvedTextSize = width / 10f;
@@ -80,7 +80,7 @@ public class FifteenPuzzleGui extends PApplet {
                 } else {
                     var position = new Position(i, j);
                     int actualValue = puzzle.board().get(position);
-                    int expectedValue = position.calcExpectedValue(BOARD_SIZE);
+                    int expectedValue = position.calculateExpectedValue(BOARD_SIZE);
                     square(i * tileSize, j * tileSize, tileSize);
                     fill((actualValue == expectedValue) ? 0xFF005500 : 0xFF0000FF);
                     textSize(numberTextSize);

@@ -3,18 +3,13 @@ package pathfinding.graphs;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+@Getter
 @ToString
 public class FlexibleGraph<T> implements Graph<T> {
 
-    @Getter
     private final boolean directed;
-
-    @Getter
     private final Map<T, Map<T, Double>> adjacencies = new HashMap<>();
 
     /**
@@ -105,8 +100,7 @@ public class FlexibleGraph<T> implements Graph<T> {
      * @return the number of edges in the graph
      */
     public int getEdgeCount() {
-        int count = adjacencies
-                .values()
+        int count = adjacencies.values()
                 .stream()
                 .mapToInt(Map::size)
                 .sum();
@@ -136,9 +130,21 @@ public class FlexibleGraph<T> implements Graph<T> {
         return adjacencies.keySet();
     }
 
+    public double calculateAverageDegree() {
+        return adjacencies.values()
+                .stream()
+                .mapToInt(Map::size)
+                .average()
+                .orElse(0);
+    }
+
+    public int getDegree(T vertex) {
+        return getNeighbors(vertex).size();
+    }
+
     @Override
     public Map<T, Double> getNeighbors(T vertex) {
-        return adjacencies.get(vertex);
+        return adjacencies.getOrDefault(vertex, Collections.emptyMap());
     }
 
 }

@@ -54,7 +54,7 @@ public class FlexibleGraphRandomizer<T> {
                     graph.addEdge(
                             source,
                             destination,
-                            calcWeight(source, destination)
+                            calculateWeight(source, destination)
                     );
                 }
             }
@@ -80,7 +80,7 @@ public class FlexibleGraphRandomizer<T> {
                     graph.addEdge(
                             source,
                             destination,
-                            calcWeight(source, destination)
+                            calculateWeight(source, destination)
                     );
                 }
             }
@@ -95,7 +95,7 @@ public class FlexibleGraphRandomizer<T> {
         return graph;
     }
 
-    private double calcWeight(T source, T destination) {
+    private double calculateWeight(T source, T destination) {
         return weightFunction.applyAsDouble(source, destination);
     }
 

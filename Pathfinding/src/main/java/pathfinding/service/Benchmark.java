@@ -1,11 +1,11 @@
 package pathfinding.service;
 
 import lombok.Builder;
+import org.apache.commons.lang3.function.TriConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntFunction;
-import java.util.function.ObjLongConsumer;
 
 /**
  * Utility class to measure the duration of a given task.
@@ -22,7 +22,7 @@ public class Benchmark<T> {
     private IntFunction<T> task;
 
     @Builder.Default
-    private ObjLongConsumer<T> postProcessor = (_, _) -> {};
+    private TriConsumer<Integer, T, Long> postProcessor = (_, _, _) -> {};
 
     public long times(int times) {
         long totalNanos = 0;
@@ -33,7 +33,7 @@ public class Benchmark<T> {
             long nanos = elapsedNanos();
             totalNanos += nanos;
             durations.add(nanos);
-            postProcessor.accept(result, nanos);
+            postProcessor.accept(i, result, nanos);
         }
 
         return totalNanos;

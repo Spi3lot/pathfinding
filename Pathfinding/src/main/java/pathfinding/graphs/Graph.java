@@ -11,6 +11,13 @@ import java.util.Map;
 public interface Graph<T> {
 
     /**
+     * @param vertex the vertex to get the neighbors of
+     * @return a Map of the neighbors of the vertex and
+     * the weights of the edges between them
+     */
+    Map<T, Double> getNeighbors(T vertex);
+
+    /**
      * @param path the path to calculate the total weight of
      * @return the accumulated weight of the path
      */
@@ -30,24 +37,19 @@ public interface Graph<T> {
      * @return the weight of the edge between the two vertices
      */
     default double getEdgeWeight(T source, T destination) {
-        return getNeighbors(source)
-                .getOrDefault(destination, Double.POSITIVE_INFINITY);
+        return getNeighbors(source).getOrDefault(
+                destination,
+                Double.POSITIVE_INFINITY
+        );
     }
 
     /**
-     * @param source      the source vertex of the edge to be checked for
-     * @param destination the destination vertex of the edge to be checked for
+     * @param source      vertex v1 of the edge (v1, v2) to be checked for
+     * @param destination vertex v2 of the edge (v1, v2) to be checked for
      * @return the weight of the edge between the two vertices
      */
     default boolean hasEdge(T source, T destination) {
-        return getNeighbors(source)
-                .containsKey(destination);
+        return getNeighbors(source).containsKey(destination);
     }
-
-    /**
-     * @param vertex the vertex to get the neighbors of
-     * @return a Map of the neighbors of the vertex and the weights of the edges between them
-     */
-    Map<T, Double> getNeighbors(T vertex);
 
 }

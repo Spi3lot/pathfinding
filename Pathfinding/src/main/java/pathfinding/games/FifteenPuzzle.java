@@ -52,11 +52,11 @@ public record FifteenPuzzle(FifteenPuzzleBoard board) {
     }
 
     public Map<Integer, Integer> getLeastMoveCountsTo(FifteenPuzzle desired) {
-        var moveCounts = HashMap.<Integer, Integer>newHashMap(board.calcArea() - 1);
+        var moveCounts = HashMap.<Integer, Integer>newHashMap(board.calculateArea() - 1);
         var positions = getPositions();
         var desiredPositions = desired.getPositions();
 
-        for (int i = 1; i < board.calcArea(); i++) {
+        for (int i = 1; i < board.calculateArea(); i++) {
             var position = positions.get(i);
             var desiredPosition = desiredPositions.get(i);
             int moveCount = position.manhattanDistance(desiredPosition);
@@ -67,7 +67,7 @@ public record FifteenPuzzle(FifteenPuzzleBoard board) {
     }
 
     public Map<Integer, Position> getPositions() {
-        var positions = HashMap.<Integer, Position>newHashMap(board.calcArea());
+        var positions = HashMap.<Integer, Position>newHashMap(board.calculateArea());
 
         for (int j = 0; j < board.getLength(); j++) {
             for (int i = 0; i < board.getLength(); i++) {

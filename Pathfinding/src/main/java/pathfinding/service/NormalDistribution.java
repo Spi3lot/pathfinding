@@ -3,8 +3,6 @@ package pathfinding.service;
 import java.util.Collection;
 import java.util.Locale;
 
-import static java.util.FormatProcessor.FMT;
-
 /**
  * Represents a normal distribution.
  *
