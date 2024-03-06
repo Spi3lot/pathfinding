@@ -7,7 +7,7 @@ import java.util.*;
 
 @Getter
 @ToString
-public class FlexibleGraph<T> implements Graph<T> {
+public class FlexibleGraph<T> implements ModifiableGraph<T> {
 
     private final boolean directed;
     private final Map<T, Map<T, Double>> adjacencies = new HashMap<>();
@@ -28,23 +28,12 @@ public class FlexibleGraph<T> implements Graph<T> {
         this.directed = directed;
     }
 
-    /**
-     * Adds an unweighted edge between two vertices.
-     *
-     * @param source      the source vertex of the edge
-     * @param destination the destination vertex of the edge
-     */
+    @Override
     public void addEdge(T source, T destination) {
         addEdge(source, destination, 1);
     }
 
-    /**
-     * Adds a weighted edge between two vertices with a weight.
-     *
-     * @param source      the source vertex of the edge
-     * @param destination the destination vertex of the edge
-     * @param weight      the weight of the edge
-     */
+    @Override
     public void addEdge(T source, T destination, double weight) {
         addVertex(source);
         addVertex(destination);
@@ -55,30 +44,19 @@ public class FlexibleGraph<T> implements Graph<T> {
         }
     }
 
-    /**
-     * Adds a Collection of vertices to the graph.
-     */
+    @Override
     public void addVertices(Collection<T> vertices) {
         for (T vertex : vertices) {
             addVertex(vertex);
         }
     }
 
-    /**
-     * Adds a vertex to the graph.
-     *
-     * @param vertex the value of the vertex to be added
-     */
+    @Override
     public void addVertex(T vertex) {
         adjacencies.computeIfAbsent(vertex, _ -> new HashMap<>());
     }
 
-    /**
-     * Removes an edge between two vertices.
-     *
-     * @param source      the source vertex of the edge to be removed
-     * @param destination the destination vertex of the edge to be removed
-     */
+    @Override
     public void removeEdge(T source, T destination) {
         adjacencies.get(source).remove(destination);
 
@@ -87,18 +65,12 @@ public class FlexibleGraph<T> implements Graph<T> {
         }
     }
 
-    /**
-     * Removes a vertex from the graph.
-     *
-     * @param vertex the value of the vertex to be removed
-     */
+    @Override
     public void removeVertex(T vertex) {
         adjacencies.remove(vertex);
     }
 
-    /**
-     * @return the number of edges in the graph
-     */
+    @Override
     public int getEdgeCount() {
         int count = adjacencies.values()
                 .stream()
@@ -108,28 +80,17 @@ public class FlexibleGraph<T> implements Graph<T> {
         return (directed) ? count : count / 2;
     }
 
-    /**
-     * @return the number of vertices in the graph
-     */
+    @Override
     public int getVertexCount() {
         return adjacencies.size();
     }
 
-    /**
-     * @param vertex the vertex to be checked for
-     * @return the weight of the edge between the two vertices
-     */
+    @Override
     public boolean hasVertex(T vertex) {
         return adjacencies.containsKey(vertex);
     }
 
-    /**
-     * @return a Set of all the vertices in the graph
-     */
-    public Set<T> getVertices() {
-        return adjacencies.keySet();
-    }
-
+    @Override
     public double calculateAverageDegree() {
         return adjacencies.values()
                 .stream()
@@ -138,8 +99,14 @@ public class FlexibleGraph<T> implements Graph<T> {
                 .orElse(0);
     }
 
+    @Override
     public int getDegree(T vertex) {
         return getNeighbors(vertex).size();
+    }
+
+    @Override
+    public Set<T> getVertices() {
+        return adjacencies.keySet();
     }
 
     @Override

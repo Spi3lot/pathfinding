@@ -3,8 +3,8 @@ package pathfinding.benchmark;
 import com.opencsv.CSVWriter;
 import pathfinding.algorithms.*;
 import pathfinding.functions.Heuristic;
-import pathfinding.graphs.FlexibleGraph;
-import pathfinding.service.FlexibleGraphRandomizer;
+import pathfinding.graphs.ModifiableGraph;
+import pathfinding.service.ModifiableGraphRandomizer;
 import processing.core.PVector;
 
 import java.io.FileWriter;
@@ -32,13 +32,13 @@ public interface PVectorBenchmark {
             .mapToObj(_ -> PVector.random2D())
             .toList();
 
-    FlexibleGraphRandomizer<PVector> RANDOMIZER = FlexibleGraphRandomizer.<PVector>builder()
+    ModifiableGraphRandomizer<PVector> RANDOMIZER = ModifiableGraphRandomizer.<PVector>builder()
             .vertices(VERTICES)
             .weightFunction((source, destination) -> source.dist(destination))
             .edgeProbability(EDGE_PROBABILITY)
             .build();
 
-    List<FlexibleGraph<PVector>> GRAPHS = IntStream.range(0, GRAPH_COUNT)
+    List<ModifiableGraph<PVector>> GRAPHS = IntStream.range(0, GRAPH_COUNT)
             .mapToObj(_ -> RANDOMIZER.randomizeUndirectedEdges())
             .toList();
 

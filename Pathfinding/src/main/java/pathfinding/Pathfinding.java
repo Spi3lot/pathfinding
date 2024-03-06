@@ -1,6 +1,7 @@
 package pathfinding;
 
 import pathfinding.graphs.FlexibleGraph;
+import pathfinding.graphs.ModifiableGraph;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -11,7 +12,7 @@ import processing.core.PVector;
 public class Pathfinding extends PApplet {
 
     private static final int VERTEX_COUNT = 10;
-    private FlexibleGraph<PVector> graph;
+    private ModifiableGraph<PVector> graph;
 
     public static void main(String[] args) {
         PApplet.main(Pathfinding.class);

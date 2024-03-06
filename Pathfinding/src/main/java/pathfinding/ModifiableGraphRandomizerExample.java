@@ -1,16 +1,16 @@
 package pathfinding;
 
-import pathfinding.service.FlexibleGraphRandomizer;
+import pathfinding.service.ModifiableGraphRandomizer;
 
 import java.util.List;
 import java.util.Random;
 
-public class FlexibleGraphExample {
+public class ModifiableGraphRandomizerExample {
 
     public static void main(String[] args) {
         var random = new Random();
 
-        var graphRandomizer = FlexibleGraphRandomizer.<Character>builder()
+        var graphRandomizer = ModifiableGraphRandomizer.<Character>builder()
                 .vertices(List.of('A', 'B', 'C', 'D', 'E'))
                 .weightFunction((_, _) -> 1 + random.nextInt(10))
                 .build();

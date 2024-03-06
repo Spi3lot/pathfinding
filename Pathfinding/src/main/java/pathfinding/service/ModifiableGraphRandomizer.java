@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import pathfinding.graphs.FlexibleGraph;
+import pathfinding.graphs.ModifiableGraph;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.function.ToDoubleBiFunction;
 @Builder
 @Getter
 @Setter
-public class FlexibleGraphRandomizer<T> {
+public class ModifiableGraphRandomizer<T> {
 
     private static final Random RANDOM = new Random();
 
@@ -45,7 +46,7 @@ public class FlexibleGraphRandomizer<T> {
      *
      * @return a new directed graph with randomized edges
      */
-    public FlexibleGraph<T> randomizeDirectedEdges() {
+    public ModifiableGraph<T> randomizeDirectedEdges() {
         var graph = createFilledGraph(true);
 
         for (T source : vertices) {
@@ -68,7 +69,7 @@ public class FlexibleGraphRandomizer<T> {
      *
      * @return a new undirected graph with randomized edges
      */
-    public FlexibleGraph<T> randomizeUndirectedEdges() {
+    public ModifiableGraph<T> randomizeUndirectedEdges() {
         var graph = createFilledGraph(false);
 
         for (int i = 0; i < vertices.size(); i++) {
@@ -89,7 +90,7 @@ public class FlexibleGraphRandomizer<T> {
         return graph;
     }
 
-    private FlexibleGraph<T> createFilledGraph(boolean directed) {
+    private ModifiableGraph<T> createFilledGraph(boolean directed) {
         var graph = new FlexibleGraph<T>(directed);
         graph.addVertices(vertices);
         return graph;

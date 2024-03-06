@@ -11,16 +11,17 @@ import java.util.List;
  * @author Emilio Zottel (5AHIF)
  * @since 23.02.2024, Fr.
  */
-public class FlexibleGraphBenchmark implements PVectorBenchmark {
+public class ModifiableGraphBenchmark implements PVectorBenchmark {
 
+    private static final boolean DISCONNECT_START = false;
     private static final boolean DISCONNECT_END = false;
 
     public static void main(String[] args) throws IOException {
-        new FlexibleGraphBenchmark().runBenchmark();
+        new ModifiableGraphBenchmark().runBenchmark();
     }
 
     /**
-     * Runs the benchmark for the flexible graph.
+     * Runs the benchmark for modifiable graphs.
      * The average degree of the graph is calculated.
      */
     @Override
@@ -31,6 +32,10 @@ public class FlexibleGraphBenchmark implements PVectorBenchmark {
 
         try (var csvWriter = csvWriter()) {
             csvWriter.writeNext(new String[]{"Algorithm", "Path Length", "Duration (µs)", "Average Degree"});
+
+            if (DISCONNECT_START) {
+                PVectorBenchmark.disconnectVertexInAllGraphs(start);
+            }
 
             if (DISCONNECT_END) {
                 PVectorBenchmark.disconnectVertexInAllGraphs(endCondition.vertex().orElseThrow());
@@ -61,7 +66,7 @@ public class FlexibleGraphBenchmark implements PVectorBenchmark {
 
     @Override
     public String outputFileName() {
-        return "flexible-benchmark.csv";
+        return "modifiable-benchmark.csv";
     }
 
 }
