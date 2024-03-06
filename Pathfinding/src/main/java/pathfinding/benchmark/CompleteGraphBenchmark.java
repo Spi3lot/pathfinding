@@ -18,7 +18,7 @@ public class CompleteGraphBenchmark implements PVectorBenchmark {
     private static final Graph<PVector> GRAPH = new CompleteGraph<>(VERTICES);
 
     public static void main(String[] args) {
-
+        new CompleteGraphBenchmark().runBenchmark();
     }
 
     /**
