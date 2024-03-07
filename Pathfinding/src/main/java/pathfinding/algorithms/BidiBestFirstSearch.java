@@ -94,6 +94,12 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
         return Collections.emptyList();
     }
 
+    @Override
+    public int getVisitedVertexCount() {
+        return forwardSearch.getVisitedVertexCount()
+                + backwardSearch.getVisitedVertexCount();
+    }
+
     private boolean doSearchesIntersect() {
         return forwardSearch.hasVisited(forwardSearch.getCurrent())
                 || backwardSearch.hasVisited(backwardSearch.getCurrent());

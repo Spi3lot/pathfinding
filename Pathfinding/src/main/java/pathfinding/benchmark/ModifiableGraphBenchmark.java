@@ -41,8 +41,9 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
                     "Algorithm",
                     "Path Length",
                     "Duration (µs)",
+                    "Visited Vertices",
                     "Average Degree",
-                    "Average Path Degree",
+                    "Average Path Degree"
             });
 
             if (DISCONNECT_START) {
@@ -55,7 +56,7 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
 
             for (var algorithm : SPF_ALGORITHMS) {
                 var benchmark = Benchmark.<List<PVector>>builder()
-                        .task(iteration -> algorithm.findAnyPath(
+                        .task(iteration -> algorithm.findShortestPath(
                                 start,
                                 endCondition,
                                 graphs.get(iteration)
@@ -72,6 +73,7 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
                                     algorithm.getClass().getSimpleName(),
                                     STR."\{path.size()}",
                                     STR."\{nanos / 1e3}",
+                                    STR."\{algorithm.getVisitedVertexCount()}",
                                     STR."\{graph.calculateAverageDegree()}",
                                     STR."\{averagePathDegree}"
                             });

@@ -41,11 +41,17 @@ public class CompleteGraphBenchmark implements PVectorBenchmark {
                 .toList();
 
         try (var csvWriter = csvWriter()) {
-            csvWriter.writeNext(new String[]{"Algorithm", "Path Length", "Duration (µs)", "Average Degree"});
+            csvWriter.writeNext(new String[]{
+                    "Algorithm",
+                    "Path Length",
+                    "Duration (µs)",
+                    "Visited Vertices",
+                    "Average Degree"
+            });
 
             for (var algorithm : SPF_ALGORITHMS) {
                 var benchmark = Benchmark.<List<PVector>>builder()
-                        .task(iteration -> algorithm.findAnyPath(
+                        .task(iteration -> algorithm.findShortestPath(
                                 startVertices.get(iteration),
                                 endConditions.get(iteration),
                                 GRAPH
@@ -54,6 +60,7 @@ public class CompleteGraphBenchmark implements PVectorBenchmark {
                                 algorithm.getClass().getSimpleName(),
                                 STR."\{path.size()}",
                                 STR."\{nanos / 1e3}",
+                                STR."\{algorithm.getVisitedVertexCount()}",
                                 STR."\{VERTICES.size() * (VERTICES.size() - 1) / 2}"
                         }))
                         .build();

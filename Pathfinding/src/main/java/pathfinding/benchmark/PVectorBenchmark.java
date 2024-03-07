@@ -3,7 +3,6 @@ package pathfinding.benchmark;
 import com.opencsv.CSVWriter;
 import pathfinding.algorithms.*;
 import pathfinding.functions.Heuristic;
-import pathfinding.graphs.ModifiableGraph;
 import pathfinding.service.ModifiableGraphRandomizer;
 import processing.core.PVector;
 
@@ -20,7 +19,7 @@ public interface PVectorBenchmark {
 
     int GRAPH_COUNT = 1000;
 
-    int VERTEX_COUNT_PER_GRAPH = 250;
+    int VERTEX_COUNT_PER_GRAPH = 1000;
 
     int AVERAGE_EDGE_COUNT_PER_GRAPH = 1000;
 
@@ -46,6 +45,8 @@ public interface PVectorBenchmark {
             new DepthFirstSearch<>(),
             new RecursiveDFS<>()
     );
+
+    List<PathfindingAlgorithm<PVector>> ITERATIVE_ALGORITHMS = ALGORITHMS.subList(0, 5);
 
     /**
      * The algorithms reasonable to be used for finding the shortest paths.

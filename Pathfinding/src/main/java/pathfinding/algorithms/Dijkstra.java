@@ -30,4 +30,9 @@ public class Dijkstra<T> implements PathfindingAlgorithm<T> {
         return algorithm.findShortestPath(start, endCondition, graph);
     }
 
+    @Override
+    public int getVisitedVertexCount() {
+        return algorithm.getVisitedVertexCount();
+    }
+
 }

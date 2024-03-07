@@ -1,5 +1,6 @@
 package pathfinding.algorithms;
 
+import lombok.Getter;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 import pathfinding.service.PathTracer;
@@ -18,7 +19,10 @@ import java.util.*;
  *
  * @param <T> the type of the nodes in the graph to be searched
  */
+@Getter
 public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
+
+    private int visitedVertexCount;
 
     // TODO: check if this is actually faster than findShortestPath
     @Override
@@ -29,10 +33,12 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
         var stack = new ArrayDeque<T>();
         var visited = new ArrayList<T>();
         stack.push(start);
+        visitedVertexCount = 0;
 
         while (!stack.isEmpty()) {
             T current = stack.pop();
             visited.add(current);
+            visitedVertexCount++;
 
             if (endCondition.condition().test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
@@ -62,10 +68,12 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
         var paths = new ArrayList<List<T>>();
         var pathTracer = new PathTracer<>(predecessors);
         stack.push(start);
+        visitedVertexCount = 0;
 
         while (!stack.isEmpty()) {
             T current = stack.pop();
             var path = pathTracer.unsafeTrace(start, current);
+            visitedVertexCount++;
 
             if (endCondition.condition().test(current)) {
                 paths.add(path);

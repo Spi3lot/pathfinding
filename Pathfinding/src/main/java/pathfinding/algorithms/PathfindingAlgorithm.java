@@ -33,4 +33,10 @@ public interface PathfindingAlgorithm<T> {
                              EndCondition<T> endCondition,
                              Graph<T> graph);
 
+    /**
+     * Returns the number of vertices visited during the last search.
+     * @return the number of visited vertices
+     */
+    int getVisitedVertexCount();
+
 }

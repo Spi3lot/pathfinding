@@ -49,6 +49,11 @@ public abstract class AbstractBestFirstSearch<T>
     }
 
     @Override
+    public int getVisitedVertexCount() {
+        return closed.size();
+    }
+
+    @Override
     public void updateCurrent() {
         current = open.dequeueMin().getValue();
     }

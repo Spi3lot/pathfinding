@@ -1,9 +1,13 @@
 package pathfinding.algorithms;
 
+import lombok.Getter;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Recursive implementation of the Depth-First Search algorithm.
@@ -16,20 +20,25 @@ import java.util.*;
  *
  * @param <T> the type of the nodes in the graph to be searched
  */
+@Getter
 public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
 
+    private int visitedVertexCount;
 
     @Override
     public List<T> findAnyPath(T start,
-                                         EndCondition<T> endCondition,
-                                         Graph<T> graph) {
+                               EndCondition<T> endCondition,
+                               Graph<T> graph) {
+        visitedVertexCount = 0;
         return findAnyPath(start, endCondition, graph, List.of(start));
     }
 
     private List<T> findAnyPath(T start,
-                                          EndCondition<T> endCondition,
-                                          Graph<T> graph,
-                                          List<T> path) {
+                                EndCondition<T> endCondition,
+                                Graph<T> graph,
+                                List<T> path) {
+        visitedVertexCount++;
+
         if (endCondition.condition().test(start)) {
             return path;
         }
@@ -53,13 +62,16 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
     public List<T> findShortestPath(T start,
                                     EndCondition<T> endCondition,
                                     Graph<T> graph) {
+        visitedVertexCount = 0;
         return findShortestPath(start, endCondition, graph, List.of(start));
     }
 
     private List<T> findShortestPath(T start,
-                                               EndCondition<T> endCondition,
-                                               Graph<T> graph,
-                                               List<T> path) {
+                                     EndCondition<T> endCondition,
+                                     Graph<T> graph,
+                                     List<T> path) {
+        visitedVertexCount++;
+
         if (endCondition.condition().test(start)) {
             return path;
         }
