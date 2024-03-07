@@ -20,7 +20,7 @@ public interface PVectorBenchmark {
 
     int GRAPH_COUNT = 1000;
 
-    int VERTEX_COUNT_PER_GRAPH = 1000;
+    int VERTEX_COUNT_PER_GRAPH = 250;
 
     int AVERAGE_EDGE_COUNT_PER_GRAPH = 1000;
 
@@ -37,10 +37,6 @@ public interface PVectorBenchmark {
             .weightFunction((source, destination) -> source.dist(destination))
             .edgeProbability(EDGE_PROBABILITY)
             .build();
-
-    List<ModifiableGraph<PVector>> GRAPHS = IntStream.range(0, GRAPH_COUNT)
-            .mapToObj(_ -> RANDOMIZER.randomizeUndirectedEdges())
-            .toList();
 
     List<PathfindingAlgorithm<PVector>> ALGORITHMS = List.of(
             BidiBestFirstSearch.usingAStar(HEURISTIC),
@@ -60,16 +56,6 @@ public interface PVectorBenchmark {
      * SPF stands for "Shortest Path First".
      */
     List<PathfindingAlgorithm<PVector>> SPF_ALGORITHMS = ALGORITHMS.subList(0, 4);
-
-    static void disconnectVertexInAllGraphs(PVector vertex) {
-        for (var graph : GRAPHS) {
-            graph.getNeighbors(vertex)
-                    .keySet()
-                    .stream()
-                    .toList()  // copy to avoid concurrent modification
-                    .forEach(neighbor -> graph.removeEdge(vertex, neighbor));
-        }
-    }
 
     void runBenchmark();
 
