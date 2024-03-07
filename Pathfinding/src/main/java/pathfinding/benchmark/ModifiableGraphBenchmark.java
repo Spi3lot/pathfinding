@@ -1,11 +1,13 @@
 package pathfinding.benchmark;
 
+import pathfinding.graphs.ModifiableGraph;
 import pathfinding.service.Benchmark;
 import pathfinding.service.EndCondition;
 import processing.core.PVector;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * @author Emilio Zottel (5AHIF)
@@ -15,6 +17,10 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
 
     private static final boolean DISCONNECT_START = false;
     private static final boolean DISCONNECT_END = false;
+
+    private final List<ModifiableGraph<PVector>> graphs = IntStream.range(0, GRAPH_COUNT)
+            .mapToObj(_ -> RANDOMIZER.randomizeUndirectedEdges())
+            .toList();
 
     public static void main(String[] args) throws IOException {
         new ModifiableGraphBenchmark().runBenchmark();
@@ -31,29 +37,45 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
         var endCondition = EndCondition.endAt(VERTICES.getLast());
 
         try (var csvWriter = csvWriter()) {
-            csvWriter.writeNext(new String[]{"Algorithm", "Path Length", "Duration (µs)", "Average Degree"});
+            csvWriter.writeNext(new String[]{
+                    "Algorithm",
+                    "Path Length",
+                    "Duration (µs)",
+                    "Average Degree",
+                    "Average Path Degree",
+            });
 
             if (DISCONNECT_START) {
-                PVectorBenchmark.disconnectVertexInAllGraphs(start);
+                disconnectVertexInAllGraphs(start);
             }
 
             if (DISCONNECT_END) {
-                PVectorBenchmark.disconnectVertexInAllGraphs(endCondition.vertex().orElseThrow());
+                disconnectVertexInAllGraphs(endCondition.vertex().orElseThrow());
             }
 
             for (var algorithm : SPF_ALGORITHMS) {
                 var benchmark = Benchmark.<List<PVector>>builder()
-                        .task((iteration) -> algorithm.findAnyPath(
+                        .task(iteration -> algorithm.findAnyPath(
                                 start,
                                 endCondition,
-                                GRAPHS.get(iteration)
+                                graphs.get(iteration)
                         ))
-                        .postProcessor((iteration, path, nanos) -> csvWriter.writeNext(new String[]{
-                                algorithm.getClass().getSimpleName(),
-                                STR."\{path.size()}",
-                                STR."\{nanos / 1e3}",
-                                STR."\{GRAPHS.get(iteration).calculateAverageDegree()}"
-                        }))
+                        .postProcessor((iteration, path, nanos) -> {
+                            var graph = graphs.get(iteration);
+
+                            double averagePathDegree = path.stream()
+                                    .mapToDouble(graph::getDegree)
+                                    .average()
+                                    .orElse(0);
+
+                            csvWriter.writeNext(new String[]{
+                                    algorithm.getClass().getSimpleName(),
+                                    STR."\{path.size()}",
+                                    STR."\{nanos / 1e3}",
+                                    STR."\{graph.calculateAverageDegree()}",
+                                    STR."\{averagePathDegree}"
+                            });
+                        })
                         .build();
 
                 long nanos = benchmark.times(GRAPH_COUNT);
@@ -61,6 +83,16 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void disconnectVertexInAllGraphs(PVector vertex) {
+        for (var graph : graphs) {
+            graph.getNeighbors(vertex)
+                    .keySet()
+                    .stream()
+                    .toList()  // copy to avoid concurrent modification
+                    .forEach(neighbor -> graph.removeEdge(vertex, neighbor));
         }
     }
 
