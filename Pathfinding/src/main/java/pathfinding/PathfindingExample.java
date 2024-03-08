@@ -15,7 +15,7 @@ import java.util.List;
 public class PathfindingExample {
 
     public static void main(String[] args) {
-        aStarBreaker();
+        bidiBefsBreaker();
     }
 
     private static void bidiBefsBreaker() {
