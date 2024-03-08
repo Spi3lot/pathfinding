@@ -40,6 +40,7 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
             csvWriter.writeNext(new String[]{
                     "Algorithm",
                     "Path Length",
+                    "Path Weight",
                     "Duration (µs)",
                     "Visited Vertices",
                     "Average Degree",
@@ -54,7 +55,7 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
                 disconnectVertexInAllGraphs(endCondition.vertex().orElseThrow());
             }
 
-            for (var algorithm : SPF_ALGORITHMS) {
+            for (var algorithm : UNIDIRECTIONAL_BEFS_ALGORITHMS) {
                 var benchmark = Benchmark.<List<PVector>>builder()
                         .task(iteration -> algorithm.findShortestPath(
                                 start,
@@ -72,6 +73,7 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
                             csvWriter.writeNext(new String[]{
                                     algorithm.getClass().getSimpleName(),
                                     STR."\{path.size()}",
+                                    STR."\{graph.sumEdgeWeights(path)}",
                                     STR."\{nanos / 1e3}",
                                     STR."\{algorithm.getVisitedVertexCount()}",
                                     STR."\{graph.calculateAverageDegree()}",

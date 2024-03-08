@@ -1,16 +1,22 @@
 package pathfinding.graphs;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.*;
+import java.util.function.ToDoubleBiFunction;
 
+@RequiredArgsConstructor
 @Getter
+@Setter
 @ToString
 public class FlexibleGraph<T> implements ModifiableGraph<T> {
 
     private final boolean directed;
     private final Map<T, Map<T, Double>> adjacencies = new HashMap<>();
+    private ToDoubleBiFunction<T, T> defaultWeightFunction = (_, _) -> 1;
 
     /**
      * Undirected graph constructor.
@@ -19,18 +25,13 @@ public class FlexibleGraph<T> implements ModifiableGraph<T> {
         this(false);
     }
 
-    /**
-     * Graph constructor.
-     *
-     * @param directed whether the graph is directed or not
-     */
-    public FlexibleGraph(boolean directed) {
-        this.directed = directed;
-    }
-
     @Override
     public void addEdge(T source, T destination) {
-        addEdge(source, destination, 1);
+        addEdge(
+                source,
+                destination,
+                defaultWeightFunction.applyAsDouble(source, destination)
+        );
     }
 
     @Override

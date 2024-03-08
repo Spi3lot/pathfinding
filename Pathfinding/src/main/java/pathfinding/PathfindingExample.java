@@ -1,17 +1,36 @@
 package pathfinding;
 
 import pathfinding.algorithms.AStar;
+import pathfinding.algorithms.BidiBestFirstSearch;
 import pathfinding.algorithms.DepthFirstSearch;
 import pathfinding.algorithms.Dijkstra;
 import pathfinding.graphs.FlexibleGraph;
 import pathfinding.service.EndCondition;
+import pathfinding.service.ModifiableGraphRandomizer;
 import pathfinding.service.Pathfinder;
 import processing.core.PVector;
+
+import java.util.List;
 
 public class PathfindingExample {
 
     public static void main(String[] args) {
         aStarBreaker();
+    }
+
+    private static void bidiBefsBreaker() {
+        var graph = new FlexibleGraph<PVector>();
+        graph.setDefaultWeightFunction((source, destination) -> source.dist(destination));
+        graph.addEdge(new PVector(0, 0), new PVector(1, 1));
+        graph.addEdge(new PVector(1, 1), new PVector(2, 2));
+        graph.addEdge(new PVector(0, 0), new PVector(2, 2));
+
+        var aStar = new AStar<PVector>((current, endCondition) -> graph.getDefaultWeightFunction().applyAsDouble(current, endCondition.vertex().orElseThrow()));
+        var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+        var path1 = aStar.findShortestPath(new PVector(0, 0), EndCondition.endAt(new PVector(2, 2)), graph);
+        var path2 = bidiAStar.findShortestPath(new PVector(0, 0), EndCondition.endAt(new PVector(2, 2)), graph);
+        System.out.println(path1);
+        System.out.println(path2);
     }
 
     private static void aStarBreaker() {

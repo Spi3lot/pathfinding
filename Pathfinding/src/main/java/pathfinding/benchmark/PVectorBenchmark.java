@@ -58,6 +58,10 @@ public interface PVectorBenchmark {
      */
     List<PathfindingAlgorithm<PVector>> SPF_ALGORITHMS = ALGORITHMS.subList(0, 4);
 
+    List<PathfindingAlgorithm<PVector>> BEFS_ALGORITHMS = ALGORITHMS.subList(0, 3);
+
+    List<PathfindingAlgorithm<PVector>> UNIDIRECTIONAL_BEFS_ALGORITHMS = ALGORITHMS.subList(1, 3);
+
     void runBenchmark();
 
     String outputFileName();
