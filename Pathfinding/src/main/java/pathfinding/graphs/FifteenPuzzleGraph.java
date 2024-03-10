@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A graph that helps with solving the fifteen puzzle in the shortest amount of moves.
+ * A graph that helps with solving the
+ * 15 puzzle in the least amount of moves.
  **/
 public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
 
@@ -23,7 +24,7 @@ public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
 
             if (moved) {
                 var puzzleCopy = new FifteenPuzzle(boardCopy);
-                map.put(puzzleCopy, getEdgeWeight(puzzle, puzzleCopy));
+                map.put(puzzleCopy, 1.0);
             }
         }
 
@@ -31,13 +32,14 @@ public class FifteenPuzzleGraph implements Graph<FifteenPuzzle> {
     }
 
     @Override
-    public double getEdgeWeight(FifteenPuzzle source, FifteenPuzzle destination) {
+    public double getEdgeWeight(FifteenPuzzle source,
+                                FifteenPuzzle destination) {
         return 1;
     }
 
     @Override
     public double sumEdgeWeights(List<FifteenPuzzle> path) {
-        return path.size() - 1.0;
+        return (path.isEmpty()) ? 0 : path.size() - 1;
     }
 
 }

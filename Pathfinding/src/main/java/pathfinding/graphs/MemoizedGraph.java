@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @param <T> the type of the vertices in the graph
  */
-public abstract class CachedGraph<T> implements Graph<T> {
+public abstract class MemoizedGraph<T> implements Graph<T> {
 
     private final Map<T, Map<T, Double>> adjacencyCache = new HashMap<>();
 
@@ -21,6 +21,6 @@ public abstract class CachedGraph<T> implements Graph<T> {
         );
     }
 
-    abstract Map<T, Double> calculateNeighbors(T vertex);
+    protected abstract Map<T, Double> calculateNeighbors(T vertex);
 
 }

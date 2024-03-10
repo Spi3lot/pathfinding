@@ -5,32 +5,52 @@ import pathfinding.algorithms.BidiBestFirstSearch;
 import pathfinding.algorithms.DepthFirstSearch;
 import pathfinding.algorithms.Dijkstra;
 import pathfinding.graphs.FlexibleGraph;
+import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 import pathfinding.service.ModifiableGraphRandomizer;
 import pathfinding.service.Pathfinder;
 import processing.core.PVector;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.ToDoubleBiFunction;
+import java.util.stream.IntStream;
 
 public class PathfindingExample {
 
     public static void main(String[] args) {
-        aStarBreaker();
+        bidiBefsBreaker();
     }
 
     private static void bidiBefsBreaker() {
-        var graph = new FlexibleGraph<PVector>();
-        graph.setDefaultWeightFunction((source, destination) -> source.dist(destination));
-        graph.addEdge(new PVector(0, 0), new PVector(1, 1));
-        graph.addEdge(new PVector(1, 1), new PVector(2, 2));
-        graph.addEdge(new PVector(0, 0), new PVector(2, 2));
+        ToDoubleBiFunction<PVector, PVector> weightFunction = (source, destination) -> source.dist(destination);
 
-        var aStar = new AStar<PVector>((current, endCondition) -> graph.getDefaultWeightFunction().applyAsDouble(current, endCondition.vertex().orElseThrow()));
-        var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
-        var path1 = aStar.findShortestPath(new PVector(0, 0), EndCondition.endAt(new PVector(2, 2)), graph);
-        var path2 = bidiAStar.findShortestPath(new PVector(0, 0), EndCondition.endAt(new PVector(2, 2)), graph);
-        System.out.println(path1);
-        System.out.println(path2);
+        var vertices = IntStream.range(0, 100)
+                .mapToObj(_ -> PVector.random2D())
+                .toList();
+
+        var randomizer = ModifiableGraphRandomizer.<PVector>builder()
+                .vertices(vertices)
+                .weightFunction((source, destination) -> source.dist(destination))
+                .edgeProbability(0.1)
+                .build();
+
+        List<PVector> unidiPath = null;
+        List<PVector> bidiPath = null;
+        Graph<PVector> graph = null;
+        int i;
+
+        for (i = 0; Objects.equals(unidiPath, bidiPath); i++) {
+            graph = randomizer.randomizeUndirectedEdges();
+            var aStar = new AStar<PVector>((current, endCondition) -> weightFunction.applyAsDouble(current, endCondition.vertex().orElseThrow()));
+            var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+            unidiPath = aStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
+            bidiPath = bidiAStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
+        }
+
+        System.out.println(STR."It took \{i} iterations to break the BidiBestFirstSearch algorithm.");
+        System.out.println(STR."Unidirectional (\{unidiPath.size()}, \{graph.sumEdgeWeights(unidiPath)}): \{unidiPath}");
+        System.out.println(STR."Bidirectional: (\{bidiPath.size()}, \{graph.sumEdgeWeights(bidiPath)}): \{bidiPath}");
     }
 
     private static void aStarBreaker() {
