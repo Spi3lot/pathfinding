@@ -55,7 +55,7 @@ public class ModifiableGraphBenchmark implements PVectorBenchmark {
                 disconnectVertexInAllGraphs(endCondition.vertex().orElseThrow());
             }
 
-            for (var algorithm : UNIDIRECTIONAL_BEFS_ALGORITHMS) {
+            for (var algorithm : SPF_ALGORITHMS) {
                 var benchmark = Benchmark.<List<PVector>>builder()
                         .task(iteration -> algorithm.findShortestPath(
                                 start,
