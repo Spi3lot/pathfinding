@@ -23,6 +23,52 @@ public class PathfindingExample {
     }
 
     private static void bidiBefsBreaker() {
+        var graph = new FlexibleGraph<>();
+        graph.addEdge(0, 1);
+        graph.addEdge(0, 2);
+        graph.addEdge(1, 3);
+        graph.addEdge(2, 1);
+
+        var aStar = new AStar<>((_, _) -> 1);
+        var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+        System.out.println(aStar.findShortestPath(0, EndCondition.endAt(3), graph));
+        System.out.println(bidiAStar.findShortestPath(0, EndCondition.endAt(3), graph));
+    }
+
+    private static void bidiBefsIntBreaker() {
+        //ToDoubleBiFunction<Integer, Integer> weightFunction = (source, destination) -> Math.abs(source - destination);
+        ToDoubleBiFunction<Integer, Integer> weightFunction = (_, _) -> 1;
+
+        var vertices = IntStream.range(0, 4)  // Takes at least 4 vertices for some reason
+                .boxed()
+                .toList();
+
+        var randomizer = ModifiableGraphRandomizer.<Integer>builder()
+                .vertices(vertices)
+                .weightFunction(weightFunction)
+                .edgeProbability(0.1)
+                .build();
+
+        List<Integer> unidiPath = null;
+        List<Integer> bidiPath = null;
+        Graph<Integer> graph = null;
+        int i;
+
+        for (i = 0; unidiPath == null || bidiPath == null || graph.sumEdgeWeights(unidiPath) >= graph.sumEdgeWeights(bidiPath); i++) {
+            graph = randomizer.randomizeUndirectedEdges();
+            var aStar = new AStar<Integer>((current, endCondition) -> weightFunction.applyAsDouble(current, endCondition.vertex().orElseThrow()));
+            var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+            unidiPath = aStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
+            bidiPath = bidiAStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
+        }
+
+        System.out.println(STR."It took \{i} iterations to break BidiBestFirstSearch");
+        System.out.println(STR."Unidirectional (\{unidiPath.size()}, \{graph.sumEdgeWeights(unidiPath)}): \{unidiPath}");
+        System.out.println(STR."Bidirectional: (\{bidiPath.size()}, \{graph.sumEdgeWeights(bidiPath)}): \{bidiPath}");
+        System.out.println(graph);
+    }
+
+    private static void bidiBefsPVectorBreaker() {
         ToDoubleBiFunction<PVector, PVector> weightFunction = (source, destination) -> source.dist(destination);
 
         var vertices = IntStream.range(0, 100)
@@ -31,7 +77,7 @@ public class PathfindingExample {
 
         var randomizer = ModifiableGraphRandomizer.<PVector>builder()
                 .vertices(vertices)
-                .weightFunction((source, destination) -> source.dist(destination))
+                .weightFunction(weightFunction)
                 .edgeProbability(0.1)
                 .build();
 

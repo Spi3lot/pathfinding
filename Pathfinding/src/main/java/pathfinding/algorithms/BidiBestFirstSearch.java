@@ -72,23 +72,25 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
             forwardSearch.updateCurrent();
             backwardSearch.updateCurrent();
 
-            if (doSearchesIntersect()) {
-                continue;
+            if (!forwardSearch.hasVisited(forwardSearch.getCurrent())) {
+                forwardSearch.closeCurrent();
+
+                if (forwardSearch.hasVisited(backwardSearch.getCurrent())) {
+                    return mergePaths(start, backwardSearch.getCurrent(), end);
+                }
+
+                forwardSearch.expand(forwardEndCondition, graph);
             }
 
-            forwardSearch.closeCurrent();
-            backwardSearch.closeCurrent();
+            if (!backwardSearch.hasVisited(backwardSearch.getCurrent())) {
+                backwardSearch.closeCurrent();
 
-            if (backwardSearch.hasVisited(forwardSearch.getCurrent())) {
-                return mergePaths(start, forwardSearch.getCurrent(), end);
+                if (backwardSearch.hasVisited(forwardSearch.getCurrent())) {
+                    return mergePaths(start, forwardSearch.getCurrent(), end);
+                }
+
+                backwardSearch.expand(backwardEndCondition, graph);
             }
-
-            if (forwardSearch.hasVisited(backwardSearch.getCurrent())) {
-                return mergePaths(start, backwardSearch.getCurrent(), end);
-            }
-
-            forwardSearch.expand(forwardEndCondition, graph);
-            backwardSearch.expand(backwardEndCondition, graph);
         }
 
         return Collections.emptyList();
@@ -98,11 +100,6 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
     public int getVisitedVertexCount() {
         return forwardSearch.getVisitedVertexCount()
                 + backwardSearch.getVisitedVertexCount();
-    }
-
-    private boolean doSearchesIntersect() {
-        return forwardSearch.hasVisited(forwardSearch.getCurrent())
-                || backwardSearch.hasVisited(backwardSearch.getCurrent());
     }
 
     /**

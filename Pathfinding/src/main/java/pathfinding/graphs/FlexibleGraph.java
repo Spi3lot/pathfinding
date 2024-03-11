@@ -15,7 +15,10 @@ import java.util.function.ToDoubleBiFunction;
 public class FlexibleGraph<T> implements ModifiableGraph<T> {
 
     private final boolean directed;
+    
     private final Map<T, Map<T, Double>> adjacencies = new HashMap<>();
+
+    @ToString.Exclude
     private ToDoubleBiFunction<T, T> defaultWeightFunction = (_, _) -> 1;
 
     /**
