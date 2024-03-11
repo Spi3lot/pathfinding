@@ -19,10 +19,22 @@ import java.util.stream.IntStream;
 public class PathfindingExample {
 
     public static void main(String[] args) {
-        bidiBefsIntBreaker();
+        bidiBefsIntBreaker3();
     }
 
-    private static void bidiBefsBreaker() {
+    private static void bidiBefsIntBreaker3() {
+        var graph = new FlexibleGraph<>();
+        graph.addEdge(0, 1);
+        graph.addEdge(0, 2);
+        graph.addEdge(1, 2);
+
+        var aStar = new AStar<>((_, _) -> 1);
+        var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+        System.out.println(aStar.findShortestPath(0, EndCondition.endAt(1), graph));
+        System.out.println(bidiAStar.findShortestPath(0, EndCondition.endAt(1), graph));
+    }
+
+    private static void bidiBefsIntBreaker4() {
         var graph = new FlexibleGraph<>();
         graph.addEdge(0, 1);
         graph.addEdge(0, 2);

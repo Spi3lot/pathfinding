@@ -72,9 +72,9 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
             forwardSearch.updateCurrent();
             backwardSearch.updateCurrent();
 
-//            System.out.println(forwardSearch.getCurrent());
-//            System.out.println(backwardSearch.getCurrent());
-//            System.out.println();
+            System.out.println(forwardSearch.getCurrent());
+            System.out.println(backwardSearch.getCurrent());
+            System.out.println();
 
 //            if (forwardSearch.hasVisited(backwardSearch.getCurrent())
 //                    && backwardSearch.hasVisited(forwardSearch.getCurrent())) {
