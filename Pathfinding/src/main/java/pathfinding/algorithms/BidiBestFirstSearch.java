@@ -56,6 +56,12 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
     }
 
     @Override
+    public int getVisitedVertexCount() {
+        return forwardSearch.getVisitedVertexCount()
+                + backwardSearch.getVisitedVertexCount();
+    }
+
+    @Override
     public List<T> findShortestPath(T start,
                                     EndCondition<T> forwardEndCondition,
                                     Graph<T> graph) {
@@ -64,9 +70,10 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
                         "The end condition must specify a vertex."
                 ));
 
-        T bestCommon = null;
-        var backwardEndCondition = EndCondition.endAt(start);
         boolean met = false;
+        var backwardEndCondition = EndCondition.endAt(start);
+        double bestCost = Double.POSITIVE_INFINITY;
+        T bestCommon = null;
         forwardSearch.initializeDataStructures(start);
         backwardSearch.initializeDataStructures(end);
 
@@ -74,20 +81,62 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
             forwardSearch.closeCurrent();
             backwardSearch.closeCurrent();
 
-            if (doSearchesMeet()) {
+            if (forwardSearch.hasVisited(backwardSearch.getCurrent())
+                    && backwardSearch.hasVisited(forwardSearch.getCurrent())) {
                 met = true;
+                double cost1 = cost(forwardSearch.getCurrent());
+                double cost2 = cost(backwardSearch.getCurrent());
+                bestCost = Math.min(cost1, cost2);
+                bestCommon = (cost1 < cost2) ? forwardSearch.getCurrent() : backwardSearch.getCurrent();
+                break;
             }
 
-            if (met) {
-                // TODO: find best common vertex
-            } else {
-                forwardSearch.expand(forwardEndCondition, graph);
-                backwardSearch.expand(backwardEndCondition, graph);
+            if (forwardSearch.hasVisited(backwardSearch.getCurrent())) {
+                met = true;
+                bestCommon = backwardSearch.getCurrent();
+                bestCost = cost(bestCommon);
+                break;
             }
+
+            if (backwardSearch.hasVisited(forwardSearch.getCurrent())) {
+                met = true;
+                bestCommon = forwardSearch.getCurrent();
+                bestCost = cost(bestCommon);
+                break;
+            }
+
+            forwardSearch.expand(forwardEndCondition, graph);
+            backwardSearch.expand(backwardEndCondition, graph);
         }
 
         if (met) {
-            return mergePaths(start, forwardSearch.getCurrent(), end);
+            while (forwardSearch.nextUnvisited()) {
+                if (!backwardSearch.hasVisited(forwardSearch.getCurrent())) {
+                    continue;
+                }
+
+                double cost = cost(forwardSearch.getCurrent());
+
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    bestCommon = forwardSearch.getCurrent();
+                }
+            }
+
+            while (backwardSearch.nextUnvisited()) {
+                if (!forwardSearch.hasVisited(backwardSearch.getCurrent())) {
+                    continue;
+                }
+
+                double cost = cost(backwardSearch.getCurrent());
+
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    bestCommon = backwardSearch.getCurrent();
+                }
+            }
+
+            return mergePaths(start, bestCommon, end);
         }
 
         return Collections.emptyList();
@@ -98,10 +147,8 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
                 || backwardSearch.hasVisited(forwardSearch.getCurrent());
     }
 
-    @Override
-    public int getVisitedVertexCount() {
-        return forwardSearch.getVisitedVertexCount()
-                + backwardSearch.getVisitedVertexCount();
+    private double cost(T common) {
+        return forwardSearch.g(common) + backwardSearch.g(common);
     }
 
     /**

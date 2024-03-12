@@ -24,6 +24,11 @@ public abstract class AbstractBestFirstSearch<T>
     private T current;
 
     @Override
+    public int getVisitedVertexCount() {
+        return closed.size();
+    }
+
+    @Override
     public List<T> findShortestPath(T start,
                                     EndCondition<T> endCondition,
                                     Graph<T> graph) {
@@ -43,13 +48,14 @@ public abstract class AbstractBestFirstSearch<T>
     }
 
     @Override
-    public int getVisitedVertexCount() {
-        return closed.size();
-    }
+    public boolean nextOpen() {
+        if (hasOpen()) {
+            current = open.dequeueMin().getValue();
+            return true;
+        }
 
-    @Override
-    public void nextOpen() {
-        current = open.dequeueMin().getValue();
+        current = null;
+        return false;
     }
 
     @Override
@@ -86,8 +92,8 @@ public abstract class AbstractBestFirstSearch<T>
                 .forEach(entry -> {
                     T neighbor = entry.getKey();
                     double weight = entry.getValue();
-                    double g = g(neighbor, distances);
-                    double tentativeG = g(current, distances) + weight;
+                    double g = g(neighbor);
+                    double tentativeG = g(current) + weight;
 
                     if (tentativeG < g) {
                         distances.put(neighbor, tentativeG);

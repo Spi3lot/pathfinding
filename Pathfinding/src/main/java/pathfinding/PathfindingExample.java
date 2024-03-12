@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 public class PathfindingExample {
 
     public static void main(String[] args) {
-        bidiBefsIntBreaker();
+        bidiBefsPVectorBreaker();
     }
 
     private static void bidiBefsIntBreaker3() {

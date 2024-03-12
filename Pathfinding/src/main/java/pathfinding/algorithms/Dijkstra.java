@@ -17,6 +17,11 @@ public class Dijkstra<T> implements PathfindingAlgorithm<T> {
     private final PathfindingAlgorithm<T> algorithm = new AStar<>(zero);
 
     @Override
+    public int getVisitedVertexCount() {
+        return algorithm.getVisitedVertexCount();
+    }
+
+    @Override
     public List<T> findAnyPath(T start,
                                EndCondition<T> endCondition,
                                Graph<T> graph) {
@@ -28,11 +33,6 @@ public class Dijkstra<T> implements PathfindingAlgorithm<T> {
                                     EndCondition<T> endCondition,
                                     Graph<T> graph) {
         return algorithm.findShortestPath(start, endCondition, graph);
-    }
-
-    @Override
-    public int getVisitedVertexCount() {
-        return algorithm.getVisitedVertexCount();
     }
 
 }

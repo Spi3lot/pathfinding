@@ -12,25 +12,15 @@ import java.util.Map;
  */
 public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
 
+    Map<T, Double> getDistances();
+
     Map<T, T> getPredecessors();
 
     T getCurrent();
 
     void closeCurrent();
 
-    default boolean nextUnvisited() {
-        while (hasOpen()) {
-            nextOpen();
-
-            if (!hasVisited(getCurrent())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    void nextOpen();
+    boolean nextOpen();
 
     boolean hasVisited(T vertex);
 
@@ -43,5 +33,19 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
     double g(T vertex, Map<T, Double> distances);
 
     double h(T vertex, EndCondition<T> endCondition);
+
+    default boolean nextUnvisited() {
+        while (nextOpen()) {
+            if (!hasVisited(getCurrent())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    default double g(T vertex) {
+        return g(vertex, getDistances());
+    }
 
 }
