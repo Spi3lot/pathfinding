@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 public class PathfindingExample {
 
     public static void main(String[] args) {
-        bidiBefsPVectorBreaker();
+        bidiBefsIntBreaker();
     }
 
     private static void bidiBefsIntBreaker3() {
@@ -51,7 +51,7 @@ public class PathfindingExample {
         //ToDoubleBiFunction<Integer, Integer> weightFunction = (source, destination) -> Math.abs(source - destination);
         ToDoubleBiFunction<Integer, Integer> weightFunction = (_, _) -> 1;
 
-        var vertices = IntStream.range(0, 3)  // Takes at least 3 vertices
+        var vertices = IntStream.range(0, 4)  // Takes at least 3 vertices
                 .boxed()
                 .toList();
 
