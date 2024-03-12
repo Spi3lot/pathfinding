@@ -16,9 +16,21 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
 
     T getCurrent();
 
-    void updateCurrent();
-
     void closeCurrent();
+
+    default boolean nextUnvisited() {
+        while (hasOpen()) {
+            nextOpen();
+
+            if (!hasVisited(getCurrent())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void nextOpen();
 
     boolean hasVisited(T vertex);
 

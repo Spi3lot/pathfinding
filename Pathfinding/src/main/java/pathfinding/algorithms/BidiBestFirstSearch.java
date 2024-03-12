@@ -64,50 +64,38 @@ public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
                         "The end condition must specify a vertex."
                 ));
 
+        T bestCommon = null;
         var backwardEndCondition = EndCondition.endAt(start);
+        boolean met = false;
         forwardSearch.initializeDataStructures(start);
         backwardSearch.initializeDataStructures(end);
 
-        while (forwardSearch.hasOpen() && backwardSearch.hasOpen()) {
-            forwardSearch.updateCurrent();
-            backwardSearch.updateCurrent();
+        while (forwardSearch.nextUnvisited() && backwardSearch.nextUnvisited()) {
+            forwardSearch.closeCurrent();
+            backwardSearch.closeCurrent();
 
-            System.out.println(forwardSearch.getCurrent());
-            System.out.println(backwardSearch.getCurrent());
-            System.out.println();
-
-//            if (forwardSearch.hasVisited(backwardSearch.getCurrent())
-//                    && backwardSearch.hasVisited(forwardSearch.getCurrent())) {
-//                var path1 = mergePaths(start, forwardSearch.getCurrent(), end);
-//                var path2 = mergePaths(start, backwardSearch.getCurrent(), end);
-//                System.out.println("Path 1: " + path1);
-//                System.out.println("Path 2: " + path2);
-//
-//                return (graph.sumEdgeWeights(path1) < graph.sumEdgeWeights(path2)) ? path1 : path2;
-//            }
-
-            if (!forwardSearch.hasVisited(forwardSearch.getCurrent())) {
-                forwardSearch.closeCurrent();
-
-                if (forwardSearch.hasVisited(backwardSearch.getCurrent())) {
-                    return mergePaths(start, backwardSearch.getCurrent(), end);
-                }
-
-                forwardSearch.expand(forwardEndCondition, graph);
+            if (doSearchesMeet()) {
+                met = true;
             }
 
-            if (!backwardSearch.hasVisited(backwardSearch.getCurrent())) {
-                backwardSearch.closeCurrent();
-
-                if (backwardSearch.hasVisited(forwardSearch.getCurrent())) {
-                    return mergePaths(start, forwardSearch.getCurrent(), end);
-                }
-
+            if (met) {
+                // TODO: find best common vertex
+            } else {
+                forwardSearch.expand(forwardEndCondition, graph);
                 backwardSearch.expand(backwardEndCondition, graph);
             }
         }
 
+        if (met) {
+            return mergePaths(start, forwardSearch.getCurrent(), end);
+        }
+
         return Collections.emptyList();
+    }
+
+    private boolean doSearchesMeet() {
+        return forwardSearch.hasVisited(backwardSearch.getCurrent())
+                || backwardSearch.hasVisited(forwardSearch.getCurrent());
     }
 
     @Override

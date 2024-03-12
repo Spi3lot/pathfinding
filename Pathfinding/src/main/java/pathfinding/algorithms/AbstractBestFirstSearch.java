@@ -29,13 +29,7 @@ public abstract class AbstractBestFirstSearch<T>
                                     Graph<T> graph) {
         initializeDataStructures(start);
 
-        while (hasOpen()) {
-            updateCurrent();
-
-            if (hasVisited(current)) {
-                continue;
-            }
-
+        while (nextUnvisited()) {
             if (endCondition.condition().test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
                 return pathTracer.unsafeTrace(start, current);
@@ -54,7 +48,7 @@ public abstract class AbstractBestFirstSearch<T>
     }
 
     @Override
-    public void updateCurrent() {
+    public void nextOpen() {
         current = open.dequeueMin().getValue();
     }
 
