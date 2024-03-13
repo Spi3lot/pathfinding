@@ -38,7 +38,7 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
      * Constructor to create a bidirectional best-first search
      * using A* as the search algorithm for both directions.
      *
-     * @param heuristic   the heuristic function to use.
+     * @param heuristic the heuristic function to use.
      */
     public BidiBestFirstSearch(Heuristic<T> heuristic) {
         this(new AStar<>(heuristic), new AStar<>(heuristic));
@@ -49,7 +49,10 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
         return forwardSearch.getVisitedVertexCount()
                 + backwardSearch.getVisitedVertexCount();
     }
-
+    static List<?> path = Collections.emptyList();
+    static Object starty;
+    static Object endy;
+    static double bestCost = Double.POSITIVE_INFINITY;
     @Override
     public List<T> findShortestPath(T start,
                                     EndCondition<T> forwardEndCondition,
@@ -59,27 +62,46 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
                         "The end condition must specify a vertex."
                 ));
 
+        starty = start;
+        endy = end;
         var backwardEndCondition = EndCondition.endAt(start);
+        boolean forward = true;
         forwardSearch.initializeDataStructures(start);
         backwardSearch.initializeDataStructures(end);
+        backwardSearch.nextOpen();
 
-        while (forwardSearch.nextUnvisited() && backwardSearch.nextUnvisited()) {
-            forwardSearch.closeCurrent();
-            backwardSearch.closeCurrent();
-
-            if (forwardSearch.hasVisited(backwardSearch.getCurrent())) {
-                return mergePaths(start, backwardSearch.getCurrent(), end);
+        do {
+            if (forward) {
+                step(forwardSearch, backwardSearch, forwardEndCondition, graph);
+            } else {
+                step(backwardSearch, forwardSearch, backwardEndCondition, graph);
             }
 
-            if (backwardSearch.hasVisited(forwardSearch.getCurrent())) {
-                return mergePaths(start, forwardSearch.getCurrent(), end);
-            }
-
-            forwardSearch.expand(forwardEndCondition, graph);
-            backwardSearch.expand(backwardEndCondition, graph);
-        }
+            forward = !forward;
+        } while (forwardSearch.g() + backwardSearch.g() < bestCost);
 
         return Collections.emptyList();
+    }
+
+    private void step(BestFirstSearch<T> search,
+                      BestFirstSearch<T> otherSearch,
+                      EndCondition<T> endCondition,
+                      Graph<T> graph) {
+        search.nextUnvisited();
+
+        for (var visited : search.expand(endCondition, graph).keySet()) {
+            double cost = search.g(visited) + otherSearch.g(visited);
+
+            if (cost < bestCost && otherSearch.hasVisited(visited)){
+                bestCost = cost;
+                var tracer1 = new PathTracer<>(search.getPredecessors());
+                var tracer2 = new PathTracer<>(otherSearch.getPredecessors());
+                var path1 =  tracer1.unsafeTrace((T) starty, search.getCurrent());
+                var path2 =  tracer2.unsafeTrace((T) endy, visited);
+                path1.addAll(path2.reversed());
+                path = path1;
+            }
+        }
     }
 
     /**

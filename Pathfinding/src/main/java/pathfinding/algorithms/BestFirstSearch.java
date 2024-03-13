@@ -28,7 +28,7 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
 
     void initializeDataStructures(T start);
 
-    void expand(EndCondition<T> endCondition, Graph<T> graph);
+    Map<T, Double> expand(EndCondition<T> endCondition, Graph<T> graph);
 
     double g(T vertex, Map<T, Double> distances);
 
@@ -42,6 +42,10 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
         }
 
         return false;
+    }
+
+    default double g() {
+        return g(getCurrent());
     }
 
     default double g(T vertex) {

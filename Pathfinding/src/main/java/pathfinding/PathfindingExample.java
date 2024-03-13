@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 public class PathfindingExample {
 
     public static void main(String[] args) {
-        bidiBefsIntBreaker();
+        bidiBefsIntBreaker3();
     }
 
     private static void bidiBefsIntBreaker3() {
