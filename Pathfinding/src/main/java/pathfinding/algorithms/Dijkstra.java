@@ -5,34 +5,23 @@ import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of the Dijkstra algorithm for finding the shortest path.
  *
  * @param <T> the type of the vertices in the graph
  */
-public class Dijkstra<T> implements PathfindingAlgorithm<T> {
-
-    private final Heuristic<T> zero = (_, _) -> 0;
-    private final PathfindingAlgorithm<T> algorithm = new AStar<>(zero);
+public class Dijkstra<T> extends AbstractBestFirstSearch<T> {
 
     @Override
-    public int getVisitedVertexCount() {
-        return algorithm.getVisitedVertexCount();
+    public double g(T vertex, Map<T, Double> distances) {
+        return distances.getOrDefault(vertex, Double.POSITIVE_INFINITY);
     }
 
     @Override
-    public List<T> findAnyPath(T start,
-                               EndCondition<T> endCondition,
-                               Graph<T> graph) {
-        return algorithm.findAnyPath(start, endCondition, graph);
-    }
-
-    @Override
-    public List<T> findShortestPath(T start,
-                                    EndCondition<T> endCondition,
-                                    Graph<T> graph) {
-        return algorithm.findShortestPath(start, endCondition, graph);
+    public double h(T vertex, EndCondition<T> endCondition) {
+        return 0;
     }
 
 }

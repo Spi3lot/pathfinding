@@ -21,38 +21,27 @@ import java.util.Objects;
  *
  * @param <T> the type of the vertices in the graph
  */
-public class BidiBestFirstSearch<T> implements PathfindingAlgorithm<T> {
+public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
+                                     BestFirstSearch<T> backwardSearch)
+        implements PathfindingAlgorithm<T> {
 
-    private final BestFirstSearch<T> forwardSearch;
-    private final BestFirstSearch<T> backwardSearch;
-
-    public BidiBestFirstSearch(BestFirstSearch<T> forwardSearch,
-                               BestFirstSearch<T> backwardSearch) {
-        if (forwardSearch == backwardSearch) {
+    public BidiBestFirstSearch {
+        if (Objects.requireNonNull(forwardSearch) == Objects.requireNonNull(backwardSearch)) {
             throw new IllegalArgumentException(
                     "The forward and backward searches " +
                             "must not be the same instance."
             );
         }
-
-        this.forwardSearch = Objects.requireNonNull(forwardSearch);
-        this.backwardSearch = Objects.requireNonNull(backwardSearch);
     }
 
     /**
-     * Named constructor to create a bidirectional best-first search
+     * Constructor to create a bidirectional best-first search
      * using A* as the search algorithm for both directions.
      *
-     * @param h   the heuristic function to use.
-     *            The name is abbreviated to avoid line breaks in the code.
-     * @param <T> the type of the vertices in the graph
-     * @return a new instance of BidiBestFirstSearch
+     * @param heuristic   the heuristic function to use.
      */
-    public static <T> BidiBestFirstSearch<T> usingAStar(Heuristic<T> h) {
-        return new BidiBestFirstSearch<>(
-                new AStar<>(h),
-                new AStar<>(h)
-        );
+    public BidiBestFirstSearch(Heuristic<T> heuristic) {
+        this(new AStar<>(heuristic), new AStar<>(heuristic));
     }
 
     @Override

@@ -27,7 +27,7 @@ import static java.util.FormatProcessor.FMT;
 public class FifteenPuzzleGui extends PApplet {
 
     private static final int BOARD_SIZE = 4;
-    private static final BidiBestFirstSearch<FifteenPuzzle> SEARCH = BidiBestFirstSearch.usingAStar(new FifteenPuzzleHeuristic());
+    private static final BidiBestFirstSearch<FifteenPuzzle> SEARCH = new BidiBestFirstSearch<>(new FifteenPuzzleHeuristic());
     private static final Pathfinder<FifteenPuzzle> FINDER = new Pathfinder<>(new FifteenPuzzleGraph(), SEARCH);
     private final FifteenPuzzle puzzle = new FifteenPuzzle(BOARD_SIZE, 0);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
