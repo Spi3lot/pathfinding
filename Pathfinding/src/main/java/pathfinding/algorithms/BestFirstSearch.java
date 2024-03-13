@@ -3,7 +3,9 @@ package pathfinding.algorithms;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Interface for best-first search algorithms.
@@ -28,7 +30,7 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
 
     void initializeDataStructures(T start);
 
-    void expand(EndCondition<T> endCondition, Graph<T> graph);
+    Set<T> expand(EndCondition<T> endCondition, Graph<T> graph);
 
     double g(T vertex, Map<T, Double> distances);
 
@@ -44,8 +46,16 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
         return false;
     }
 
+    default double g() {
+        return g(getCurrent());
+    }
+
     default double g(T vertex) {
         return g(vertex, getDistances());
+    }
+
+    default double f(T vertex, EndCondition<T> endCondition) {
+        return g(vertex) + h(vertex, endCondition);
     }
 
 }

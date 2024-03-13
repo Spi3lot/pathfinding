@@ -7,6 +7,7 @@ import pathfinding.service.EndCondition;
 import pathfinding.service.PathTracer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class for best-first search algorithms.
@@ -84,14 +85,14 @@ public abstract class AbstractBestFirstSearch<T>
     }
 
     @Override
-    public void expand(EndCondition<T> endCondition, Graph<T> graph) {
-        graph.getNeighbors(current)
+    public Set<T> expand(EndCondition<T> endCondition, Graph<T> graph) {
+        var neighbors = graph.getNeighbors(current)
                 .entrySet()
                 .stream()
                 .filter(entry -> !hasVisited(entry.getKey()))
-                .forEach(entry -> {
-                    T neighbor = entry.getKey();
-                    double weight = entry.getValue();
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        neighbors.forEach((neighbor, weight) -> {
                     double g = g(neighbor);
                     double tentativeG = g(current) + weight;
 
@@ -102,6 +103,8 @@ public abstract class AbstractBestFirstSearch<T>
                         open.enqueue(neighbor, tentativeG + heuristic);
                     }
                 });
+
+        return neighbors.keySet();
     }
 
 }
