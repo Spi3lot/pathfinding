@@ -84,15 +84,22 @@ public abstract class AbstractBestFirstSearch<T>
         open.enqueue(start, 0.0);
     }
 
+    /**
+     * Expands the current vertex in the graph.
+     *
+     * @param endCondition the end condition
+     * @param graph the graph to expand the current vertex in
+     * @return the updated neighbors of the current vertex and their weights
+     */
     @Override
-    public Set<T> expand(EndCondition<T> endCondition, Graph<T> graph) {
-        var neighbors = graph.getNeighbors(current)
+    public Map<T, Double> expand(EndCondition<T> endCondition, Graph<T> graph) {
+        return graph.getNeighbors(current)
                 .entrySet()
                 .stream()
                 .filter(entry -> !hasVisited(entry.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        neighbors.forEach((neighbor, weight) -> {
+                .filter(entry -> {
+                    T neighbor = entry.getKey();
+                    double weight = entry.getValue();
                     double g = g(neighbor);
                     double tentativeG = g(current) + weight;
 
@@ -101,10 +108,12 @@ public abstract class AbstractBestFirstSearch<T>
                         predecessors.put(neighbor, current);
                         double heuristic = h(neighbor, endCondition);
                         open.enqueue(neighbor, tentativeG + heuristic);
+                        return true;
                     }
-                });
 
-        return neighbors.keySet();
+                    return false;
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 }

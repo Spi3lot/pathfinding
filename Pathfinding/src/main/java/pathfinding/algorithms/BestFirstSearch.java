@@ -30,7 +30,7 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
 
     void initializeDataStructures(T start);
 
-    Set<T> expand(EndCondition<T> endCondition, Graph<T> graph);
+    Map<T, Double> expand(EndCondition<T> endCondition, Graph<T> graph);
 
     double g(T vertex, Map<T, Double> distances);
 
