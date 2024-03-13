@@ -1,9 +1,6 @@
 package pathfinding;
 
-import pathfinding.algorithms.AStar;
-import pathfinding.algorithms.BidiBestFirstSearch;
-import pathfinding.algorithms.DepthFirstSearch;
-import pathfinding.algorithms.Dijkstra;
+import pathfinding.algorithms.*;
 import pathfinding.graphs.FlexibleGraph;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
@@ -23,41 +20,37 @@ public class PathfindingExample {
     }
 
     private static void bidiBefsIntBreaker3() {
-        var graph = new FlexibleGraph<>();
+        var graph = new FlexibleGraph<Integer>();
         graph.addEdge(0, 1);
         graph.addEdge(0, 2);
         graph.addEdge(1, 2);
 
-        var aStar = new AStar<>((_, _) -> 1);
-        var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+        var aStar = new AStar<Integer>((v, c) -> (v.equals(c.vertex().orElseThrow())) ? 0 : 1);
+        var bidiAStar = new BidiBestFirstSearch<>(aStar::h);
         System.out.println(aStar.findShortestPath(0, EndCondition.endAt(1), graph));
         System.out.println(bidiAStar.findShortestPath(0, EndCondition.endAt(1), graph));
     }
 
     private static void bidiBefsIntBreaker4() {
-        var graph = new FlexibleGraph<>();
+        var graph = new FlexibleGraph<Integer>();
         graph.addEdge(0, 1);
         graph.addEdge(0, 2);
         graph.addEdge(1, 3);
         graph.addEdge(2, 1);
 
-        var aStar = new AStar<>((_, _) -> 1);
-        var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+        var aStar = new AStar<Integer>((v, c) -> (v.equals(c.vertex().orElseThrow())) ? 0 : 1);
+        var bidiAStar = new BidiBestFirstSearch<>(aStar::h);
         System.out.println(aStar.findShortestPath(0, EndCondition.endAt(3), graph));
         System.out.println(bidiAStar.findShortestPath(0, EndCondition.endAt(3), graph));
     }
 
     private static void bidiBefsIntBreaker() {
-        //ToDoubleBiFunction<Integer, Integer> weightFunction = (source, destination) -> Math.abs(source - destination);
-        ToDoubleBiFunction<Integer, Integer> weightFunction = (_, _) -> 1;
-
         var vertices = IntStream.range(0, 4)  // Takes at least 3 vertices
                 .boxed()
                 .toList();
 
         var randomizer = ModifiableGraphRandomizer.<Integer>builder()
                 .vertices(vertices)
-                .weightFunction(weightFunction)
                 .edgeProbability(0.1)
                 .build();
 
@@ -68,8 +61,8 @@ public class PathfindingExample {
 
         for (i = 0; unidiPath == null || bidiPath == null || graph.sumEdgeWeights(unidiPath) >= graph.sumEdgeWeights(bidiPath); i++) {
             graph = randomizer.randomizeUndirectedEdges();
-            var aStar = new AStar<Integer>((current, endCondition) -> weightFunction.applyAsDouble(current, endCondition.vertex().orElseThrow()));
-            var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+            var aStar = new AStar<Integer>((v, c) -> v.equals(c.vertex().orElseThrow()) ? 0 : 1);
+            var bidiAStar = new BidiBestFirstSearch<>(aStar::h);
             unidiPath = aStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
             bidiPath = bidiAStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
         }
@@ -101,7 +94,7 @@ public class PathfindingExample {
         for (i = 0; Objects.equals(unidiPath, bidiPath); i++) {
             graph = randomizer.randomizeUndirectedEdges();
             var aStar = new AStar<PVector>((current, endCondition) -> weightFunction.applyAsDouble(current, endCondition.vertex().orElseThrow()));
-            var bidiAStar = BidiBestFirstSearch.usingAStar(aStar::h);
+            var bidiAStar = new BidiBestFirstSearch<>(aStar::h);
             unidiPath = aStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
             bidiPath = bidiAStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
         }

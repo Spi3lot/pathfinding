@@ -38,7 +38,7 @@ public interface PVectorBenchmark {
             .build();
 
     List<PathfindingAlgorithm<PVector>> ALGORITHMS = List.of(
-            BidiBestFirstSearch.usingAStar(HEURISTIC),
+            new BidiBestFirstSearch<>(HEURISTIC),
             new AStar<>(HEURISTIC),
             new Dijkstra<>(),
             new BreadthFirstSearch<>(),
