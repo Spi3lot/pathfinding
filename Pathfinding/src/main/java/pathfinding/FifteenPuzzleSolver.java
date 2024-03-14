@@ -20,9 +20,9 @@ public class FifteenPuzzleSolver {
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
         var pathfinder = new Pathfinder<>(graph, new BidiBestFirstSearch<>(
-                        (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
-                                endCondition.vertex().orElseThrow()
-                        )
+                (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
+                        endCondition.vertex().orElseThrow()
+                )
         ));
 
         var path = pathfinder.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
