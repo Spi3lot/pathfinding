@@ -53,7 +53,7 @@ public class Benchmark<T> {
 
     @Override
     public String toString() {
-        return calculateDistribution().toString("ms");
+        return calculateDistribution().toString("ns");
     }
 
 }

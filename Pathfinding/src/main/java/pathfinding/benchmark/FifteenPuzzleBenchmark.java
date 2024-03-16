@@ -35,7 +35,7 @@ public class FifteenPuzzleBenchmark {
                 .build();
 
         long totalDuration = benchmark.times(3);
-        System.out.println(STR."Total duration: \{totalDuration}ms");
+        System.out.println(STR."Total duration: \{totalDuration / 1e6}ms");
         System.out.println(benchmark);
     }
 
