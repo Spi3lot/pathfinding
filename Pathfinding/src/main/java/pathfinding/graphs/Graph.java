@@ -18,6 +18,23 @@ public interface Graph<T> {
     Map<T, Double> getNeighbors(T vertex);
 
     /**
+     * @param source      vertex u of the edge (u, v) to be checked for
+     * @param destination vertex v of the edge (u, v) to be checked for
+     * @return the weight of the edge between the two vertices
+     */
+    default boolean hasEdge(T source, T destination) {
+        return getNeighbors(source).containsKey(destination);
+    }
+
+    /**
+     * @param vertex the vertex to get the degree of
+     * @return the degree of the vertex
+     */
+    default int getDegree(T vertex) {
+        return getNeighbors(vertex).size();
+    }
+
+    /**
      * @param path the path to calculate the total weight of
      * @return the accumulated weight of the path
      */
@@ -42,14 +59,4 @@ public interface Graph<T> {
                 Double.POSITIVE_INFINITY
         );
     }
-
-    /**
-     * @param source      vertex v1 of the edge (v1, v2) to be checked for
-     * @param destination vertex v2 of the edge (v1, v2) to be checked for
-     * @return the weight of the edge between the two vertices
-     */
-    default boolean hasEdge(T source, T destination) {
-        return getNeighbors(source).containsKey(destination);
-    }
-
 }

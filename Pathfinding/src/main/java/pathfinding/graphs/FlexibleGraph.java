@@ -104,11 +104,6 @@ public class FlexibleGraph<T> implements ModifiableGraph<T> {
     }
 
     @Override
-    public int getDegree(T vertex) {
-        return getNeighbors(vertex).size();
-    }
-
-    @Override
     public Set<T> getVertices() {
         return adjacencies.keySet();
     }

@@ -46,16 +46,8 @@ public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
         return false;
     }
 
-    default double g() {
-        return g(getCurrent());
-    }
-
     default double g(T vertex) {
         return g(vertex, getDistances());
-    }
-
-    default double f(T vertex, EndCondition<T> endCondition) {
-        return g(vertex) + h(vertex, endCondition);
     }
 
 }

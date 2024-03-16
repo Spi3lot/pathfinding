@@ -76,12 +76,6 @@ public interface ModifiableGraph<T> extends Graph<T> {
     double calculateAverageDegree();
 
     /**
-     * @param vertex the vertex to get the degree of
-     * @return the degree of the vertex
-     */
-    int getDegree(T vertex);
-
-    /**
      * @return whether the graph is directed or not
      */
     boolean isDirected();

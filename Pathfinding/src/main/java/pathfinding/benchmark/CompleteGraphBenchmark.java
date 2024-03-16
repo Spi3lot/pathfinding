@@ -14,7 +14,7 @@ import java.util.Random;
  * @author Emilio Zottel (5AHIF)
  * @since 05.03.2024, Di.
  */
-public class CompleteGraphBenchmark implements PVectorBenchmark {
+public class CompleteGraphBenchmark implements GraphBenchmark {
 
     private static final int ITERATION_COUNT = 1000;
     private static final Graph<PVector> GRAPH = new CompleteGraph<>(VERTICES);

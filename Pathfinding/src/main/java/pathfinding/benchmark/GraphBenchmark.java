@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
  * @author Emilio Zottel (5AHIF)
  * @since 05.03.2024, Di.
  */
-public interface PVectorBenchmark {
+public interface GraphBenchmark {
 
     int GRAPH_COUNT = 1000;
 

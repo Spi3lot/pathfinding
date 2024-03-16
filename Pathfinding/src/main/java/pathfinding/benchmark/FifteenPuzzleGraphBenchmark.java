@@ -1,8 +1,15 @@
 package pathfinding.benchmark;
 
-import pathfinding.graphs.ModifiableGraph;
+import pathfinding.algorithms.AStar;
+import pathfinding.algorithms.BidiBestFirstSearch;
+import pathfinding.algorithms.PathfindingAlgorithm;
+import pathfinding.functions.Heuristic;
+import pathfinding.games.FifteenPuzzle;
+import pathfinding.graphs.FifteenPuzzleGraph;
+import pathfinding.graphs.Graph;
 import pathfinding.service.Benchmark;
 import pathfinding.service.EndCondition;
+import pathfinding.service.Pathfinder;
 import processing.core.PVector;
 
 import java.io.IOException;
@@ -13,17 +20,19 @@ import java.util.stream.IntStream;
  * @author Emilio Zottel (5AHIF)
  * @since 23.02.2024, Fr.
  */
-public class ModifiableGraphBenchmark implements GraphBenchmark {
+public class FifteenPuzzleGraphBenchmark implements GraphBenchmark {
 
-    private static final boolean DISCONNECT_START = false;
-    private static final boolean DISCONNECT_END = false;
+    private static final Graph<FifteenPuzzle> GRAPH = new FifteenPuzzleGraph();
 
-    private final List<ModifiableGraph<PVector>> graphs = IntStream.range(0, GRAPH_COUNT)
-            .mapToObj(_ -> RANDOMIZER.randomizeUndirectedEdges())
-            .toList();
+    private static final Heuristic<FifteenPuzzle> HEURISTIC = (vertex, endCondition) -> vertex.getLeastMoveCountTo(endCondition.vertex().orElseThrow());
+
+    private static final List<PathfindingAlgorithm<FifteenPuzzle>> ALGORITHMS = List.of(
+            new BidiBestFirstSearch<>(HEURISTIC)
+            //new AStar<>(HEURISTIC)
+    );
 
     public static void main(String[] args) throws IOException {
-        new ModifiableGraphBenchmark().runBenchmark();
+        new FifteenPuzzleGraphBenchmark().runBenchmark();
     }
 
     /**
@@ -32,9 +41,8 @@ public class ModifiableGraphBenchmark implements GraphBenchmark {
      */
     @Override
     public void runBenchmark() {
-        System.out.println(STR."Running benchmarks with an edge probability of \{EDGE_PROBABILITY}...");
-        var start = VERTICES.getFirst();
-        var endCondition = EndCondition.endAt(VERTICES.getLast());
+        var start = new FifteenPuzzle(4);
+        var endCondition = EndCondition.endAt(FifteenPuzzle.solved(4));
 
         try (var csvWriter = csvWriter()) {
             csvWriter.writeNext(new String[]{
@@ -47,38 +55,30 @@ public class ModifiableGraphBenchmark implements GraphBenchmark {
                     "Average Path Degree"
             });
 
-            if (DISCONNECT_START) {
-                disconnectVertexInAllGraphs(start);
-            }
-
-            if (DISCONNECT_END) {
-                disconnectVertexInAllGraphs(endCondition.vertex().orElseThrow());
-            }
-
-            for (var algorithm : SPF_ALGORITHMS) {
-                var benchmark = Benchmark.<List<PVector>>builder()
-                        .task(iteration -> algorithm.findShortestPath(
+            for (var algorithm : ALGORITHMS) {
+                var benchmark = Benchmark.<List<FifteenPuzzle>>builder()
+                        .task(_ -> algorithm.findShortestPath(
                                 start,
                                 endCondition,
-                                graphs.get(iteration)
+                                GRAPH
                         ))
-                        .postProcessor((iteration, path, nanos) -> {
-                            var graph = graphs.get(iteration);
-
+                        .postProcessor((_, path, nanos) -> {
                             double averagePathDegree = path.stream()
-                                    .mapToDouble(graph::getDegree)
+                                    .mapToDouble(GRAPH::getDegree)
                                     .average()
                                     .orElse(0);
 
                             csvWriter.writeNext(new String[]{
                                     algorithm.getClass().getSimpleName(),
                                     STR."\{path.size()}",
-                                    STR."\{graph.sumEdgeWeights(path)}",
+                                    STR."\{GRAPH.sumEdgeWeights(path)}",
                                     STR."\{nanos / 1e3}",
                                     STR."\{algorithm.getVisitedVertexCount()}",
-                                    STR."\{graph.calculateAverageDegree()}",
+                                    STR."\{(4 * 4 + 3 * 8 + 2 * 4) / 16.0}",
                                     STR."\{averagePathDegree}"
                             });
+
+                            start.board().shuffle();
                         })
                         .build();
 
@@ -90,19 +90,9 @@ public class ModifiableGraphBenchmark implements GraphBenchmark {
         }
     }
 
-    private void disconnectVertexInAllGraphs(PVector vertex) {
-        for (var graph : graphs) {
-            graph.getNeighbors(vertex)
-                    .keySet()
-                    .stream()
-                    .toList()  // copy to avoid concurrent modification
-                    .forEach(neighbor -> graph.removeEdge(vertex, neighbor));
-        }
-    }
-
     @Override
     public String outputFileName() {
-        return "modifiable-benchmark.csv";
+        return "15-benchmark.csv";
     }
 
 }
