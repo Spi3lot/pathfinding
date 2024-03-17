@@ -27,8 +27,8 @@ public class FifteenPuzzleGraphBenchmark implements GraphBenchmark {
     private static final Heuristic<FifteenPuzzle> HEURISTIC = (vertex, endCondition) -> vertex.getLeastMoveCountTo(endCondition.vertex().orElseThrow());
 
     private static final List<PathfindingAlgorithm<FifteenPuzzle>> ALGORITHMS = List.of(
-            new BidiBestFirstSearch<>(HEURISTIC)
-            //new AStar<>(HEURISTIC)
+            //new BidiBestFirstSearch<>(HEURISTIC)
+            new AStar<>(HEURISTIC)
     );
 
     public static void main(String[] args) throws IOException {

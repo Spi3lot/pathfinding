@@ -38,7 +38,7 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
      * Constructor to create a bidirectional best-first search
      * using A* as the search algorithm for both directions.
      *
-     * @param heuristic   the heuristic function to use.
+     * @param heuristic the heuristic function to use.
      */
     public BidiBestFirstSearch(Heuristic<T> heuristic) {
         this(new AStar<>(heuristic), new AStar<>(heuristic));
@@ -63,7 +63,7 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
         forwardSearch.initializeDataStructures(start);
         backwardSearch.initializeDataStructures(end);
 
-        while (forwardSearch.nextUnvisited() && backwardSearch.nextUnvisited()) {
+        while (nextUnvisited()) {
             forwardSearch.closeCurrent();
             backwardSearch.closeCurrent();
 
@@ -80,6 +80,11 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
         }
 
         return Collections.emptyList();
+    }
+
+    private boolean nextUnvisited() {
+        return forwardSearch.nextUnvisited()
+                && backwardSearch.nextUnvisited();
     }
 
     /**
