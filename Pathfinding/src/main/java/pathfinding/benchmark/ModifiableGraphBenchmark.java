@@ -55,9 +55,9 @@ public class ModifiableGraphBenchmark implements GraphBenchmark {
                 disconnectVertexInAllGraphs(endCondition.vertex().orElseThrow());
             }
 
-            for (var algorithm : SPF_ALGORITHMS) {
+            for (var algorithm : ITERATIVE_ALGORITHMS) {
                 var benchmark = Benchmark.<List<PVector>>builder()
-                        .task(iteration -> algorithm.findShortestPath(
+                        .task(iteration -> algorithm.findAnyPath(
                                 start,
                                 endCondition,
                                 graphs.get(iteration)
