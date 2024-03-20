@@ -1,0 +1,2 @@
+"Algorithm","Path Length","Path Weight","Duration (µs)","Visited Vertices","Average Degree","Average Path Degree"
+"BidiBestFirstSearch","55","54.0","1084805.9","52576","3.0","3.309090909090909"

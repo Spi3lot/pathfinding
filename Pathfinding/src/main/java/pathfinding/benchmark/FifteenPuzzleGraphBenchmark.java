@@ -1,6 +1,5 @@
 package pathfinding.benchmark;
 
-import pathfinding.algorithms.AStar;
 import pathfinding.algorithms.BidiBestFirstSearch;
 import pathfinding.algorithms.PathfindingAlgorithm;
 import pathfinding.functions.Heuristic;
@@ -9,12 +8,9 @@ import pathfinding.graphs.FifteenPuzzleGraph;
 import pathfinding.graphs.Graph;
 import pathfinding.service.Benchmark;
 import pathfinding.service.EndCondition;
-import pathfinding.service.Pathfinder;
-import processing.core.PVector;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * @author Emilio Zottel (5AHIF)
@@ -27,8 +23,8 @@ public class FifteenPuzzleGraphBenchmark implements GraphBenchmark {
     private static final Heuristic<FifteenPuzzle> HEURISTIC = (vertex, endCondition) -> vertex.getLeastMoveCountTo(endCondition.vertex().orElseThrow());
 
     private static final List<PathfindingAlgorithm<FifteenPuzzle>> ALGORITHMS = List.of(
-            //new BidiBestFirstSearch<>(HEURISTIC)
-            new AStar<>(HEURISTIC)
+            new BidiBestFirstSearch<>(HEURISTIC)
+            //new AStar<>(HEURISTIC)
     );
 
     public static void main(String[] args) throws IOException {
