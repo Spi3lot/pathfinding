@@ -24,7 +24,6 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
     private int visitedVertexCount;
 
-    // TODO: check if this is actually faster than findShortestPath
     @Override
     public List<T> findAnyPath(T start,
                                EndCondition<T> endCondition,
