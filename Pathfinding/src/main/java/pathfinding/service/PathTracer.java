@@ -15,16 +15,9 @@ import java.util.Map;
 public record PathTracer<T>(Map<T, T> predecessors) {
 
     /**
-     * Traces the path from start to end in a given map of predecessors.
-     * <p>
-     * This method is less safe than {@link #safeTrace(T, T)}
-     * because it doesn't check for cycles in the path and it is possible
-     * to get stuck in an infinite loop. However, it is more efficient
-     * because it uses an {@link ArrayList} as data structure.
-     *
-     * @param start the node the path starts at
-     * @param end   the node the path ends at
-     * @return a list of nodes that form the path from start to end
+     * This method is less safe than {@link #safeTrace(T, T)} because
+     * it is possibleto get stuck in an infinite loop. However, it is
+     * more efficient because it makes use of {@link ArrayList}.
      */
     public List<T> unsafeTrace(T start, T end) {
         var path = new ArrayList<T>();
@@ -40,16 +33,11 @@ public record PathTracer<T>(Map<T, T> predecessors) {
     }
 
     /**
-     * Traces the path from start to end in a given map of predecessors.
-     * <p>
-     * This method is more safe than {@link #unsafeTrace(T, T)}
+     * This method is safer than {@link #unsafeTrace(T, T)}
      * because it checks for cycles in the path. However, it is
-     * less efficient because it uses a {@link LinkedHashSet}.
+     * less efficient because it makes use of {@link LinkedHashSet}.
      *
-     * @param start the node the path starts at
-     * @param end   the node the path ends at
-     * @return a list of nodes that form the path from start to end
-     * @throws CycleException if the end node is unreachable because of a cycle
+     * @throws CycleException if a cycle is detected in the path
      */
     public List<T> safeTrace(T start, T end) {
         var path = new LinkedHashSet<T>();

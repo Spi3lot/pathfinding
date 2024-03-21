@@ -49,13 +49,6 @@ public class FlexibleGraph<T> implements ModifiableGraph<T> {
     }
 
     @Override
-    public void addVertices(Collection<T> vertices) {
-        for (T vertex : vertices) {
-            addVertex(vertex);
-        }
-    }
-
-    @Override
     public void addVertex(T vertex) {
         adjacencies.computeIfAbsent(vertex, _ -> new HashMap<>());
     }

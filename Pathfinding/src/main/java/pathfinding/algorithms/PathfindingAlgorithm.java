@@ -12,8 +12,11 @@ public interface PathfindingAlgorithm<T> extends SearchAlgorithm<T> {
      * Finds the shortest path between two given vertices in a graph.
      *
      * @param start        the vertex the path starts at
-     * @param endCondition the condition that has to be met for the path to end
-     * @return The shortest path between the two vertices, or {@link Collections#emptyList()} if no path exists.
+     * @param endCondition the condition that has to
+     *                     be met for the path to end
+     * @param graph        the graph in which a path is to be found
+     * @return the shortest path between the two vertices,
+     * or {@link Collections#emptyList()} if no path exists.
      */
     List<T> findShortestPath(T start,
                              EndCondition<T> endCondition,

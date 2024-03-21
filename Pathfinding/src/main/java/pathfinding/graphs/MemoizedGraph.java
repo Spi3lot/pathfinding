@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An abstract class that helps with memoizing the neighbors of a graph.
- * The neighbors will only be calculated when they are requested for the first time.
+ * An abstract class that helps with
+ * memoizing the neighbors of a graph.
+ * The neighbors will only be calculated
+ * when they are requested for the first time.
  *
  * @param <T> the type of the vertices in the graph
  */

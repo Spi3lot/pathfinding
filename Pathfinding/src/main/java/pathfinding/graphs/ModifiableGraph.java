@@ -28,11 +28,6 @@ public interface ModifiableGraph<T> extends Graph<T> {
     void addEdge(T source, T destination, double weight);
 
     /**
-     * Adds a Collection of vertices to the graph.
-     */
-    void addVertices(Collection<T> vertices);
-
-    /**
      * Adds a vertex to the graph.
      *
      * @param vertex the value of the vertex to be added
@@ -89,5 +84,12 @@ public interface ModifiableGraph<T> extends Graph<T> {
      * @return a Set of all the vertices in the graph
      */
     Set<T> getVertices();
+
+    /**
+     * Adds a Collection of vertices to the graph.
+     */
+    default void addVertices(Collection<T> vertices) {
+        vertices.forEach(this::addVertex);
+    }
 
 }

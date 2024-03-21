@@ -47,7 +47,7 @@ public class ModifiableGraphRandomizer<T> {
      * @return a new directed graph with randomized edges
      */
     public ModifiableGraph<T> randomizeDirectedEdges() {
-        var graph = createFilledGraph(true);
+        var graph = new FlexibleGraph<T>(true);
 
         for (T source : vertices) {
             for (T destination : vertices) {
@@ -70,7 +70,7 @@ public class ModifiableGraphRandomizer<T> {
      * @return a new undirected graph with randomized edges
      */
     public ModifiableGraph<T> randomizeUndirectedEdges() {
-        var graph = createFilledGraph(false);
+        var graph = new FlexibleGraph<T>(false);
 
         for (int i = 0; i < vertices.size(); i++) {
             for (int j = i + 1; j < vertices.size(); j++) {
@@ -87,12 +87,6 @@ public class ModifiableGraphRandomizer<T> {
             }
         }
 
-        return graph;
-    }
-
-    private ModifiableGraph<T> createFilledGraph(boolean directed) {
-        var graph = new FlexibleGraph<T>(directed);
-        graph.addVertices(vertices);
         return graph;
     }
 

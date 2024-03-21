@@ -88,8 +88,9 @@ public abstract class AbstractBestFirstSearch<T>
      * Expands the current vertex in the graph.
      *
      * @param endCondition the end condition
-     * @param graph the graph to expand the current vertex in
-     * @return the updated neighbors of the current vertex and their weights
+     * @param graph        the graph to expand the current vertex in
+     * @return the updated neighbors of the current vertex and the
+     * weights of the edges between them
      */
     @Override
     public Map<T, Double> expand(EndCondition<T> endCondition, Graph<T> graph) {

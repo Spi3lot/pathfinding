@@ -35,10 +35,8 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
     }
 
     /**
-     * Constructor to create a bidirectional best-first search
-     * using A* as the search algorithm for both directions.
-     *
-     * @param heuristic the heuristic function to use.
+     * Constructor to create a bidirectional best-first search using A*
+     * with the given heuristic as the search algorithm for both directions
      */
     public BidiBestFirstSearch(Heuristic<T> heuristic) {
         this(new AStar<>(heuristic), new AStar<>(heuristic));
@@ -92,9 +90,6 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
      * and from the end to the common vertex into a single path.
      * The common vertex is included only once in the result.
      *
-     * @param start  the start vertex
-     * @param common the common vertex
-     * @param end    the end vertex
      * @return the merged path
      */
     private List<T> mergePaths(T start,
@@ -111,9 +106,8 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
     }
 
     /**
-     * Merges the 2 paths by reversing the 2nd one and
-     * removing the common vertex from any of the 2
-     * (in this case, from the 2nd path) and concatenating them
+     * Merges the 2 paths by reversing the 2nd one,
+     * removing the common vertex from it and concatenating them
      *
      * @param startToCommon the path from the start to the common vertex
      * @param endToCommon   the path from the end to the common vertex
