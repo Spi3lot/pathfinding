@@ -57,7 +57,7 @@ public class ModifiableGraphBenchmark implements GraphBenchmark {
 
             for (var algorithm : SPF_ALGORITHMS) {
                 var benchmark = Benchmark.<List<PVector>>builder()
-                        .task(iteration -> algorithm.findShortestPath(
+                        .task(iteration -> algorithm.findAnyPath(
                                 start,
                                 endCondition,
                                 graphs.get(iteration)

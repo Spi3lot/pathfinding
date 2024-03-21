@@ -51,7 +51,7 @@ public class CompleteGraphBenchmark implements GraphBenchmark {
 
             for (var algorithm : SPF_ALGORITHMS) {
                 var benchmark = Benchmark.<List<PVector>>builder()
-                        .task(iteration -> algorithm.findShortestPath(
+                        .task(iteration -> algorithm.findAnyPath(
                                 startVertices.get(iteration),
                                 endConditions.get(iteration),
                                 GRAPH

@@ -28,7 +28,7 @@ public class PathfindingExample {
         var aStar = new AStar<Integer>((v, c) -> (v.equals(c.vertex().orElseThrow())) ? 0 : 1);
         var bidiAStar = new BidiBestFirstSearch<>(aStar::h);
         System.out.println(aStar.findShortestPath(0, EndCondition.endAt(1), graph));
-        System.out.println(bidiAStar.findShortestPath(0, EndCondition.endAt(1), graph));
+        System.out.println(bidiAStar.findAnyPath(0, EndCondition.endAt(1), graph));
     }
 
     private static void bidiBefsIntBreaker4() {
@@ -41,7 +41,7 @@ public class PathfindingExample {
         var aStar = new AStar<Integer>((v, c) -> (v.equals(c.vertex().orElseThrow())) ? 0 : 1);
         var bidiAStar = new BidiBestFirstSearch<>(aStar::h);
         System.out.println(aStar.findShortestPath(0, EndCondition.endAt(3), graph));
-        System.out.println(bidiAStar.findShortestPath(0, EndCondition.endAt(3), graph));
+        System.out.println(bidiAStar.findAnyPath(0, EndCondition.endAt(3), graph));
     }
 
     private static void bidiBefsIntBreaker() {
@@ -64,7 +64,7 @@ public class PathfindingExample {
             var aStar = new AStar<Integer>((v, c) -> v.equals(c.vertex().orElseThrow()) ? 0 : 1);
             var bidiAStar = new BidiBestFirstSearch<>(aStar::h);
             unidiPath = aStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
-            bidiPath = bidiAStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
+            bidiPath = bidiAStar.findAnyPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
         }
 
         System.out.println(STR."It took \{i} iterations to break BidiBestFirstSearch");
@@ -96,7 +96,7 @@ public class PathfindingExample {
             var aStar = new AStar<PVector>((current, endCondition) -> weightFunction.applyAsDouble(current, endCondition.vertex().orElseThrow()));
             var bidiAStar = new BidiBestFirstSearch<>(aStar::h);
             unidiPath = aStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
-            bidiPath = bidiAStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
+            bidiPath = bidiAStar.findAnyPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
         }
 
         System.out.println(STR."It took \{i} iterations to break the BidiBestFirstSearch algorithm.");

@@ -37,7 +37,7 @@ public interface GraphBenchmark {
             .edgeProbability(EDGE_PROBABILITY)
             .build();
 
-    List<PathfindingAlgorithm<PVector>> ALGORITHMS = List.of(
+    List<SearchAlgorithm<PVector>> ALGORITHMS = List.of(
             new BidiBestFirstSearch<>(HEURISTIC),
             new AStar<>(HEURISTIC),
             new Dijkstra<>(),
@@ -46,7 +46,7 @@ public interface GraphBenchmark {
             new RecursiveDFS<>()
     );
 
-    List<PathfindingAlgorithm<PVector>> ITERATIVE_ALGORITHMS = ALGORITHMS.subList(0, 5);
+    List<SearchAlgorithm<PVector>> ITERATIVE_ALGORITHMS = ALGORITHMS.subList(0, 5);
 
     /**
      * The algorithms reasonable to be used for finding the shortest paths.
@@ -56,11 +56,11 @@ public interface GraphBenchmark {
      * <p>
      * SPF stands for "Shortest Path First".
      */
-    List<PathfindingAlgorithm<PVector>> SPF_ALGORITHMS = ALGORITHMS.subList(0, 4);
+    List<SearchAlgorithm<PVector>> SPF_ALGORITHMS = ALGORITHMS.subList(0, 4);
 
-    List<PathfindingAlgorithm<PVector>> BEFS_ALGORITHMS = ALGORITHMS.subList(0, 3);
+    List<SearchAlgorithm<PVector>> BEFS_ALGORITHMS = ALGORITHMS.subList(0, 3);
 
-    List<PathfindingAlgorithm<PVector>> UNIDIRECTIONAL_BEFS_ALGORITHMS = ALGORITHMS.subList(1, 3);
+    List<SearchAlgorithm<PVector>> UNIDIRECTIONAL_BEFS_ALGORITHMS = ALGORITHMS.subList(1, 3);
 
     void runBenchmark();
 

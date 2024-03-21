@@ -50,7 +50,7 @@ public class Pathfinding extends PApplet {
     public void draw() {
         background(0);
         var path1 = aStar.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
-        var path2 = bidiBefs.findShortestPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
+        var path2 = bidiBefs.findAnyPath(vertices.getFirst(), EndCondition.endAt(vertices.getLast()), graph);
 
         for (var vertexEntry : graph.getAdjacencies().entrySet()) {
             var vertex = vertexEntry.getKey();

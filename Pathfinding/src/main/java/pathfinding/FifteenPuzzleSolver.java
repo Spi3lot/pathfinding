@@ -19,13 +19,13 @@ public class FifteenPuzzleSolver {
         var puzzle = new FifteenPuzzle(BOARD_SIZE);
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
-        var pathfinder = new Pathfinder<>(graph, new BidiBestFirstSearch<>(
-                (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
+        var algorithm = new BidiBestFirstSearch<FifteenPuzzle>(
+                (vertex, endCondition) -> vertex.getLeastMoveCountTo(
                         endCondition.vertex().orElseThrow()
                 )
-        ));
+        );
 
-        var path = pathfinder.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
+        var path = algorithm.findAnyPath(puzzle, EndCondition.endAt(solvedPuzzle), graph);
         System.out.println(path);
         System.out.println(graph.sumEdgeWeights(path));
     }

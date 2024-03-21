@@ -21,16 +21,17 @@ public class FifteenPuzzleBenchmark {
         var graph = new FifteenPuzzleGraph();
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
-        var pathfinder = new Pathfinder<>(graph, new BidiBestFirstSearch<>(
+        var algorithm = new BidiBestFirstSearch<FifteenPuzzle>(
                 (vertex, endCondition) -> vertex.getLeastMoveCountTo(
                         endCondition.vertex().orElseThrow()
                 )
-        ));
+        );
 
         var benchmark = Benchmark.<List<FifteenPuzzle>>builder()
-                .task((_) -> pathfinder.findAnyPath(
+                .task((_) -> algorithm.findAnyPath(
                         new FifteenPuzzle(BOARD_SIZE),
-                        EndCondition.endAt(solvedPuzzle)
+                        EndCondition.endAt(solvedPuzzle),
+                        graph
                 ))
                 .build();
 

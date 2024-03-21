@@ -9,6 +9,7 @@ import pathfinding.games.Position;
 import pathfinding.graphs.FifteenPuzzleGraph;
 import pathfinding.service.EndCondition;
 import pathfinding.service.Pathfinder;
+import pathfinding.service.Searcher;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -28,7 +29,7 @@ public class FifteenPuzzleGui extends PApplet {
 
     private static final int BOARD_SIZE = 4;
     private static final BidiBestFirstSearch<FifteenPuzzle> SEARCH = new BidiBestFirstSearch<>(new FifteenPuzzleHeuristic());
-    private static final Pathfinder<FifteenPuzzle> FINDER = new Pathfinder<>(new FifteenPuzzleGraph(), SEARCH);
+    private static final Searcher<FifteenPuzzle> FINDER = new Searcher<>(new FifteenPuzzleGraph(), SEARCH);
     private final FifteenPuzzle puzzle = new FifteenPuzzle(BOARD_SIZE, 0);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private Future<Integer> minMoveCountFuture;
@@ -148,7 +149,7 @@ public class FifteenPuzzleGui extends PApplet {
 
         minMoveCountFuture = executor.submit(() -> {
             var start = new FifteenPuzzle(new FifteenPuzzleBoard(puzzle.board()));
-            var path = FINDER.findShortestPath(start, EndCondition.endAt(FifteenPuzzle.solved(BOARD_SIZE)));
+            var path = FINDER.findAnyPath(start, EndCondition.endAt(FifteenPuzzle.solved(BOARD_SIZE)));
             return (int) FINDER.getGraph().sumEdgeWeights(path);
         });
     }

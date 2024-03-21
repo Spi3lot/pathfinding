@@ -23,7 +23,7 @@ import java.util.Objects;
  */
 public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
                                      BestFirstSearch<T> backwardSearch)
-        implements PathfindingAlgorithm<T> {
+        implements SearchAlgorithm<T> {
 
     public BidiBestFirstSearch {
         if (Objects.requireNonNull(forwardSearch) == Objects.requireNonNull(backwardSearch)) {
@@ -51,9 +51,9 @@ public record BidiBestFirstSearch<T>(BestFirstSearch<T> forwardSearch,
     }
 
     @Override
-    public List<T> findShortestPath(T start,
-                                    EndCondition<T> forwardEndCondition,
-                                    Graph<T> graph) {
+    public List<T> findAnyPath(T start,
+                               EndCondition<T> forwardEndCondition,
+                               Graph<T> graph) {
         T end = forwardEndCondition.vertex()
                 .orElseThrow(() -> new IllegalArgumentException(
                         "The end condition must specify a vertex."
