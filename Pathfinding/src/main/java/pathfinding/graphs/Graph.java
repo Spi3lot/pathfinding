@@ -48,15 +48,11 @@ public interface Graph<T> {
         return sum;
     }
 
-    /**
-     * @param source      the source vertex of the edge
-     * @param destination the destination vertex of the edge
-     * @return the weight of the edge between the two vertices
-     */
     default double getEdgeWeight(T source, T destination) {
         return getNeighbors(source).getOrDefault(
                 destination,
                 Double.POSITIVE_INFINITY
         );
     }
+
 }

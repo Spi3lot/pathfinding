@@ -1,8 +1,7 @@
 package pathfinding.benchmark;
 
-import pathfinding.algorithms.BidiBestFirstSearch;
+import pathfinding.algorithms.AStar;
 import pathfinding.algorithms.PathfindingAlgorithm;
-import pathfinding.algorithms.SearchAlgorithm;
 import pathfinding.functions.Heuristic;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.graphs.FifteenPuzzleGraph;
@@ -23,9 +22,9 @@ public class FifteenPuzzleGraphBenchmark implements GraphBenchmark {
 
     private static final Heuristic<FifteenPuzzle> HEURISTIC = (vertex, endCondition) -> vertex.getLeastMoveCountTo(endCondition.vertex().orElseThrow());
 
-    private static final List<SearchAlgorithm<FifteenPuzzle>> ALGORITHMS = List.of(
-            new BidiBestFirstSearch<>(HEURISTIC)
-            //new AStar<>(HEURISTIC)
+    private static final List<PathfindingAlgorithm<FifteenPuzzle>> ALGORITHMS = List.of(
+            //new BidiBestFirstSearch<>(HEURISTIC)
+            new AStar<>(HEURISTIC)
     );
 
     public static void main(String[] args) throws IOException {
@@ -54,7 +53,7 @@ public class FifteenPuzzleGraphBenchmark implements GraphBenchmark {
 
             for (var algorithm : ALGORITHMS) {
                 var benchmark = Benchmark.<List<FifteenPuzzle>>builder()
-                        .task(_ -> algorithm.findAnyPath(
+                        .task(_ -> algorithm.findShortestPath(
                                 start,
                                 endCondition,
                                 GRAPH
