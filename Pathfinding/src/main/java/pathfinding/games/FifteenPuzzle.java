@@ -52,22 +52,22 @@ public record FifteenPuzzle(FifteenPuzzleBoard board) {
     }
 
     public Map<Integer, Integer> getLeastMoveCountsTo(FifteenPuzzle desired) {
-        var moveCounts = HashMap.<Integer, Integer>newHashMap(board.calculateArea() - 1);
+        var moves = HashMap.<Integer, Integer>newHashMap(board.area() - 1);
         var positions = getPositions();
         var desiredPositions = desired.getPositions();
 
-        for (int i = 1; i < board.calculateArea(); i++) {
+        for (int i = 1; i < board.area(); i++) {
             var position = positions.get(i);
             var desiredPosition = desiredPositions.get(i);
             int moveCount = position.manhattanDistance(desiredPosition);
-            moveCounts.put(i, moveCount);
+            moves.put(i, moveCount);
         }
 
-        return moveCounts;
+        return moves;
     }
 
     public Map<Integer, Position> getPositions() {
-        var positions = HashMap.<Integer, Position>newHashMap(board.calculateArea());
+        var positions = HashMap.<Integer, Position>newHashMap(board.area());
 
         for (int j = 0; j < board.getLength(); j++) {
             for (int i = 0; i < board.getLength(); i++) {

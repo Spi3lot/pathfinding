@@ -10,8 +10,10 @@ import pathfinding.service.EndCondition;
 public class FifteenPuzzleHeuristic implements Heuristic<FifteenPuzzle> {
 
     @Override
-    public double applyAsDouble(FifteenPuzzle puzzle, EndCondition<FifteenPuzzle> endCondition) {
-        return puzzle.getLeastMoveCountTo(endCondition.vertex().orElseThrow());
+    public double applyAsDouble(FifteenPuzzle puzzle,
+                                EndCondition<FifteenPuzzle> endCondition) {
+        var vertex = endCondition.vertex().orElseThrow();
+        return puzzle.getLeastMoveCountTo(vertex);
     }
 
 }

@@ -30,7 +30,7 @@ public class FifteenPuzzleBoard {
                 .map(int[]::clone)
                 .toArray(int[][]::new);
 
-        this.emptyValue = calculateArea();
+        this.emptyValue = area();
     }
 
     private void fillBoard(int size) {
@@ -57,7 +57,7 @@ public class FifteenPuzzleBoard {
     }
 
     public void shuffle() {
-        shuffle(calculateArea() * 100);
+        shuffle(area() * 100);
     }
 
     public void shuffle(int count) {
@@ -119,7 +119,7 @@ public class FifteenPuzzleBoard {
         throw new IllegalStateException(STR."The value \{value} is not on the board.");
     }
 
-    public int calculateArea() {
+    public int area() {
         return board.length * board.length;
     }
 

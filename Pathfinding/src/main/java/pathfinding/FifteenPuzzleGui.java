@@ -8,7 +8,6 @@ import pathfinding.games.FifteenPuzzleBoard;
 import pathfinding.games.Position;
 import pathfinding.graphs.FifteenPuzzleGraph;
 import pathfinding.service.EndCondition;
-import pathfinding.service.Pathfinder;
 import pathfinding.service.Searcher;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
@@ -50,7 +49,7 @@ public class FifteenPuzzleGui extends PApplet {
 
     @Override
     public void setup() {
-        int highestDigitCount = countDigits(puzzle.board().calculateArea() - 1);
+        int highestDigitCount = countDigits(puzzle.board().area() - 1);
         tileSize = (float) width / BOARD_SIZE;
         numberTextSize = tileSize * 2 / (highestDigitCount + 1);
         solvedTextSize = width / 10f;
