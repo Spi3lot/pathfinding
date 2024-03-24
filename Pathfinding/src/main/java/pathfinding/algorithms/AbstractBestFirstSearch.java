@@ -84,16 +84,9 @@ public abstract class AbstractBestFirstSearch<T>
         open.enqueue(start, 0.0);
     }
 
-    /**
-     * Expands the current vertex in the graph.
-     *
-     * @param endCondition the end condition
-     * @param graph        the graph to expand the current vertex in
-     * @return the updated neighbors of the current vertex and the
-     * weights of the edges between them
-     */
     @Override
-    public Map<T, Double> expand(EndCondition<T> endCondition, Graph<T> graph) {
+    public Map<T, Double> expand(EndCondition<T> endCondition,
+                                 Graph<T> graph) {
         return graph.getNeighbors(current)
                 .entrySet()
                 .stream()
@@ -114,7 +107,10 @@ public abstract class AbstractBestFirstSearch<T>
 
                     return false;
                 })
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
     }
 
 }

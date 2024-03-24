@@ -19,7 +19,10 @@ public class ModifiableGraphBenchmark implements GraphBenchmark {
     private static final boolean DISCONNECT_END = false;
 
     private final List<ModifiableGraph<PVector>> graphs = IntStream.range(0, GRAPH_COUNT)
-            .mapToObj(_ -> RANDOMIZER.randomizeUndirectedEdges())
+            .mapToObj(_ -> {
+                RANDOMIZER.setEdgeProbability(Math.random());
+                return RANDOMIZER.randomizeUndirectedEdges();
+            })
             .toList();
 
     public static void main(String[] args) throws IOException {

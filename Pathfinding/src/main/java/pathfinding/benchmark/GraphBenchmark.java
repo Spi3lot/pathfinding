@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
  */
 public interface GraphBenchmark {
 
-    int GRAPH_COUNT = 15_000;
+    int GRAPH_COUNT = 25;
 
     int VERTEX_COUNT_PER_GRAPH = 1000;
 
