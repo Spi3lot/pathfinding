@@ -7,7 +7,6 @@ import pathfinding.algorithms.PathfindingAlgorithm;
 import pathfinding.graphs.Graph;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Utility class so the graph doesn't have
@@ -24,11 +23,13 @@ public class Pathfinder<T> {
     private Graph<T> graph;
     private PathfindingAlgorithm<T> algorithm;
 
-    public Optional<List<T>> findAnyPath(T start, EndCondition<T> endCondition) {
+    public List<T> findAnyPath(T start,
+                               EndCondition<T> endCondition) {
         return algorithm.findAnyPath(start, endCondition, graph);
     }
 
-    public Optional<List<T>> findShortestPath(T start, EndCondition<T> endCondition) {
+    public List<T> findShortestPath(T start,
+                                    EndCondition<T> endCondition) {
         return algorithm.findShortestPath(start, endCondition, graph);
     }
 

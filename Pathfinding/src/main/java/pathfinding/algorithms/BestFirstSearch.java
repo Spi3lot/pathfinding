@@ -1,80 +1,53 @@
 package pathfinding.algorithms;
 
-import pathfinding.datastructures.FibonacciHeap;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
-import pathfinding.service.PathTracer;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Abstract class to make the implementation of best-first search algorithms easier.
+ * Interface for best-first search algorithms.
  *
  * @param <T> the type of the vertices in the graph
  */
-public abstract class BestFirstSearch<T> implements PathfindingAlgorithm<T> {
+public interface BestFirstSearch<T> extends PathfindingAlgorithm<T> {
 
-    protected final Map<T, Double> distances = new HashMap<>();
-    private final Map<T, T> predecessors = new HashMap<>();
-    private final PathTracer<T> pathTracer = new PathTracer<>(predecessors);
+    Map<T, Double> getDistances();
 
-    @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              EndCondition<T> endCondition,
-                                              Graph<T> graph) {
-        var open = new PriorityQueue<>(
-                Comparator.<T>comparingDouble(
-                                vertex -> f(vertex, endCondition)
-                        )
-                        .thenComparingDouble(
-                                vertex -> h(vertex, endCondition)
-                        )
-        );
+    Map<T, T> getPredecessors();
 
-        var closed = new HashSet<T>();
-        predecessors.clear();
-        distances.clear();
-        distances.put(start, 0.0);
-        open.offer(start);
+    T getCurrent();
 
-        while (!open.isEmpty()) {
-            T current = open.poll();
-            closed.add(current);
+    void closeCurrent();
 
-            if (endCondition.condition().test(current)) {
-                return Optional.of(pathTracer.unsafeTrace(start, current));
+    boolean nextOpen();
+
+    boolean hasVisited(T vertex);
+
+    boolean hasOpen();
+
+    void initializeDataStructures(T start);
+
+    Map<T, Double> expand(EndCondition<T> endCondition, Graph<T> graph);
+
+    double g(T vertex, Map<T, Double> distances);
+
+    double h(T vertex, EndCondition<T> endCondition);
+
+    default boolean nextUnvisited() {
+        while (nextOpen()) {
+            if (!hasVisited(getCurrent())) {
+                return true;
             }
-
-            graph.getNeighbors(current)
-                    .entrySet()
-                    .stream()
-                    .filter(neighbor -> !closed.contains(neighbor.getKey()))
-                    .forEach(entry -> {
-                        T neighbor = entry.getKey();
-                        double weight = entry.getValue();
-                        double oldStartDistance = g(neighbor);
-                        double newStartDistance = g(current) + weight;
-                        double heuristic = h(neighbor, endCondition);
-                        double oldDistance = oldStartDistance + heuristic;
-                        double newDistance = newStartDistance + heuristic;
-
-                        if (newDistance < oldDistance) {
-                            distances.put(neighbor, newStartDistance);
-                            predecessors.put(neighbor, current);
-                            open.offer(neighbor);
-                        }
-                    });
         }
 
-        return Optional.empty();
+        return false;
     }
 
-    protected double f(T vertex, EndCondition<T> endCondition) {
-        return g(vertex) + h(vertex, endCondition);
+    default double g(T vertex) {
+        return g(vertex, getDistances());
     }
-
-    protected abstract double g(T vertex);
-
-    protected abstract double h(T vertex, EndCondition<T> endCondition);
 
 }

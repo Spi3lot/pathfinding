@@ -1,13 +1,24 @@
 package pathfinding;
 
+import pathfinding.algorithms.BidiBestFirstSearch;
+import pathfinding.functions.FifteenPuzzleHeuristic;
 import pathfinding.games.Direction;
 import pathfinding.games.FifteenPuzzle;
+import pathfinding.games.FifteenPuzzleBoard;
 import pathfinding.games.Position;
+import pathfinding.graphs.FifteenPuzzleGraph;
+import pathfinding.service.EndCondition;
+import pathfinding.service.Searcher;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import static java.util.FormatProcessor.FMT;
 
 /**
  * @author Emilio Zottel (5AHIF)
@@ -16,11 +27,14 @@ import java.util.Locale;
 public class FifteenPuzzleGui extends PApplet {
 
     private static final int BOARD_SIZE = 4;
+    private static final BidiBestFirstSearch<FifteenPuzzle> SEARCH = new BidiBestFirstSearch<>(new FifteenPuzzleHeuristic());
+    private static final Searcher<FifteenPuzzle> FINDER = new Searcher<>(new FifteenPuzzleGraph(), SEARCH);
     private final FifteenPuzzle puzzle = new FifteenPuzzle(BOARD_SIZE, 0);
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private Future<Integer> minMoveCountFuture;
     private float tileSize;
     private float numberTextSize;
     private float solvedTextSize;
-    private int minMoveCount;  // TODO: Calculate this value by using the A* algorithm
     private int moveCount;
     private long startNanos;
 
@@ -35,10 +49,11 @@ public class FifteenPuzzleGui extends PApplet {
 
     @Override
     public void setup() {
-        int highestDigitCount = countDigits(puzzle.board().calcArea() - 1);
+        int highestDigitCount = countDigits(puzzle.board().area() - 1);
         tileSize = (float) width / BOARD_SIZE;
         numberTextSize = tileSize * 2 / (highestDigitCount + 1);
         solvedTextSize = width / 10f;
+        windowTitle("15 Puzzle");
         textAlign(CENTER, CENTER);
         textFont(createFont("Comic Sans MS", 32));
         noLoop();
@@ -65,7 +80,7 @@ public class FifteenPuzzleGui extends PApplet {
                 } else {
                     var position = new Position(i, j);
                     int actualValue = puzzle.board().get(position);
-                    int expectedValue = position.calcExpectedValue(BOARD_SIZE);
+                    int expectedValue = position.calculateExpectedValue(BOARD_SIZE);
                     square(i * tileSize, j * tileSize, tileSize);
                     fill((actualValue == expectedValue) ? 0xFF005500 : 0xFF0000FF);
                     textSize(numberTextSize);
@@ -125,8 +140,17 @@ public class FifteenPuzzleGui extends PApplet {
 
     private void resetBoard() {
         puzzle.board().shuffle();
-        minMoveCount = puzzle.getLeastMoveCountTo(FifteenPuzzle.solved(BOARD_SIZE));
         moveCount = 0;
+
+        if (minMoveCountFuture != null) {
+            minMoveCountFuture.cancel(true);
+        }
+
+        minMoveCountFuture = executor.submit(() -> {
+            var start = new FifteenPuzzle(new FifteenPuzzleBoard(puzzle.board()));
+            var path = FINDER.findAnyPath(start, EndCondition.endAt(FifteenPuzzle.solved(BOARD_SIZE)));
+            return (int) FINDER.getGraph().sumEdgeWeights(path);
+        });
     }
 
     private void increaseMoveCount() {
@@ -138,10 +162,22 @@ public class FifteenPuzzleGui extends PApplet {
     }
 
     private String formatSolveText() {
+        int minMoveCount = getMinMoveCount();
         double seconds = (System.nanoTime() - startNanos) / 1e9;
         double moveRatio = (double) moveCount / minMoveCount;
-        double relativePercent = 100.0 * (moveRatio - 1);
-        return String.format(Locale.US, "SOLVED%n%.2f seconds%n%d/%d moves%n(+%.2f%%)", seconds, moveCount, minMoveCount, relativePercent);
+        double relativePercent = 100 * (moveRatio - 1);
+        return FMT."SOLVED%n%.2f\{seconds} seconds%n%d\{moveCount}/%d\{minMoveCount} moves%n(+%.2f\{relativePercent}%%)";
+    }
+
+    private int getMinMoveCount() {
+        try {
+            return minMoveCountFuture.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private int countDigits(int number) {
