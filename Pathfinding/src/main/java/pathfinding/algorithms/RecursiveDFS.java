@@ -1,12 +1,13 @@
 package pathfinding.algorithms;
 
+import lombok.Getter;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Recursive implementation of the Depth-First Search algorithm.
@@ -19,22 +20,27 @@ import java.util.Optional;
  *
  * @param <T> the type of the nodes in the graph to be searched
  */
+@Getter
 public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
 
+    private int visitedVertexCount;
 
     @Override
-    public Optional<List<T>> findAnyPath(T start,
-                                         EndCondition<T> endCondition,
-                                         Graph<T> graph) {
+    public List<T> findAnyPath(T start,
+                               EndCondition<T> endCondition,
+                               Graph<T> graph) {
+        visitedVertexCount = 0;
         return findAnyPath(start, endCondition, graph, List.of(start));
     }
 
-    private Optional<List<T>> findAnyPath(T start,
-                                          EndCondition<T> endCondition,
-                                          Graph<T> graph,
-                                          List<T> path) {
+    private List<T> findAnyPath(T start,
+                                EndCondition<T> endCondition,
+                                Graph<T> graph,
+                                List<T> path) {
+        visitedVertexCount++;
+
         if (endCondition.condition().test(start)) {
-            return Optional.of(path);
+            return path;
         }
 
         return graph.getNeighbors(start)
@@ -47,24 +53,27 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                         graph,
                         append(path, neighbor)
                 ))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findAny();
+                .filter(list -> !list.isEmpty())
+                .findAny()
+                .orElse(Collections.emptyList());
     }
 
     @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              EndCondition<T> endCondition,
-                                              Graph<T> graph) {
+    public List<T> findShortestPath(T start,
+                                    EndCondition<T> endCondition,
+                                    Graph<T> graph) {
+        visitedVertexCount = 0;
         return findShortestPath(start, endCondition, graph, List.of(start));
     }
 
-    private Optional<List<T>> findShortestPath(T start,
-                                               EndCondition<T> endCondition,
-                                               Graph<T> graph,
-                                               List<T> path) {
+    private List<T> findShortestPath(T start,
+                                     EndCondition<T> endCondition,
+                                     Graph<T> graph,
+                                     List<T> path) {
+        visitedVertexCount++;
+
         if (endCondition.condition().test(start)) {
-            return Optional.of(path);
+            return path;
         }
 
         return graph.getNeighbors(start)
@@ -77,9 +86,9 @@ public class RecursiveDFS<T> implements PathfindingAlgorithm<T> {
                         graph,
                         append(path, neighbor)
                 ))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .min(Comparator.comparingDouble(graph::sumEdgeWeights));
+                .filter(list -> !list.isEmpty())
+                .min(Comparator.comparingDouble(graph::sumEdgeWeights))
+                .orElse(Collections.emptyList());
     }
 
     private List<T> append(List<T> list, T element) {

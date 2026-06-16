@@ -6,8 +6,7 @@ import java.util.Arrays;
 import java.util.StringJoiner;
 
 /**
- * @author Emilio Zottel (5AHIF)
- * @since 17.02.2024, Sa.
+ * Represents a board of a 15-puzzle game.
  */
 @EqualsAndHashCode
 public class FifteenPuzzleBoard {
@@ -31,14 +30,14 @@ public class FifteenPuzzleBoard {
                 .map(int[]::clone)
                 .toArray(int[][]::new);
 
-        this.emptyValue = calcArea();
+        this.emptyValue = area();
     }
 
     private void fillBoard(int size) {
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
                 var position = new Position(i, j);
-                set(position, position.calcExpectedValue(size));
+                set(position, position.calculateExpectedValue(size));
             }
         }
     }
@@ -48,7 +47,7 @@ public class FifteenPuzzleBoard {
             for (int i = 0; i < board.length; i++) {
                 var position = new Position(i, j);
 
-                if (get(position) != position.calcExpectedValue(board.length)) {
+                if (get(position) != position.calculateExpectedValue(board.length)) {
                     return false;
                 }
             }
@@ -58,7 +57,7 @@ public class FifteenPuzzleBoard {
     }
 
     public void shuffle() {
-        shuffle(calcArea() * 100);
+        shuffle(area() * 100);
     }
 
     public void shuffle(int count) {
@@ -112,7 +111,7 @@ public class FifteenPuzzleBoard {
         for (int j = 0; j < board.length; j++) {
             for (int i = 0; i < board.length; i++) {
                 if (get(j, i) == value) {
-                    return new Position(i, j).calcFlatIndex(board.length);
+                    return new Position(i, j).calculateFlatIndex(board.length);
                 }
             }
         }
@@ -120,7 +119,7 @@ public class FifteenPuzzleBoard {
         throw new IllegalStateException(STR."The value \{value} is not on the board.");
     }
 
-    public int calcArea() {
+    public int area() {
         return board.length * board.length;
     }
 

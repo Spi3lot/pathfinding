@@ -35,11 +35,11 @@ public record Position(int x, int y) {
         return Math.abs(x - other.x) + Math.abs(y - other.y);
     }
 
-    public int calcExpectedValue(int boardLength) {
-        return 1 + calcFlatIndex(boardLength);
+    public int calculateExpectedValue(int boardLength) {
+        return 1 + calculateFlatIndex(boardLength);
     }
 
-    public int calcFlatIndex(int boardLength) {
+    public int calculateFlatIndex(int boardLength) {
         return y * boardLength + x;
     }
 

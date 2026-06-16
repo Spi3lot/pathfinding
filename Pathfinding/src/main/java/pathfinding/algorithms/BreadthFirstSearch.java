@@ -1,5 +1,6 @@
 package pathfinding.algorithms;
 
+import lombok.Getter;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 import pathfinding.service.PathTracer;
@@ -11,24 +12,29 @@ import java.util.*;
  *
  * @param <T> the type of the nodes in the graph to be searched
  */
+@Getter
 public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
+    private int visitedVertexCount;
+
     @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              EndCondition<T> endCondition,
-                                              Graph<T> graph) {
+    public List<T> findShortestPath(T start,
+                                    EndCondition<T> endCondition,
+                                    Graph<T> graph) {
         var queue = new ArrayDeque<T>();
         var visited = new ArrayList<T>();
         var predecessors = new HashMap<T, T>();
         queue.add(start);
+        visitedVertexCount = 0;
 
         while (!queue.isEmpty()) {
             T current = queue.poll();
             visited.add(current);
+            visitedVertexCount++;
 
             if (endCondition.condition().test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
-                return Optional.of(pathTracer.unsafeTrace(start, current));
+                return pathTracer.unsafeTrace(start, current);
             }
 
             graph.getNeighbors(current)
@@ -42,7 +48,7 @@ public class BreadthFirstSearch<T> implements PathfindingAlgorithm<T> {
                     });
         }
 
-        return Optional.empty();
+        return Collections.emptyList();
     }
 
 }

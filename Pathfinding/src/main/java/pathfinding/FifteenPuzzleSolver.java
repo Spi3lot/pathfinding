@@ -1,9 +1,8 @@
 package pathfinding;
 
-import pathfinding.algorithms.AStar;
+import pathfinding.algorithms.BidiBestFirstSearch;
 import pathfinding.games.FifteenPuzzle;
 import pathfinding.graphs.FifteenPuzzleGraph;
-import pathfinding.service.Benchmark;
 import pathfinding.service.EndCondition;
 import pathfinding.service.Pathfinder;
 
@@ -20,18 +19,15 @@ public class FifteenPuzzleSolver {
         var puzzle = new FifteenPuzzle(BOARD_SIZE);
         var solvedPuzzle = FifteenPuzzle.solved(BOARD_SIZE);
 
-        var pathfinder = new Pathfinder<>(graph, new AStar<>(
-                        (vertex, endCondition) -> (double) vertex.getLeastMoveCountTo(
-                                endCondition.endVertex().orElseThrow()
-                        )
-        ));
+        var algorithm = new BidiBestFirstSearch<FifteenPuzzle>(
+                (vertex, endCondition) -> vertex.getLeastMoveCountTo(
+                        endCondition.vertex().orElseThrow()
+                )
+        );
 
-        var benchmark = new Benchmark();
-        var path = pathfinder.findShortestPath(puzzle, EndCondition.endAt(solvedPuzzle));
-        long millis = benchmark.elapsedMillis();
+        var path = algorithm.findAnyPath(puzzle, EndCondition.endAt(solvedPuzzle), graph);
         System.out.println(path);
-        System.out.println(graph.sumEdgeWeights(path.orElseThrow()));
-        System.out.println(STR."\{millis} ms");
+        System.out.println(graph.sumEdgeWeights(path));
     }
 
 }

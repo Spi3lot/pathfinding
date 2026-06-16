@@ -1,5 +1,6 @@
 package pathfinding.algorithms;
 
+import lombok.Getter;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 import pathfinding.service.PathTracer;
@@ -18,25 +19,29 @@ import java.util.*;
  *
  * @param <T> the type of the nodes in the graph to be searched
  */
+@Getter
 public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
 
-    // TODO: check if this is actually faster than findShortestPath
+    private int visitedVertexCount;
+
     @Override
-    public Optional<List<T>> findAnyPath(T start,
-                                         EndCondition<T> endCondition,
-                                         Graph<T> graph) {
+    public List<T> findAnyPath(T start,
+                               EndCondition<T> endCondition,
+                               Graph<T> graph) {
         var predecessors = new HashMap<T, T>();
         var stack = new ArrayDeque<T>();
         var visited = new ArrayList<T>();
         stack.push(start);
+        visitedVertexCount = 0;
 
         while (!stack.isEmpty()) {
             T current = stack.pop();
             visited.add(current);
+            visitedVertexCount++;
 
             if (endCondition.condition().test(current)) {
                 var pathTracer = new PathTracer<>(predecessors);
-                return Optional.of(pathTracer.unsafeTrace(start, current));
+                return pathTracer.unsafeTrace(start, current);
             }
 
             graph.getNeighbors(current)
@@ -50,22 +55,24 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
                     });
         }
 
-        return Optional.empty();
+        return Collections.emptyList();
     }
 
     @Override
-    public Optional<List<T>> findShortestPath(T start,
-                                              EndCondition<T> endCondition,
-                                              Graph<T> graph) {
+    public List<T> findShortestPath(T start,
+                                    EndCondition<T> endCondition,
+                                    Graph<T> graph) {
         var predecessors = new HashMap<T, T>();
         var stack = new ArrayDeque<T>();
         var paths = new ArrayList<List<T>>();
         var pathTracer = new PathTracer<>(predecessors);
         stack.push(start);
+        visitedVertexCount = 0;
 
         while (!stack.isEmpty()) {
             T current = stack.pop();
             var path = pathTracer.unsafeTrace(start, current);
+            visitedVertexCount++;
 
             if (endCondition.condition().test(current)) {
                 paths.add(path);
@@ -84,7 +91,8 @@ public class DepthFirstSearch<T> implements PathfindingAlgorithm<T> {
         }
 
         return paths.stream()
-                .min(Comparator.comparingDouble(graph::sumEdgeWeights));
+                .min(Comparator.comparingDouble(graph::sumEdgeWeights))
+                .orElse(Collections.emptyList());
     }
 
 }

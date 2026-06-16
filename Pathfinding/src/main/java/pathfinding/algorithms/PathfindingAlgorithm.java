@@ -3,35 +3,29 @@ package pathfinding.algorithms;
 import pathfinding.graphs.Graph;
 import pathfinding.service.EndCondition;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-public interface PathfindingAlgorithm<T> {
+public interface PathfindingAlgorithm<T> extends SearchAlgorithm<T> {
 
     /**
-     * Searches any path between two given vertices in a graph.
+     * Finds the shortest path between two given vertices in a graph.
      *
      * @param start        the vertex the path starts at
-     * @param endCondition the condition that has to be met for the path to end
+     * @param endCondition the condition that has to
+     *                     be met for the path to end
      * @param graph        the graph in which a path is to be found
-     * @return Any path between the two vertices, or {@link Optional#empty()} if no path exists.
+     * @return the shortest path between the two vertices,
+     * or {@link Collections#emptyList()} if no path exists.
      */
-    default Optional<List<T>> findAnyPath(T start,
-                                          EndCondition<T> endCondition,
-                                          Graph<T> graph) {
+    List<T> findShortestPath(T start,
+                             EndCondition<T> endCondition,
+                             Graph<T> graph);
+
+    default List<T> findAnyPath(T start,
+                                EndCondition<T> endCondition,
+                                Graph<T> graph) {
         return findShortestPath(start, endCondition, graph);
     }
-
-    /**
-     * Searches the shortest path between two given vertices in a graph.
-     *
-     * @param start        the vertex the path starts at
-     * @param endCondition the condition that has to be met for the path to end
-     * @return The shortest path between the two vertices, or {@link Optional#empty()} if no path exists.
-     */
-    Optional<List<T>> findShortestPath(T start,
-                                       EndCondition<T> endCondition,
-                                       Graph<T> graph);
-
 
 }

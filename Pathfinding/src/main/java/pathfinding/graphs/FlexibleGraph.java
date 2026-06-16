@@ -1,21 +1,25 @@
 package pathfinding.graphs;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.ToDoubleBiFunction;
 
+@RequiredArgsConstructor
+@Getter
+@Setter
 @ToString
-public class FlexibleGraph<T> implements Graph<T> {
+public class FlexibleGraph<T> implements ModifiableGraph<T> {
 
-    @Getter
     private final boolean directed;
-
-    @Getter
+    
     private final Map<T, Map<T, Double>> adjacencies = new HashMap<>();
+
+    @ToString.Exclude
+    private ToDoubleBiFunction<T, T> defaultWeightFunction = (_, _) -> 1;
 
     /**
      * Undirected graph constructor.
@@ -24,32 +28,16 @@ public class FlexibleGraph<T> implements Graph<T> {
         this(false);
     }
 
-    /**
-     * Graph constructor.
-     *
-     * @param directed whether the graph is directed or not
-     */
-    public FlexibleGraph(boolean directed) {
-        this.directed = directed;
-    }
-
-    /**
-     * Adds an unweighted edge between two vertices.
-     *
-     * @param source      the source vertex of the edge
-     * @param destination the destination vertex of the edge
-     */
+    @Override
     public void addEdge(T source, T destination) {
-        addEdge(source, destination, 1);
+        addEdge(
+                source,
+                destination,
+                defaultWeightFunction.applyAsDouble(source, destination)
+        );
     }
 
-    /**
-     * Adds a weighted edge between two vertices with a weight.
-     *
-     * @param source      the source vertex of the edge
-     * @param destination the destination vertex of the edge
-     * @param weight      the weight of the edge
-     */
+    @Override
     public void addEdge(T source, T destination, double weight) {
         addVertex(source);
         addVertex(destination);
@@ -60,30 +48,12 @@ public class FlexibleGraph<T> implements Graph<T> {
         }
     }
 
-    /**
-     * Adds a Collection of vertices to the graph.
-     */
-    public void addVertices(Collection<T> vertices) {
-        for (T vertex : vertices) {
-            addVertex(vertex);
-        }
-    }
-
-    /**
-     * Adds a vertex to the graph.
-     *
-     * @param vertex the value of the vertex to be added
-     */
+    @Override
     public void addVertex(T vertex) {
         adjacencies.computeIfAbsent(vertex, _ -> new HashMap<>());
     }
 
-    /**
-     * Removes an edge between two vertices.
-     *
-     * @param source      the source vertex of the edge to be removed
-     * @param destination the destination vertex of the edge to be removed
-     */
+    @Override
     public void removeEdge(T source, T destination) {
         adjacencies.get(source).remove(destination);
 
@@ -92,21 +62,14 @@ public class FlexibleGraph<T> implements Graph<T> {
         }
     }
 
-    /**
-     * Removes a vertex from the graph.
-     *
-     * @param vertex the value of the vertex to be removed
-     */
+    @Override
     public void removeVertex(T vertex) {
         adjacencies.remove(vertex);
     }
 
-    /**
-     * @return the number of edges in the graph
-     */
+    @Override
     public int getEdgeCount() {
-        int count = adjacencies
-                .values()
+        int count = adjacencies.values()
                 .stream()
                 .mapToInt(Map::size)
                 .sum();
@@ -114,31 +77,33 @@ public class FlexibleGraph<T> implements Graph<T> {
         return (directed) ? count : count / 2;
     }
 
-    /**
-     * @return the number of vertices in the graph
-     */
+    @Override
     public int getVertexCount() {
         return adjacencies.size();
     }
 
-    /**
-     * @param vertex the vertex to be checked for
-     * @return the weight of the edge between the two vertices
-     */
+    @Override
     public boolean hasVertex(T vertex) {
         return adjacencies.containsKey(vertex);
     }
 
-    /**
-     * @return a Set of all the vertices in the graph
-     */
+    @Override
+    public double calculateAverageDegree() {
+        return adjacencies.values()
+                .stream()
+                .mapToInt(Map::size)
+                .average()
+                .orElse(0);
+    }
+
+    @Override
     public Set<T> getVertices() {
         return adjacencies.keySet();
     }
 
     @Override
     public Map<T, Double> getNeighbors(T vertex) {
-        return adjacencies.get(vertex);
+        return adjacencies.getOrDefault(vertex, Collections.emptyMap());
     }
 
 }
